@@ -1,0 +1,158 @@
+<div class="min-h-screen flex" style="background: #16181c;">
+
+  <!-- LEFT — Decorative Panel -->
+  <div class="hidden lg:flex lg:w-1/2 relative flex-col items-center justify-center overflow-hidden"
+    style="background: #141518;">
+    <!-- Grid backdrop -->
+    <div class="absolute inset-0 bg-grid-pattern bg-grid opacity-30" style="background-size: 40px 40px;"></div>
+
+    <!-- Glowing amber circle -->
+    <div class="absolute" style="
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(245,158,11,0.18) 0%, transparent 70%);
+            top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            pointer-events:none;">
+    </div>
+
+    <!-- Big logo central -->
+    <div class="relative z-10 flex flex-col items-center text-center">
+      <!-- Icon -->
+      <div class="relative mb-8">
+        <div class="h-24 w-24 rounded-2xl flex items-center justify-center" style="
+                    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+                    box-shadow: 0 0 60px rgba(245,158,11,0.5), inset 0 1px 0 rgba(255,255,255,0.2);">
+          <svg class="h-12 w-12" style="color: #141518;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <!-- Ping animation around icon -->
+        <div class="absolute inset-0 rounded-2xl animate-ping"
+          style="background: rgba(245,158,11,0.15); animation-duration: 3s;"></div>
+      </div>
+
+      <h1 class="text-5xl font-display font-bold mb-3"
+        style="color: #f4f5f7; letter-spacing: -0.03em; line-height: 1.1;">
+        Fleet<span style="color: #f59e0b;">Ops</span>
+      </h1>
+      <p class="text-base font-mono mb-12" style="color: #6b7280; letter-spacing: 0.08em;">CONTROL CENTER v2.0</p>
+
+      <!-- Stat pills -->
+      <div class="flex flex-col gap-3 w-64">
+        <div class="flex items-center justify-between px-4 py-3 rounded-xl"
+          style="background: #1e2025; border: 1px solid #2a2d35;">
+          <span class="text-sm" style="color: #6b7280;">Camions Actifs</span>
+          <span class="text-sm font-bold font-mono" style="color: #10b981;">● 24 / 28</span>
+        </div>
+        <div class="flex items-center justify-between px-4 py-3 rounded-xl"
+          style="background: #1e2025; border: 1px solid #2a2d35;">
+          <span class="text-sm" style="color: #6b7280;">Trajets en cours</span>
+          <span class="text-sm font-bold font-mono" style="color: #f59e0b;">● 11</span>
+        </div>
+        <div class="flex items-center justify-between px-4 py-3 rounded-xl"
+          style="background: #1e2025; border: 1px solid #2a2d35;">
+          <span class="text-sm" style="color: #6b7280;">Alertes système</span>
+          <span class="text-sm font-bold font-mono" style="color: #ef4444;">● 2</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom tagline -->
+    <p class="absolute bottom-8 text-xs font-mono" style="color: #4b5563; letter-spacing: 0.15em;">
+      GESTION DE FLOTTE ET LOGISTIQUE
+    </p>
+  </div>
+
+  <!-- RIGHT — Login Form -->
+  <div class="flex flex-col justify-center flex-1 lg:max-w-lg xl:max-w-xl px-8 py-12 sm:px-12 lg:px-16"
+    style="background: #16181c;">
+
+    <!-- Mobile logo -->
+    <div class="lg:hidden flex items-center gap-3 mb-10">
+      <div class="h-9 w-9 rounded-lg flex items-center justify-center"
+        style="background: #f59e0b; box-shadow: 0 0 20px rgba(245,158,11,0.4);">
+        <svg class="h-5 w-5" style="color:#141518" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      </div>
+      <span class="font-display font-bold text-xl" style="color: #f4f5f7;">FleetOps</span>
+    </div>
+
+    <!-- Heading -->
+    <div class="mb-8">
+      <h2 class="text-3xl font-display font-bold" style="color: #f4f5f7; letter-spacing: -0.02em;">
+        Accès Opérateur
+      </h2>
+      <p class="text-sm mt-2" style="color: #6b7280;">Connectez-vous à votre centre de contrôle</p>
+    </div>
+
+    <!-- Error Alert -->
+    <div *ngIf="errorMessage" class="mb-6 flex items-start gap-3 p-4 rounded-xl animate-fade-in"
+      style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);">
+      <svg class="h-5 w-5 flex-shrink-0 mt-0.5" style="color: #ef4444;" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <p class="text-sm" style="color: #fca5a5;">{{ errorMessage }}</p>
+    </div>
+
+    <!-- Form -->
+    <form class="space-y-5" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Email -->
+      <div>
+        <label for="email" class="fleet-label">Adresse e-mail</label>
+        <input id="email" formControlName="email" type="email" autocomplete="email" class="fleet-input h-11"
+          [style.borderColor]="email?.invalid && email?.touched ? 'rgba(239,68,68,0.5)' : ''"
+          placeholder="operateur@fleet.com">
+        <p *ngIf="email?.invalid && email?.touched" class="mt-1.5 text-xs" style="color: #f87171;">
+          Adresse email invalide.
+        </p>
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label for="password" class="fleet-label">Mot de passe</label>
+        <input id="password" formControlName="password" type="password" autocomplete="current-password"
+          class="fleet-input h-11"
+          [style.borderColor]="password?.invalid && password?.touched ? 'rgba(239,68,68,0.5)' : ''"
+          placeholder="••••••••">
+        <p *ngIf="password?.invalid && password?.touched" class="mt-1.5 text-xs" style="color: #f87171;">
+          Le mot de passe est requis.
+        </p>
+      </div>
+
+      <!-- Options Row -->
+      <div class="flex items-center justify-between">
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" class="w-4 h-4 rounded" style="accent-color: #f59e0b;">
+          <span class="text-sm" style="color: #9ca3af;">Se souvenir</span>
+        </label>
+        <a href="#" class="text-sm font-medium transition-colors" style="color: #f59e0b;">Mot de passe oublié?</a>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" [disabled]="isLoading" class="btn-fleet w-full h-11 justify-center mt-2">
+        <svg *ngIf="isLoading" class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+          </path>
+        </svg>
+        <span>{{ isLoading ? 'Connexion...' : 'Accéder au système' }}</span>
+        <svg *ngIf="!isLoading" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </button>
+    </form>
+
+    <!-- Register (Disabled per requirements)
+    <p class="mt-6 text-center text-sm" style="color: #6b7280;">
+      Pas encore de compte?
+      <a routerLink="/register" class="ml-1 font-semibold transition-colors" style="color: #f59e0b;">Créer un accès</a>
+    </p> -->
+
+    <!-- Version stamp -->
+    <p class="mt-8 text-center text-xs font-mono" style="color: #374151;">FleetOps Control Center — 2026</p>
+  </div>
+</div>
