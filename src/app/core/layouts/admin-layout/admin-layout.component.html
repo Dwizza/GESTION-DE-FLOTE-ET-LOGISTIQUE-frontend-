@@ -1,0 +1,167 @@
+<!--
+  ────────────────────────────────────────────────
+  FLEET OPS — Admin Layout
+  Midnight Command Dark Theme
+  ────────────────────────────────────────────────
+-->
+<div class="h-screen flex overflow-hidden" style="background: #0e1015;">
+
+    <!-- ─── Mobile Overlay Sidebar ─────────────────────── -->
+    <div *ngIf="isSidebarOpen" class="fixed inset-0 flex z-40 md:hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 modal-backdrop" (click)="toggleSidebar()"></div>
+        <div class="relative flex flex-col w-72 flex-shrink-0 animate-slide-in-left"
+            style="background: #181a20; border-right: 1px solid #2a2d35; box-shadow: 2px 0 20px rgba(0,0,0,0.5);">
+            <div class="flex items-center justify-between h-16 px-6" style="border-bottom: 1px solid #2a2d35;">
+                <div class="flex items-center gap-3">
+                    <div class="h-9 w-9 rounded-lg flex items-center justify-center"
+                        style="background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 12px rgba(245,158,11,0.25);">
+                        <svg class="h-5 w-5" style="color:#141518" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <span class="font-display font-bold text-lg tracking-tight" style="color: #f4f5f7;">FleetOps</span>
+                </div>
+                <button (click)="toggleSidebar()" class="p-1.5 rounded-lg transition-colors" style="color:#6b7280"
+                    onmouseover="this.style.color='#f4f5f7'; this.style.background='#1e2025'"
+                    onmouseout="this.style.color='#6b7280'; this.style.background='transparent'">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <nav class="flex-1 px-3 py-6 space-y-1 custom-scrollbar overflow-y-auto">
+                <a *ngFor="let item of navigation" [routerLink]="item.href" routerLinkActive="active" class="nav-item">
+                    <svg class="flex-shrink-0 h-5 w-5 transition-colors" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" [attr.d]="item.icon" />
+                    </svg>
+                    {{ item.name }}
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- ─── Desktop Sidebar ────────────────────────────── -->
+    <aside class="hidden md:flex md:flex-col w-[260px] flex-shrink-0"
+        style="background: #181a20; border-right: 1px solid #2a2d35;">
+
+        <!-- Logo -->
+        <div class="h-16 flex items-center px-6 flex-shrink-0" style="border-bottom: 1px solid #2a2d35;">
+            <div class="flex items-center gap-3">
+                <div class="h-9 w-9 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style="background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 12px rgba(245,158,11,0.25);">
+                    <svg class="h-5 w-5" style="color:#141518" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                            d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <div>
+                    <span class="block font-display font-bold text-base tracking-tight"
+                        style="color: #f4f5f7;">FleetOps</span>
+                    <span class="block text-xs font-mono"
+                        style="color: #4b5563; font-size: 10px; letter-spacing: 0.1em;">CONTROL CENTER</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nav Items -->
+        <nav class="flex-1 px-3 py-6 space-y-0.5 custom-scrollbar overflow-y-auto">
+            <div class="text-xs font-semibold uppercase tracking-widest px-3 mb-3"
+                style="color: #4b5563; font-family: 'Space Grotesk', sans-serif; font-size: 10px;">
+                Navigation
+            </div>
+            <a *ngFor="let item of navigation" [routerLink]="item.href" routerLinkActive="active" class="nav-item">
+                <svg class="flex-shrink-0 h-4 w-4 transition-colors" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" [attr.d]="item.icon" />
+                </svg>
+                <span>{{ item.name }}</span>
+            </a>
+        </nav>
+
+        <!-- User / Logout -->
+        <div class="p-3 flex-shrink-0" style="border-top: 1px solid #2a2d35;">
+            <div class="flex items-center gap-3 p-2.5 rounded-lg" style="background: #1e2025;">
+                <div class="h-9 w-9 rounded-lg flex-shrink-0 flex items-center justify-center font-bold text-sm"
+                    style="background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); font-family: 'Space Grotesk', sans-serif;">
+                    AD
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold truncate"
+                        style="color: #f4f5f7; font-family: 'Space Grotesk', sans-serif;">Admin</p>
+                    <p class="text-xs truncate" style="color: #4b5563; font-family: 'JetBrains Mono', monospace;">
+                        Administrateur</p>
+                </div>
+                <button (click)="logout()" title="Déconnexion" class="p-1.5 rounded-lg flex-shrink-0 transition-all"
+                    style="color: #6b7280;"
+                    onmouseover="this.style.color='#ef4444'; this.style.background='rgba(239,68,68,0.1)'"
+                    onmouseout="this.style.color='#6b7280'; this.style.background='transparent'">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ─── Main Content ────────────────────────────────── -->
+    <div class="flex flex-col flex-1 min-w-0 overflow-hidden">
+
+        <!-- Topbar -->
+        <header class="h-16 flex items-center flex-shrink-0 px-6 gap-4"
+            style="background: #181a20; border-bottom: 1px solid #2a2d35;">
+
+            <!-- Mobile hamburger -->
+            <button type="button" class="md:hidden p-1.5 rounded-lg transition-colors" style="color: #6b7280;"
+                (click)="toggleSidebar()">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+                </svg>
+            </button>
+
+            <!-- Search -->
+            <div class="flex-1 max-w-sm relative">
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style="color: #4b5563;" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="search" placeholder="Rechercher..." class="fleet-input pl-10 text-sm h-10"
+                    style="background: #252830; border-radius: 10px; border-color: transparent;"
+                    onfocus="this.style.borderColor='rgba(245,158,11,0.4)'; this.style.background='#1e2025'"
+                    onblur="this.style.borderColor='transparent'; this.style.background='#252830'">
+            </div>
+
+            <div class="flex-1"></div>
+
+            <!-- Live indicator -->
+            <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg"
+                style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2);">
+                <span class="live-dot"></span>
+                <span class="text-xs font-semibold" style="color: #10b981;">Système en ligne</span>
+            </div>
+
+            <!-- Notifications bell -->
+            <button class="relative p-2.5 rounded-lg transition-all" style="color: #6b7280; background: #252830;"
+                onmouseover="this.style.background='#2a2d35'" onmouseout="this.style.background='#252830'">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                <span class="absolute top-2 right-2 w-2 h-2 rounded-full"
+                    style="background: #ef4444; box-shadow: 0 0 6px rgba(239,68,68,0.4);"></span>
+            </button>
+        </header>
+
+        <!-- Page Content -->
+        <main class="flex-1 overflow-y-auto custom-scrollbar" style="background: #0e1015;">
+            <div class="p-6 max-w-[1400px] mx-auto page-enter">
+                <router-outlet></router-outlet>
+            </div>
+        </main>
+    </div>
+</div>

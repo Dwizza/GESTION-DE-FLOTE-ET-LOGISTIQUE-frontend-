@@ -1,0 +1,307 @@
+<div class="space-y-8">
+
+    <!-- ─── Header ──────────────────────────────────── -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-3 mb-1">
+                <span class="live-dot"></span>
+                <span class="text-xs font-mono uppercase tracking-widest" style="color: #4b5563;">Tableau de
+                    Bord</span>
+            </div>
+            <h1 class="section-title">Vue d'Ensemble</h1>
+            <p class="section-subtitle">Centre de contrôle opérationnel en temps réel</p>
+        </div>
+        <button [routerLink]="['/admin/report']" class="btn-fleet"
+            style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Générer Rapport
+        </button>
+    </div>
+
+    <!-- ─── Skeleton Loading ────────────────────────── -->
+    <div *ngIf="isLoading" class="space-y-6 animate-pulse">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div *ngFor="let i of [1,2,3,4]" class="h-32 rounded-xl" style="background: #1e2025;"></div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <div class="h-80 rounded-xl" style="background: #1e2025;"></div>
+            <div class="h-80 rounded-xl" style="background: #1e2025;"></div>
+        </div>
+    </div>
+
+    <!-- ─── Content ─────────────────────────────────── -->
+    <ng-container *ngIf="!isLoading && metrics">
+
+        <!-- ─── Metrics Row ─────────────────────────── -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Total Trucks -->
+            <div class="metric-card group cursor-default">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="h-10 w-10 rounded-lg flex items-center justify-center"
+                        style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2);">
+                        <svg class="h-5 w-5" style="color: #f59e0b;" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="metric-value">{{ metrics.totalTrucks }}</div>
+                <p class="metric-label">Camions</p>
+                <div class="absolute bottom-0 left-0 h-0.5 transition-all duration-700"
+                    style="background: linear-gradient(90deg, #f59e0b, transparent); width: 40%;" [style.width]="'40%'">
+                </div>
+            </div>
+            <!-- Total Trailers -->
+            <div class="metric-card group cursor-default">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="h-10 w-10 rounded-lg flex items-center justify-center"
+                        style="background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.2);">
+                        <svg class="h-5 w-5" style="color: #60a5fa;" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="metric-value">{{ metrics.totalTrailers }}</div>
+                <p class="metric-label">Remorques</p>
+                <div class="absolute bottom-0 left-0 h-0.5 transition-all duration-700"
+                    style="background: linear-gradient(90deg, #60a5fa, transparent); width: 35%;"></div>
+            </div>
+            <!-- Total Drivers -->
+            <div class="metric-card group cursor-default">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="h-10 w-10 rounded-lg flex items-center justify-center"
+                        style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2);">
+                        <svg class="h-5 w-5" style="color: #10b981;" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="metric-value">{{ metrics.totalDrivers }}
+                    <span class="text-sm font-normal" style="color: #4b5563;">/ {{ metrics.availableDrivers }}
+                        dispo</span>
+                </div>
+                <p class="metric-label">Chauffeurs</p>
+                <div class="absolute bottom-0 left-0 h-0.5 transition-all duration-700"
+                    style="background: linear-gradient(90deg, #10b981, transparent); width: 55%;"></div>
+            </div>
+            <!-- Active Trips -->
+            <div class="metric-card group cursor-default">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="h-10 w-10 rounded-lg flex items-center justify-center"
+                        style="background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.2);">
+                        <svg class="h-5 w-5" style="color: #a78bfa;" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="metric-value">{{ metrics.activeTrips }}</div>
+                <p class="metric-label">Trajets Actifs</p>
+                <div class="absolute bottom-0 left-0 h-0.5 transition-all duration-700"
+                    style="background: linear-gradient(90deg, #a78bfa, transparent); width: 25%;"></div>
+            </div>
+        </div>
+
+        <!-- ─── Charts Row 1: Donut Charts ──────────── -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+            <!-- Chart 1: Trucks by Status (Donut) -->
+            <div class="fleet-card p-6">
+                <div class="flex items-center justify-between mb-5">
+                    <div>
+                        <h2 class="text-base font-display font-semibold" style="color: #f4f5f7;">État de la Flotte</h2>
+                        <p class="text-xs mt-0.5" style="color: #4b5563;">Camions par statut</p>
+                    </div>
+                    <span class="text-xs font-mono px-2.5 py-1 rounded-md"
+                        style="background: #1e2025; color: #6b7280; border: 1px solid #2a2d35;">
+                        {{ getDonutTotal(truckStatusSegments) }} total
+                    </span>
+                </div>
+                <div class="flex items-center gap-8">
+                    <!-- SVG Donut -->
+                    <div class="relative flex-shrink-0" style="width: 140px; height: 140px;">
+                        <svg viewBox="0 0 100 100" class="w-full h-full -rotate-90">
+                            <!-- Background ring -->
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="#1e2025" stroke-width="10" />
+                            <!-- Segments -->
+                            <circle *ngFor="let seg of truckStatusSegments" cx="50" cy="50" r="40" fill="none"
+                                [attr.stroke]="seg.color" stroke-width="10" [attr.stroke-dasharray]="seg.dashArray"
+                                [attr.stroke-dashoffset]="seg.dashOffset" stroke-linecap="butt"
+                                style="transition: stroke-dasharray 1s ease, stroke-dashoffset 1s ease;" />
+                        </svg>
+                        <!-- Center text -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-2xl font-display font-bold" style="color: #f4f5f7;">{{
+                                getDonutTotal(truckStatusSegments) }}</span>
+                            <span class="text-xs" style="color: #4b5563;">Camions</span>
+                        </div>
+                    </div>
+                    <!-- Legend -->
+                    <div class="flex-1 space-y-2.5">
+                        <div *ngFor="let seg of truckStatusSegments" class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-sm flex-shrink-0"
+                                    [style.background]="seg.color"></span>
+                                <span class="text-sm" style="color: #9ca3af;">{{ seg.label }}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-semibold font-mono" style="color: #f4f5f7;">{{ seg.value
+                                    }}</span>
+                                <span class="text-xs font-mono" style="color: #4b5563;">{{ seg.percentage }}%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart 2: Trips by Status (Donut) -->
+            <div class="fleet-card p-6">
+                <div class="flex items-center justify-between mb-5">
+                    <div>
+                        <h2 class="text-base font-display font-semibold" style="color: #f4f5f7;">Répartition Trajets
+                        </h2>
+                        <p class="text-xs mt-0.5" style="color: #4b5563;">Trajets par statut</p>
+                    </div>
+                    <span class="text-xs font-mono px-2.5 py-1 rounded-md"
+                        style="background: #1e2025; color: #6b7280; border: 1px solid #2a2d35;">
+                        {{ getDonutTotal(tripStatusSegments) }} total
+                    </span>
+                </div>
+                <div class="flex items-center gap-8">
+                    <!-- SVG Donut -->
+                    <div class="relative flex-shrink-0" style="width: 140px; height: 140px;">
+                        <svg viewBox="0 0 100 100" class="w-full h-full -rotate-90">
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="#1e2025" stroke-width="10" />
+                            <circle *ngFor="let seg of tripStatusSegments" cx="50" cy="50" r="40" fill="none"
+                                [attr.stroke]="seg.color" stroke-width="10" [attr.stroke-dasharray]="seg.dashArray"
+                                [attr.stroke-dashoffset]="seg.dashOffset" stroke-linecap="butt"
+                                style="transition: stroke-dasharray 1s ease, stroke-dashoffset 1s ease;" />
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-2xl font-display font-bold" style="color: #f4f5f7;">{{
+                                getDonutTotal(tripStatusSegments) }}</span>
+                            <span class="text-xs" style="color: #4b5563;">Trajets</span>
+                        </div>
+                    </div>
+                    <!-- Legend -->
+                    <div class="flex-1 space-y-2.5">
+                        <div *ngFor="let seg of tripStatusSegments" class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-sm flex-shrink-0"
+                                    [style.background]="seg.color"></span>
+                                <span class="text-sm" style="color: #9ca3af;">{{ seg.label }}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-semibold font-mono" style="color: #f4f5f7;">{{ seg.value
+                                    }}</span>
+                                <span class="text-xs font-mono" style="color: #4b5563;">{{ seg.percentage }}%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── Charts Row 2: Bar Charts ────────────── -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+            <!-- Chart 3: Financial Overview (Horizontal Bars) -->
+            <div class="fleet-card p-6">
+                <div class="mb-5">
+                    <h2 class="text-base font-display font-semibold" style="color: #f4f5f7;">Bilan Financier</h2>
+                    <p class="text-xs mt-0.5" style="color: #4b5563;">Revenue, coûts et profit (DH)</p>
+                </div>
+                <div class="space-y-4">
+                    <div *ngFor="let bar of financialBars" class="space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium" style="color: #9ca3af;">{{ bar.label }}</span>
+                            <span class="text-sm font-semibold font-mono" [style.color]="bar.color">{{
+                                formatCurrency(bar.value) }} DH</span>
+                        </div>
+                        <div class="h-2.5 rounded-full overflow-hidden" style="background: #1e2025;">
+                            <div class="h-full rounded-full transition-all duration-1000 ease-out"
+                                [style.width.%]="bar.widthPercent" [style.background]="bar.color"
+                                [style.boxShadow]="'0 0 8px ' + bar.color + '33'">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Summary -->
+                <div class="mt-5 pt-4 flex items-center justify-between" style="border-top: 1px solid #2a2d35;">
+                    <span class="text-xs font-mono uppercase tracking-wider" style="color: #4b5563;">Marge nette</span>
+                    <span class="text-lg font-display font-bold"
+                        [style.color]="metrics.totalProfit >= 0 ? '#10b981' : '#ef4444'">
+                        {{ formatCurrency(metrics.totalProfit) }} DH
+                    </span>
+                </div>
+            </div>
+
+            <!-- Chart 4: Fleet Composition (Horizontal Bars) -->
+            <div class="fleet-card p-6">
+                <div class="mb-5">
+                    <h2 class="text-base font-display font-semibold" style="color: #f4f5f7;">Composition de la Flotte
+                    </h2>
+                    <p class="text-xs mt-0.5" style="color: #4b5563;">Camions par marque &amp; remorques par type</p>
+                </div>
+                <div class="space-y-3">
+                    <div *ngFor="let bar of fleetBars" class="space-y-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium" style="color: #9ca3af;">{{ bar.label }}</span>
+                            <span class="text-sm font-semibold font-mono" style="color: #f4f5f7;">{{ bar.value
+                                }}</span>
+                        </div>
+                        <div class="h-2 rounded-full overflow-hidden" style="background: #1e2025;">
+                            <div class="h-full rounded-full transition-all duration-1000 ease-out"
+                                [style.width.%]="bar.widthPercent" [style.background]="bar.color" style="opacity: 0.8;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── Activity Feed ───────────────────────── -->
+        <div class="fleet-card p-6" *ngIf="metrics.totalRevenue !== undefined">
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="text-base font-display font-semibold" style="color: #f4f5f7;">Résumé Financier</h2>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="text-center p-4 rounded-lg" style="background: #141518; border: 1px solid #2a2d35;">
+                    <p class="text-xs font-mono uppercase tracking-wider mb-2" style="color: #4b5563;">Revenue Total</p>
+                    <p class="text-xl font-display font-bold" style="color: #f59e0b;">{{
+                        formatCurrency(metrics.totalRevenue) }}</p>
+                    <p class="text-xs mt-0.5" style="color: #4b5563;">DH</p>
+                </div>
+                <div class="text-center p-4 rounded-lg" style="background: #141518; border: 1px solid #2a2d35;">
+                    <p class="text-xs font-mono uppercase tracking-wider mb-2" style="color: #4b5563;">Carburant</p>
+                    <p class="text-xl font-display font-bold" style="color: #ef4444;">{{
+                        formatCurrency(metrics.totalFuelCost) }}</p>
+                    <p class="text-xs mt-0.5" style="color: #4b5563;">DH</p>
+                </div>
+                <div class="text-center p-4 rounded-lg" style="background: #141518; border: 1px solid #2a2d35;">
+                    <p class="text-xs font-mono uppercase tracking-wider mb-2" style="color: #4b5563;">Maintenance</p>
+                    <p class="text-xl font-display font-bold" style="color: #60a5fa;">{{
+                        formatCurrency(metrics.totalMaintenanceCost) }}</p>
+                    <p class="text-xs mt-0.5" style="color: #4b5563;">DH</p>
+                </div>
+                <div class="text-center p-4 rounded-lg" style="background: #141518; border: 1px solid #2a2d35;">
+                    <p class="text-xs font-mono uppercase tracking-wider mb-2" style="color: #4b5563;">Profit Net</p>
+                    <p class="text-xl font-display font-bold"
+                        [style.color]="metrics.totalProfit >= 0 ? '#10b981' : '#ef4444'">{{
+                        formatCurrency(metrics.totalProfit) }}</p>
+                    <p class="text-xs mt-0.5" style="color: #4b5563;">DH</p>
+                </div>
+            </div>
+        </div>
+
+    </ng-container>
+</div>
