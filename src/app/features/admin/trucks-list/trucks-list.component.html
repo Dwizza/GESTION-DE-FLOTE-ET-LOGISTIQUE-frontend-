@@ -1,0 +1,254 @@
+<!-- ─── Trucks List ─────────────────────────── -->
+<div class="space-y-6">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <svg class="h-4 w-4" style="color: #f59e0b;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+                <span class="text-xs font-mono uppercase tracking-widest" style="color: #6b7280;">Flotte
+                    Véhicules</span>
+            </div>
+            <h1 class="section-title">Camions</h1>
+            <p class="section-subtitle">Supervisez l'état, le kilométrage et la disponibilité</p>
+        </div>
+        <button (click)="openModal()" class="btn-fleet flex-shrink-0">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Ajouter un Camion
+        </button>
+    </div>
+
+    <!-- Loading Skeleton -->
+    <div *ngIf="isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 animate-pulse">
+        <div *ngFor="let i of [1,2,3,4,5,6]" class="h-44 rounded-xl" style="background: #1e2025;"></div>
+    </div>
+
+    <!-- Grid -->
+    <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+
+        <div *ngFor="let t of trucks; let i = index" class="fleet-card group animate-fade-in"
+            [style.animationDelay]="(i * 0.06) + 's'">
+
+            <!-- Card Header -->
+            <div class="px-5 py-4 flex items-start justify-between" style="border-bottom: 1px solid #2a2d35;">
+                <div class="flex items-center gap-3">
+                    <div class="h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                        style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2);">
+                        <svg class="h-5 w-5" style="color: #f59e0b;" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+                                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-bold text-sm" style="color: #f4f5f7;">{{ t.brand }}</h3>
+                        <p class="text-xs font-mono" style="color: #6b7280;">{{ t.registrationNumber }}</p>
+                    </div>
+                </div>
+                <span [ngClass]="getStatusColor(t.status)">
+                    <span class="w-1.5 h-1.5 rounded-full"
+                        [style.background]="t.status === 'AVAILABLE' ? '#10b981' : t.status === 'IN_TRIP' ? '#60a5fa' : t.status === 'IN_MAINTENANCE' ? '#f59e0b' : '#ef4444'"></span>
+                    {{ t.status | titlecase }}
+                </span>
+            </div>
+
+            <!-- Card Body -->
+            <div class="px-5 py-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs uppercase tracking-widest font-semibold mb-1" style="color: #4b5563;">
+                            Kilométrage</p>
+                        <p class="text-xl font-display font-bold" style="color: #f4f5f7;">{{ t.totalMileage | number }}
+                        </p>
+                        <p class="text-xs" style="color: #6b7280;">km parcourus</p>
+                    </div>
+                    <!-- Mini progress -->
+                    <div class="h-12 w-12 relative flex items-center justify-center">
+                        <svg class="w-12 h-12 -rotate-90" viewBox="0 0 36 36">
+                            <circle cx="18" cy="18" r="15.9" fill="none" style="stroke: #2a2d35;" stroke-width="2.5" />
+                            <circle cx="18" cy="18" r="15.9" fill="none" style="stroke: #f59e0b;" stroke-width="2.5"
+                                stroke-dasharray="60, 100" stroke-linecap="round" />
+                        </svg>
+                        <span class="absolute text-xs font-bold" style="color: #f59e0b;">60%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="px-5 py-3 flex justify-end gap-3"
+                style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
+                <button (click)="openDetailModal(t)"
+                    class="text-xs font-semibold transition-colors px-3 py-1.5 rounded-md"
+                    style="color: #9ca3af; background: #252830;"
+                    onmouseover="this.style.color='#f59e0b'; this.style.borderColor='rgba(245,158,11,0.3)';"
+                    onmouseout="this.style.color='#9ca3af'; this.style.borderColor='transparent';">
+                    Voir Détails
+                </button>
+                <button (click)="deleteTruck(t.id)" class="text-xs font-semibold transition-all px-3 py-1.5 rounded-md"
+                    style="color: #ef4444; background: rgba(239,68,68,0.08);"
+                    onmouseover="this.style.background='rgba(239,68,68,0.18)';"
+                    onmouseout="this.style.background='rgba(239,68,68,0.08)';">
+                    Supprimer
+                </button>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="trucks.length === 0" class="col-span-full py-20 text-center fleet-card">
+            <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4"
+                style="background: #252830; border: 1px solid #2a2d35;">
+                <svg class="h-8 w-8" style="color: #4b5563;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+            </div>
+            <p class="font-display font-semibold" style="color: #9ca3af;">Aucun camion enregistré</p>
+            <p class="text-sm mt-1" style="color: #4b5563;">Ajoutez votre premier véhicule à la flotte</p>
+        </div>
+    </div>
+</div>
+
+<!-- ─── Modal: Créer Camion ────────────────── -->
+<div *ngIf="isModalOpen" class="fixed z-50 inset-0 flex items-center justify-center p-4" role="dialog"
+    aria-modal="true">
+    <div class="fixed inset-0 modal-backdrop" (click)="closeModal()"></div>
+    <div class="modal-panel relative w-full max-w-md animate-slide-in-up">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-5" style="border-bottom: 1px solid #2a2d35;">
+            <div>
+                <h3 class="font-display font-bold text-lg" style="color: #f4f5f7;">Enregistrer un Camion</h3>
+                <p class="text-xs mt-0.5" style="color: #6b7280;">Remplissez les informations du véhicule</p>
+            </div>
+            <button (click)="closeModal()" class="p-2 rounded-lg transition-colors"
+                style="color: #6b7280; background: #252830;">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Form Body -->
+        <form [formGroup]="truckForm" class="px-6 py-5 space-y-4">
+            <div>
+                <label class="fleet-label">Matricule / Immatriculation</label>
+                <input type="text" formControlName="registrationNumber" class="fleet-input" placeholder="Ex: 1234-A-56">
+            </div>
+            <div>
+                <label class="fleet-label">Marque</label>
+                <input type="text" formControlName="brand" class="fleet-input" placeholder="Volvo, Scania, Mercedes...">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="fleet-label">Kilométrage (km)</label>
+                    <input type="number" formControlName="totalMileage" class="fleet-input" placeholder="0">
+                </div>
+                <div>
+                    <label class="fleet-label">Statut Initial</label>
+                    <select formControlName="status" class="fleet-select">
+                        <option value="AVAILABLE">Disponible</option>
+                        <option value="IN_TRIP">En trajet</option>
+                        <option value="IN_MAINTENANCE">En maintenance</option>
+                        <option value="BROKEN">En panne</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+
+        <!-- Footer -->
+        <div class="flex justify-end gap-3 px-6 py-4" style="border-top: 1px solid #2a2d35;">
+            <button (click)="closeModal()" class="btn-fleet-ghost">Annuler</button>
+            <button (click)="onSubmit()" [disabled]="isSubmitting" class="btn-fleet">
+                {{ isSubmitting ? 'Enregistrement...' : 'Enregistrer' }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ─── Modal: Détails Camion ─────────────── -->
+<div *ngIf="isDetailModalOpen && selectedTruck" class="fixed z-50 inset-0 flex items-center justify-center p-4"
+    role="dialog" aria-modal="true">
+    <div class="fixed inset-0 modal-backdrop" (click)="closeDetailModal()"></div>
+    <div class="modal-panel relative w-full max-w-2xl animate-slide-in-up overflow-hidden">
+
+        <!-- Amber accent line -->
+        <div class="absolute top-0 left-0 right-0 h-0.5"
+            style="background: linear-gradient(90deg, #f59e0b, rgba(245,158,11,0.2), transparent);"></div>
+
+        <!-- Header -->
+        <div class="flex items-start justify-between px-6 pt-6 pb-5" style="border-bottom: 1px solid #2a2d35;">
+            <div class="flex items-center gap-4">
+                <div class="h-14 w-14 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style="background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25);">
+                    <svg class="h-7 w-7" style="color: #f59e0b;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+                            d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-display font-bold text-xl" style="color: #f4f5f7;">{{ selectedTruck.brand }}</h3>
+                    <p class="text-sm font-mono" style="color: #6b7280;">{{ selectedTruck.registrationNumber }}</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <span [ngClass]="getStatusColor(selectedTruck.status)">{{ selectedTruck.status | titlecase }}</span>
+                <button (click)="closeDetailModal()" class="p-2 rounded-lg"
+                    style="color: #6b7280; background: #252830;">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Detail Content -->
+        <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="p-4 rounded-xl" style="background: #141518; border: 1px solid #2a2d35;">
+                <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="color: #4b5563;">Informations</p>
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-xs" style="color: #6b7280;">Identifiant système</p>
+                        <p class="text-xs font-mono mt-0.5 break-all" style="color: #9ca3af;">{{ selectedTruck.id }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs" style="color: #6b7280;">Matricule</p>
+                        <p class="text-sm font-mono font-semibold mt-0.5" style="color: #f4f5f7;">{{
+                            selectedTruck.registrationNumber }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs" style="color: #6b7280;">Marque</p>
+                        <p class="text-sm font-semibold mt-0.5" style="color: #f4f5f7;">{{ selectedTruck.brand }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 rounded-xl" style="background: #141518; border: 1px solid #2a2d35;">
+                <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="color: #4b5563;">Métriques</p>
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-xs" style="color: #6b7280;">Kilométrage Total</p>
+                        <p class="text-2xl font-display font-bold mt-1" style="color: #f59e0b;">
+                            {{ selectedTruck.totalMileage | number }}
+                            <span class="text-sm font-medium" style="color: #6b7280;">km</span>
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-xs" style="color: #6b7280;">Entretien</p>
+                        <p class="text-sm font-semibold mt-0.5" style="color: #10b981;">À jour ✓</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex justify-end gap-3 px-6 py-4"
+            style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
+            <button (click)="closeDetailModal()" class="btn-fleet-ghost">Fermer</button>
+        </div>
+    </div>
+</div>
