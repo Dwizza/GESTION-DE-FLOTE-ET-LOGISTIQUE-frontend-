@@ -1,0 +1,157 @@
+<!-- ─── Managers List ─────────────────────────── -->
+<div class="space-y-6">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <svg class="h-4 w-4" style="color: #f59e0b;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span class="text-xs font-mono uppercase tracking-widest" style="color: #6b7280;">Gestion
+                    Personnel</span>
+            </div>
+            <h1 class="section-title">Responsables</h1>
+            <p class="section-subtitle">Gérez les accès et les comptes des responsables flotte</p>
+        </div>
+        <button (click)="openModal()" class="btn-fleet flex-shrink-0">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Ajouter un Responsable
+        </button>
+    </div>
+
+    <!-- Loading Skeleton -->
+    <div *ngIf="isLoading" class="animate-pulse space-y-2">
+        <div class="h-10 rounded-lg" style="background: #1e2025;"></div>
+        <div *ngFor="let x of [1,2,3]" class="h-14 rounded-lg" style="background: #1e2025;"></div>
+    </div>
+
+    <!-- Table -->
+    <div *ngIf="!isLoading" class="fleet-card overflow-hidden">
+        <table class="fleet-table">
+            <thead>
+                <tr>
+                    <th>Responsable</th>
+                    <th>Statut</th>
+                    <th>Département</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let m of managers; let i = index" class="animate-fade-in"
+                    [style.animationDelay]="(i * 0.05) + 's'">
+                    <td>
+                        <div class="flex items-center gap-3">
+                            <div class="h-9 w-9 rounded-lg flex-shrink-0 flex items-center justify-center font-bold text-sm"
+                                style="background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); font-family: 'Space Grotesk', sans-serif;">
+                                {{ m.firstName.charAt(0) }}{{ m.lastName.charAt(0) }}
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold" style="color: #f4f5f7;">{{ m.firstName }} {{
+                                    m.lastName }}</p>
+                                <p class="text-xs font-mono" style="color: #6b7280;">{{ m.email }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span *ngIf="m.active" class="badge-available">
+                            <span class="w-1.5 h-1.5 rounded-full" style="background: #10b981;"></span>
+                            Actif
+                        </span>
+                        <span *ngIf="!m.active" class="badge-broken">
+                            <span class="w-1.5 h-1.5 rounded-full" style="background: #ef4444;"></span>
+                            Inactif
+                        </span>
+                    </td>
+                    <td>
+                        <span class="text-sm" style="color: #9ca3af;">{{ m.department || 'Opérations' }}</span>
+                    </td>
+                    <td class="text-right">
+                        <button class="text-xs font-semibold mr-3 transition-colors" style="color: #9ca3af;"
+                            onmouseover="this.style.color='#f59e0b'" onmouseout="this.style.color='#9ca3af'">
+                            Modifier
+                        </button>
+                        <button (click)="deleteManager(m.id)" class="text-xs font-semibold transition-colors"
+                            style="color: #6b7280;" onmouseover="this.style.color='#ef4444'"
+                            onmouseout="this.style.color='#6b7280'">
+                            Supprimer
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- Empty State -->
+                <tr *ngIf="managers.length === 0">
+                    <td colspan="4" class="py-20 text-center">
+                        <div class="flex flex-col items-center gap-3">
+                            <div class="h-14 w-14 rounded-xl flex items-center justify-center"
+                                style="background: #252830; border: 1px solid #2a2d35;">
+                                <svg class="h-7 w-7" style="color: #4b5563;" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                            </div>
+                            <p class="font-display font-semibold" style="color: #9ca3af;">Aucun responsable trouvé</p>
+                            <p class="text-sm" style="color: #4b5563;">Commencez par ajouter un nouveau responsable</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ─── Modal: Créer Responsable ────────────────── -->
+<div *ngIf="isModalOpen" class="fixed z-50 inset-0 flex items-center justify-center p-4" role="dialog"
+    aria-modal="true">
+    <div class="fixed inset-0 modal-backdrop" (click)="closeModal()"></div>
+    <div class="modal-panel relative w-full max-w-lg animate-slide-in-up">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-5" style="border-bottom: 1px solid #2a2d35;">
+            <div>
+                <h3 class="font-display font-bold text-lg" style="color: #f4f5f7;">Nouveau Responsable</h3>
+                <p class="text-xs mt-0.5" style="color: #6b7280;">Créez un compte responsable pour la flotte</p>
+            </div>
+            <button (click)="closeModal()" class="p-2 rounded-lg transition-colors"
+                style="color: #6b7280; background: #252830;">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Form Body -->
+        <form [formGroup]="managerForm" class="px-6 py-5 space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="fleet-label">Prénom</label>
+                    <input type="text" formControlName="firstName" class="fleet-input" placeholder="Ex: Hassan">
+                </div>
+                <div>
+                    <label class="fleet-label">Nom</label>
+                    <input type="text" formControlName="lastName" class="fleet-input" placeholder="Ex: El Amrani">
+                </div>
+            </div>
+            <div>
+                <label class="fleet-label">Email</label>
+                <input type="email" formControlName="email" class="fleet-input" placeholder="email@exemple.com">
+            </div>
+            <div>
+                <label class="fleet-label">Mot de passe provisoire</label>
+                <input type="password" formControlName="password" class="fleet-input" placeholder="Min. 8 caractères">
+            </div>
+        </form>
+
+        <!-- Footer -->
+        <div class="flex justify-end gap-3 px-6 py-4" style="border-top: 1px solid #2a2d35;">
+            <button (click)="closeModal()" class="btn-fleet-ghost">Annuler</button>
+            <button (click)="onSubmit()" [disabled]="isSubmitting" class="btn-fleet">
+                {{ isSubmitting ? 'Création...' : 'Ajouter' }}
+            </button>
+        </div>
+    </div>
+</div>
