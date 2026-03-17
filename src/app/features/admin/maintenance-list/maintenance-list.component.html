@@ -1,0 +1,387 @@
+<!-- ─── Maintenance List ─────────────────────────── -->
+<div class="space-y-6">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <svg class="h-4 w-4 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                    </path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <span class="text-xs font-mono uppercase tracking-widest text-gray-500">Parc Automobile</span>
+            </div>
+            <h1 class="section-title">Maintenance</h1>
+            <p class="section-subtitle">Historique des réparations, visites techniques et entretiens</p>
+        </div>
+        <button (click)="openModal()" class="btn-fleet flex-shrink-0 bg-rose-600 hover:bg-rose-500 border-rose-500">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Nouvelle Intervention
+        </button>
+    </div>
+
+    <!-- Loading Skeleton -->
+    <div *ngIf="isLoading" class="animate-pulse space-y-2">
+        <div class="h-10 rounded-lg surface-card"></div>
+        <div *ngFor="let x of [1,2,3,4]" class="h-14 rounded-lg surface-card"></div>
+    </div>
+
+    <!-- Table -->
+    <div *ngIf="!isLoading" class="fleet-card overflow-hidden">
+        <table class="fleet-table">
+            <thead>
+                <tr>
+                    <th>Véhicule Associé</th>
+                    <th>Détails de l'Intervention</th>
+                    <th>Type & Statut</th>
+                    <th>Garage / Intervenant</th>
+                    <th>Date</th>
+                    <th class="text-right">Coût</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let m of maintenances; let i = index" class="animate-fade-in"
+                    [style.animationDelay]="(i * 0.05) + 's'">
+                    <td>
+                        <div *ngIf="m.truck" class="flex flex-col">
+                            <span
+                                class="inline-flex items-center gap-1.5 text-xs font-bold text-gray-300 w-max px-2 py-0.5 rounded bg-gray-800">
+                                <svg class="w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                                </svg>
+                                Camion
+                            </span>
+                            <span class="text-sm font-mono text-gray-100 mt-1">{{ m.truck.registrationNumber }}</span>
+                            <span class="text-[10px] text-gray-500 uppercase">{{ m.truck.brand }}</span>
+                        </div>
+                        <div *ngIf="m.trailer" class="flex flex-col">
+                            <span
+                                class="inline-flex items-center gap-1.5 text-xs font-bold text-gray-300 w-max px-2 py-0.5 rounded bg-gray-800">
+                                <svg class="w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                                Remorque
+                            </span>
+                            <span class="text-sm font-mono text-gray-100 mt-1">{{ m.trailer.type }}</span>
+                        </div>
+
+                        <div *ngIf="!m.truck && !m.trailer" class="flex flex-col">
+                            <span
+                                class="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 w-max px-2 py-0.5 rounded bg-gray-800/50 border border-gray-700/50">
+                                <svg class="w-3 h-3 text-gray-600" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                    </path>
+                                </svg>
+                                Non Assigné
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="m.description" class="text-sm font-bold text-gray-100">{{ m.description }}</div>
+                        <div *ngIf="!m.description" class="flex items-center gap-1 text-gray-600">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span class="text-[11px] italic">Non spécifié</span>
+                        </div>
+                        <div *ngIf="m.reference" class="text-[11px] font-mono text-gray-500 mt-0.5">Réf: {{ m.reference
+                            }}</div>
+                    </td>
+                    <td>
+                        <div class="flex flex-col gap-1">
+                            <span *ngIf="m.type === 'PREVENTIVE'"
+                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20 w-max">Préventive</span>
+                            <span *ngIf="m.type === 'CORRECTIVE'"
+                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400 border border-red-500/20 w-max">Corrective</span>
+                            <span *ngIf="m.type === 'INSPECTION'"
+                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 w-max">Inspection</span>
+
+                            <span *ngIf="m.status === 'PLANNED'" class="text-xs text-gray-400 mt-1">Planifiée</span>
+                            <span *ngIf="m.status === 'IN_PROGRESS'"
+                                class="text-xs text-amber-500 mt-1 font-semibold">En Cours</span>
+                            <span *ngIf="m.status === 'COMPLETED'"
+                                class="text-xs text-emerald-500 mt-1 font-semibold">Terminée</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span *ngIf="m.performedBy" class="text-sm text-gray-300">{{ m.performedBy }}</span>
+                        <div *ngIf="!m.performedBy" class="flex items-center gap-1 text-gray-600">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1v1H9V7zm5 0h1v1h-1V7zm-5 4h1v1H9v-1zm5 0h1v1h-1v-1zm-3 4H9v2h4v-2z" />
+                            </svg>
+                            <span class="text-[11px] italic">Interne</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="text-sm text-gray-300">{{ m.dateMaintenance | date:'dd MMM yyyy' }}</span>
+                    </td>
+                    <td class="text-right">
+                        <span class="text-sm font-bold text-rose-400 font-mono">{{ m.cout |
+                            currency:'MAD':'symbol':'1.2-2' }}</span>
+                    </td>
+                    <td class="text-right">
+                        <div class="flex items-center justify-end gap-3">
+                            <button (click)="openDetailsModal(m)"
+                                class="text-xs font-semibold text-gray-400 hover:text-white transition-colors">
+                                Détails
+                            </button>
+                            <button (click)="openEditModal(m)"
+                                class="text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors">
+                                Modifier
+                            </button>
+                            <button (click)="deleteMaintenance(m.id)"
+                                class="text-xs font-semibold text-rose-500 hover:text-rose-400 transition-colors">
+                                Supprimer
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Empty State -->
+                <tr *ngIf="maintenances.length === 0">
+                    <td colspan="7" class="py-20 text-center">
+                        <div class="flex flex-col items-center gap-3">
+                            <div
+                                class="h-14 w-14 rounded-xl flex items-center justify-center border border-gray-800 bg-gray-900">
+                                <svg class="h-7 w-7 text-gray-500" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <p class="font-display font-semibold text-gray-400">Aucun historique de maintenance</p>
+                            <p class="text-sm text-gray-600">Enregistrez les réparations de votre flotte ici</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ─── Modal: Enregistrer Maintenance ────────── -->
+<div *ngIf="isModalOpen" class="fixed z-50 inset-0 flex items-center justify-center p-4" role="dialog"
+    aria-modal="true">
+    <div class="fixed inset-0 modal-backdrop" (click)="closeModal()"></div>
+    <div class="modal-panel relative w-full max-w-2xl animate-slide-in-up flex flex-col max-h-[90vh]">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-5 border-b border-gray-800 flex-shrink-0">
+            <div>
+                <h3 class="font-display font-bold text-lg text-gray-100">
+                    {{ editingId ? 'Modifier l\'Intervention' : 'Nouvelle Intervention' }}
+                </h3>
+                <p class="text-xs text-gray-500 mt-0.5">Enregistrez les réparations et le coût de l'entretien</p>
+            </div>
+            <button (click)="closeModal()"
+                class="p-2 rounded-lg text-gray-400 bg-gray-800 hover:text-white transition-colors">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Form Body -->
+        <div class="overflow-y-auto custom-scrollbar flex-1 p-6">
+            <form [formGroup]="maintenanceForm" class="space-y-6">
+
+                <!-- Vehicle Selection Type -->
+                <div>
+                    <label class="fleet-label mb-2">Type de Véhicule <span class="text-red-500">*</span></label>
+                    <div class="flex gap-4">
+                        <button type="button" (click)="setServiceType('TRUCK')"
+                            [class.border-rose-500]="serviceType === 'TRUCK'"
+                            [class.bg-rose-500]="serviceType === 'TRUCK'"
+                            [class.bg-opacity-10]="serviceType === 'TRUCK'"
+                            class="flex-1 py-2 px-4 rounded-lg border border-gray-700 text-sm font-semibold transition-colors">
+                            Camion
+                        </button>
+                        <button type="button" (click)="setServiceType('TRAILER')"
+                            [class.border-rose-500]="serviceType === 'TRAILER'"
+                            [class.bg-rose-500]="serviceType === 'TRAILER'"
+                            [class.bg-opacity-10]="serviceType === 'TRAILER'"
+                            class="flex-1 py-2 px-4 rounded-lg border border-gray-700 text-sm font-semibold transition-colors">
+                            Remorque
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Vehicle Dropdown -->
+                <div *ngIf="serviceType === 'TRUCK'">
+                    <label class="fleet-label">Sélectionner le Camion <span class="text-red-500">*</span></label>
+                    <select formControlName="truckId" class="fleet-select">
+                        <option value="" disabled selected>Choisir un camion...</option>
+                        <option *ngFor="let truck of trucks" [value]="truck.id">
+                            {{ truck.registrationNumber }} - {{ truck.brand }}
+                        </option>
+                    </select>
+                </div>
+
+                <div *ngIf="serviceType === 'TRAILER'">
+                    <label class="fleet-label">Sélectionner la Remorque <span class="text-red-500">*</span></label>
+                    <select formControlName="trailerId" class="fleet-select">
+                        <option value="" disabled selected>Choisir une remorque...</option>
+                        <option *ngFor="let trailer of trailers" [value]="trailer.id">
+                            {{ trailer.type }} (Capacité: {{ trailer.maxWeight }}t)
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Info Intervention -->
+                <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-800">
+                    <div>
+                        <label class="fleet-label">Facture / Référence <span class="text-red-500">*</span></label>
+                        <input type="text" formControlName="reference" class="fleet-input font-mono"
+                            placeholder="Ex: FAC-2023-11A">
+                    </div>
+                    <div>
+                        <label class="fleet-label">Garage / Intervenant <span class="text-red-500">*</span></label>
+                        <input type="text" formControlName="performedBy" class="fleet-input"
+                            placeholder="Ex: Garage Renault Trucks">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="fleet-label">Description de l'intervention <span
+                                class="text-red-500">*</span></label>
+                        <input type="text" formControlName="description" class="fleet-input"
+                            placeholder="Ex: Vidange complète, changement filtres et plaquettes">
+                    </div>
+                    <div>
+                        <label class="fleet-label">Type d'intervention <span class="text-red-500">*</span></label>
+                        <select formControlName="type" class="fleet-select">
+                            <option value="PREVENTIVE">Préventive</option>
+                            <option value="CORRECTIVE">Corrective</option>
+                            <option value="INSPECTION">Inspection</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="fleet-label">Statut <span class="text-red-500">*</span></label>
+                        <select formControlName="status" class="fleet-select">
+                            <option value="PLANNED">Planifiée</option>
+                            <option value="IN_PROGRESS">En Cours</option>
+                            <option value="COMPLETED">Terminée</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Specs -->
+                <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-800">
+                    <div>
+                        <label class="fleet-label">Date <span class="text-red-500">*</span></label>
+                        <input type="date" formControlName="dateMaintenance" class="fleet-input text-gray-300">
+                    </div>
+                    <div>
+                        <label class="fleet-label">Coût Total (MAD) <span class="text-red-500">*</span></label>
+                        <input type="number" step="100" formControlName="cout"
+                            class="fleet-input font-mono text-rose-400 font-bold" placeholder="0.00">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex justify-end gap-3 px-6 py-4 border-t border-gray-800 flex-shrink-0 bg-gray-900/50">
+            <button (click)="closeModal()" class="btn-fleet-ghost">Annuler</button>
+            <button (click)="onSubmit()" [disabled]="isSubmitting"
+                class="btn-fleet bg-rose-600 hover:bg-rose-500 border-rose-500">
+                {{ isSubmitting ? 'Enregistrement...' : 'Enregistrer' }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ─── Modal: Détails Maintenance ────────── -->
+<div *ngIf="isDetailsModalOpen && selectedMaintenance" class="fixed z-50 inset-0 flex items-center justify-center p-4"
+    role="dialog" aria-modal="true">
+    <div class="fixed inset-0 modal-backdrop" (click)="closeDetailsModal()"></div>
+    <div class="modal-panel relative w-full max-w-2xl animate-slide-in-up flex flex-col max-h-[90vh]">
+        <div class="flex items-center justify-between px-6 py-5 border-b border-gray-800 flex-shrink-0">
+            <div>
+                <h3 class="font-display font-bold text-lg text-gray-100">Détails de l'Intervention</h3>
+                <p class="text-xs text-gray-500 mt-0.5">Réf: {{ selectedMaintenance.reference }}</p>
+            </div>
+            <button (click)="closeDetailsModal()"
+                class="p-2 rounded-lg text-gray-400 bg-gray-800 hover:text-white transition-colors">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="p-6 overflow-y-auto space-y-6 flex-1">
+            <!-- Véhicule Info -->
+            <div class="bg-gray-800/30 p-4 rounded-xl border border-gray-800">
+                <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Véhicule Concerné</h4>
+                <div class="flex items-center gap-4">
+                    <div *ngIf="selectedMaintenance.truck" class="flex flex-col">
+                        <span class="text-sm font-mono text-gray-100">{{ selectedMaintenance.truck.registrationNumber
+                            }}</span>
+                        <span class="text-xs text-gray-500 uppercase">{{ selectedMaintenance.truck.brand }}</span>
+                    </div>
+                    <div *ngIf="selectedMaintenance.trailer" class="flex flex-col">
+                        <span class="text-sm font-mono text-gray-100">Remorque : {{ selectedMaintenance.trailer.type
+                            }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div class="space-y-1">
+                    <p class="text-xs text-gray-500 uppercase tracking-wider">Description</p>
+                    <p class="text-sm text-gray-200 font-medium">{{ selectedMaintenance.description }}</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-xs text-gray-500 uppercase tracking-wider">Intervenant / Garage</p>
+                    <p class="text-sm text-gray-200 font-medium">{{ selectedMaintenance.performedBy }}</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-xs text-gray-500 uppercase tracking-wider">Type</p>
+                    <span *ngIf="selectedMaintenance.type === 'PREVENTIVE'"
+                        class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20 w-max">Préventive</span>
+                    <span *ngIf="selectedMaintenance.type === 'CORRECTIVE'"
+                        class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400 border border-red-500/20 w-max">Corrective</span>
+                    <span *ngIf="selectedMaintenance.type === 'INSPECTION'"
+                        class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 w-max">Inspection</span>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-xs text-gray-500 uppercase tracking-wider">Statut</p>
+                    <span *ngIf="selectedMaintenance.status === 'PLANNED'"
+                        class="text-sm text-gray-300">Planifiée</span>
+                    <span *ngIf="selectedMaintenance.status === 'IN_PROGRESS'"
+                        class="text-sm text-amber-500 font-semibold">En Cours</span>
+                    <span *ngIf="selectedMaintenance.status === 'COMPLETED'"
+                        class="text-sm text-emerald-500 font-semibold">Terminée</span>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-xs text-gray-500 uppercase tracking-wider">Date d'intervention</p>
+                    <p class="text-sm text-gray-200 font-medium">{{ selectedMaintenance.dateMaintenance | date:'dd MMM
+                        yyyy' }}</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-xs text-gray-500 uppercase tracking-wider">Coût Total</p>
+                    <p class="text-lg text-rose-400 font-mono font-bold">{{ selectedMaintenance.cout |
+                        currency:'MAD':'symbol':'1.2-2' }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-3 px-6 py-4 border-t border-gray-800 flex-shrink-0 bg-gray-900/50">
+            <button (click)="closeDetailsModal()" class="btn-fleet bg-gray-800 hover:bg-gray-700">Fermer</button>
+        </div>
+    </div>
+</div>
