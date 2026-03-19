@@ -1,0 +1,129 @@
+<!-- ─── Manager Fuel List ─────────────────────────── -->
+<div class="space-y-6">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <svg class="h-4 w-4" style="color: #10b981;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span class="text-xs font-mono uppercase tracking-widest" style="color: #6b7280;">Logistique &
+                    Consommation</span>
+            </div>
+            <h1 class="section-title">Transactions Carburant</h1>
+            <p class="section-subtitle">Gérez les dépenses en carburant du parc automobile</p>
+        </div>
+        <button (click)="openModal()" class="btn-fleet flex-shrink-0"
+            style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Nouveau Plein
+        </button>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="animate-pulse space-y-2">
+        <div class="h-10 rounded-lg surface-card"></div>
+        <div *ngFor="let x of [1,2,3,4]" class="h-14 rounded-lg surface-card"></div>
+    </div>
+
+    <!-- Table -->
+    <div *ngIf="!isLoading" class="fleet-card overflow-hidden">
+        <table class="fleet-table border-collapse">
+            <thead>
+                <tr>
+                    <th>Ref</th>
+                    <th>Camion</th>
+                    <th>Date & Heure</th>
+                    <th>Station</th>
+                    <th>Litres</th>
+                    <th class="text-right">Coût (MAD)</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let t of transactions; let i = index" class="animate-fade-in"
+                    [style.animationDelay]="(i * 0.05) + 's'">
+                    <td><span class="text-xs font-mono font-bold text-[#10b981]">{{ t.reference }}</span></td>
+                    <td>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-semibold text-gray-100">{{ t.truck?.registrationNumber }}</span>
+                            <span class="text-[10px] text-gray-500 uppercase">{{ t.truck?.brand }}</span>
+                        </div>
+                    </td>
+                    <td><span class="text-xs text-gray-400 font-mono">{{ t.dateHeure | date:'dd/MM/yy HH:mm' }}</span>
+                    </td>
+                    <td><span class="text-sm text-gray-300">{{ t.stationName }}</span></td>
+                    <td><span class="text-sm font-bold text-[#10b981]">{{ t.quantite }} L</span></td>
+                    <td class="text-right font-mono font-bold">{{ t.cout | number:'1.0-0' }}</td>
+                    <td class="text-right">
+                        <div class="flex items-center justify-end gap-3">
+                            <button (click)="openModal(t)"
+                                class="text-xs font-semibold text-gray-400 hover:text-white">Modifier</button>
+                            <button (click)="deleteTransaction(t.id)"
+                                class="text-xs font-semibold text-gray-500 hover:text-red-500">Effacer</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div *ngIf="isModalOpen" class="fixed z-50 inset-0 flex items-center justify-center p-4">
+    <div class="fixed inset-0 modal-backdrop" (click)="closeModal()"></div>
+    <div class="modal-panel relative w-full max-w-lg animate-slide-in-up">
+        <div class="absolute top-0 left-0 right-0 h-1" style="background: linear-gradient(90deg, #10b981, #059669);">
+        </div>
+        <div class="px-6 py-5 border-b border-gray-800">
+            <h3 class="font-bold text-lg text-gray-100">{{ editMode ? 'Modifier Transaction' : 'Nouvelle Transaction' }}
+            </h3>
+        </div>
+        <form [formGroup]="fuelForm" class="p-6 space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="fleet-label">Camion</label>
+                    <select formControlName="truckId" class="fleet-select">
+                        <option value="">Sélectionner...</option>
+                        <option *ngFor="let tk of trucks" [value]="tk.id">{{ tk.registrationNumber }}</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="fleet-label">Référence</label>
+                    <input type="text" formControlName="reference" class="fleet-input font-mono" placeholder="FL-000">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="fleet-label">Station Service</label>
+                    <input type="text" formControlName="stationName" class="fleet-input"
+                        placeholder="Nom de l'enseigne">
+                </div>
+                <div>
+                    <label class="fleet-label">Date du plein</label>
+                    <input type="date" formControlName="dateHeure" class="fleet-input">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="fleet-label">Quantité (L)</label>
+                    <input type="number" formControlName="quantite" class="fleet-input text-emerald-400 font-bold">
+                </div>
+                <div>
+                    <label class="fleet-label">Coût Total (MAD)</label>
+                    <input type="number" formControlName="cout" class="fleet-input text-emerald-400 font-bold">
+                </div>
+            </div>
+        </form>
+        <div class="p-4 border-t border-gray-800 flex justify-end gap-3 bg-gray-900/40">
+            <button (click)="closeModal()" class="btn-fleet-ghost">Annuler</button>
+            <button (click)="onSubmit()" [disabled]="isSubmitting" class="btn-fleet"
+                style="background: #10b981;">Confirmer</button>
+        </div>
+    </div>
+</div>
