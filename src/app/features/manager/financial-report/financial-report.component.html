@@ -1,0 +1,110 @@
+<div class="report-container no-print-actions">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-100 no-print">Cahier de Rapport Financier</h1>
+        <button (click)="printReport()" class="btn-print no-print">
+            <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            Imprimer le rapport
+        </button>
+    </div>
+
+    <!-- The actual printable document -->
+    <div id="printable-doc"
+        class="printable-doc bg-white p-10 shadow-xl border border-gray-200 text-gray-900 mx-auto max-w-4xl rounded-sm">
+        <!-- Header -->
+        <div class="flex justify-between border-b-2 border-slate-900 pb-6 mb-8">
+            <div>
+                <h2 class="text-2xl font-black text-slate-900 uppercase tracking-tighter">DWIZZA LOGISTICS</h2>
+                <p class="text-xs text-slate-500">Service de Gestion de Flotte & Transport</p>
+            </div>
+            <div class="text-right">
+                <p class="text-xs font-bold uppercase text-slate-400">Date du Rapport</p>
+                <p class="text-sm font-mono">{{ currentDate | date:'fullDate' }}</p>
+            </div>
+        </div>
+
+        <div class="mb-10">
+            <h3 class="text-xl font-bold border-l-4 border-slate-900 pl-3 mb-6 font-display">RÉSUMÉ EXÉCUTIF</h3>
+            <div class="grid grid-cols-2 gap-8">
+                <div class="p-6 bg-slate-50 border border-slate-100 rounded">
+                    <p class="text-xs text-slate-400 uppercase font-bold mb-1">Revenu Total</p>
+                    <p class="text-3xl font-black text-slate-900">{{ metrics?.totalRevenue | number:'1.2-2' }} DH</p>
+                </div>
+                <div class="p-6 bg-slate-50 border border-slate-100 rounded">
+                    <p class="text-xs text-slate-400 uppercase font-bold mb-1">Bénéfice Net</p>
+                    <p class="text-3xl font-black text-emerald-600">{{ metrics?.totalProfit | number:'1.2-2' }} DH</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-10">
+            <h3 class="text-xl font-bold border-l-4 border-slate-900 pl-3 mb-6 font-display">ANALYSE DES COÛTS</h3>
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-900 text-white uppercase text-xs tracking-widest">
+                        <th class="p-3">Catégorie</th>
+                        <th class="p-3 text-right">Montant</th>
+                        <th class="p-3 text-right">% du Revenu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-slate-100">
+                        <td class="p-3 font-semibold text-slate-700 uppercase text-sm">Carburant</td>
+                        <td class="p-3 text-right font-mono">{{ metrics?.totalFuelCost | number:'1.2-2' }} DH</td>
+                        <td class="p-3 text-right text-xs text-slate-500">
+                            {{ (metrics ? (metrics.totalFuelCost / metrics.totalRevenue * 100) : 0) | number:'1.1-1' }}%
+                        </td>
+                    </tr>
+                    <tr class="border-b border-slate-100">
+                        <td class="p-3 font-semibold text-slate-700 uppercase text-sm">Maintenance</td>
+                        <td class="p-3 text-right font-mono">{{ metrics?.totalMaintenanceCost | number:'1.2-2' }} DH
+                        </td>
+                        <td class="p-3 text-right text-xs text-slate-500">
+                            {{ (metrics ? (metrics.totalMaintenanceCost / metrics.totalRevenue * 100) : 0) |
+                            number:'1.1-1' }}%
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="bg-slate-50">
+                        <td class="p-3 font-black text-slate-900 uppercase">Total Dépenses</td>
+                        <td class="p-3 text-right font-black text-slate-900 font-mono">
+                            {{ (metrics ? (metrics.totalFuelCost + metrics.totalMaintenanceCost) : 0) | number:'1.2-2'
+                            }} DH
+                        </td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="mb-10">
+            <h3 class="text-xl font-bold border-l-4 border-slate-900 pl-3 mb-6 font-display">STATISTIQUES DE LA FLOTTE
+            </h3>
+            <div class="grid grid-cols-3 gap-4 text-center">
+                <div class="p-4 border border-slate-200">
+                    <p class="text-2xl font-black text-slate-900">{{ metrics?.totalTrucks }}</p>
+                    <p class="text-[10px] uppercase font-bold text-slate-400">Camions</p>
+                </div>
+                <div class="p-4 border border-slate-200">
+                    <p class="text-2xl font-black text-slate-900">{{ metrics?.totalDrivers }}</p>
+                    <p class="text-[10px] uppercase font-bold text-slate-400">Chauffeurs</p>
+                </div>
+                <div class="p-4 border border-slate-200">
+                    <p class="text-2xl font-black text-slate-900">{{ metrics?.activeTrips }}</p>
+                    <p class="text-[10px] uppercase font-bold text-slate-400">Trajets Actifs</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-20 pt-10 border-t border-slate-200 text-center">
+            <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Document Officiel Dwizza Logistics
+                - Signature & Cachet</p>
+            <div class="h-20 w-48 border border-dashed border-slate-200 mx-auto mt-4 flex items-center justify-center">
+                <span class="text-[10px] text-slate-200 italic font-mono">Signature Autorisée</span>
+            </div>
+        </div>
+    </div>
+</div>
