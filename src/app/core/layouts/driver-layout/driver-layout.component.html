@@ -1,0 +1,104 @@
+<div class="h-screen flex overflow-hidden" style="background: #0e1015;">
+    <!-- Desktop Sidebar -->
+    <aside class="hidden md:flex md:flex-col w-[260px] flex-shrink-0"
+        style="background: #181a20; border-right: 1px solid #2a2d35;">
+        <!-- Logo -->
+        <div class="h-16 flex items-center px-6 flex-shrink-0" style="border-bottom: 1px solid #2a2d35;">
+            <div class="flex items-center gap-3">
+                <div class="h-9 w-9 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style="background: linear-gradient(135deg, #3b82f6, #2563eb); box-shadow: 0 4px 12px rgba(59,130,246,0.25);">
+                    <svg class="h-5 w-5" style="color:#f4f5f7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                            d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <div>
+                    <span class="block font-display font-bold text-base tracking-tight"
+                        style="color: #f4f5f7;">DriverOps</span>
+                    <span class="block text-xs font-mono"
+                        style="color: #4b5563; font-size: 10px; letter-spacing: 0.1em;">DRIVER
+                        PORTAL</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nav Items -->
+        <nav class="flex-1 px-3 py-6 space-y-0.5 custom-scrollbar overflow-y-auto">
+            <div class="text-xs font-semibold uppercase tracking-widest px-3 mb-3"
+                style="color: #4b5563; font-family: 'Space Grotesk', sans-serif; font-size: 10px;">
+                Main Menu
+            </div>
+            <a routerLink="/driver/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+                class="nav-item">
+                <svg class="flex-shrink-0 h-4 w-4 transition-colors" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a routerLink="/driver/trips" routerLinkActive="active" class="nav-item">
+                <svg class="flex-shrink-0 h-4 w-4 transition-colors" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+                        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                </svg>
+                <span>Mes Trajets</span>
+            </a>
+        </nav>
+
+        <!-- User / Logout -->
+        <div class="p-3 flex-shrink-0" style="border-top: 1px solid #2a2d35;">
+            <div class="flex items-center gap-3 p-2.5 rounded-lg" style="background: #1e2025;">
+                <div class="h-9 w-9 rounded-lg flex-shrink-0 flex items-center justify-center font-bold text-sm"
+                    style="background: rgba(59,130,246,0.15); color: #3b82f6; border: 1px solid rgba(59,130,246,0.25); font-family: 'Space Grotesk', sans-serif;">
+                    DR
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold truncate"
+                        style="color: #f4f5f7; font-family: 'Space Grotesk', sans-serif;">
+                        Chauffeur</p>
+                    <p class="text-xs truncate" style="color: #4b5563; font-family: 'JetBrains Mono', monospace;">
+                        Personnel</p>
+                </div>
+                <button (click)="logout()" title="Déconnexion" class="p-1.5 rounded-lg flex-shrink-0 transition-all"
+                    style="color: #6b7280;"
+                    onmouseover="this.style.color='#ef4444'; this.style.background='rgba(239,68,68,0.1)'"
+                    onmouseout="this.style.color='#6b7280'; this.style.background='transparent'">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex flex-col flex-1 min-w-0 overflow-hidden">
+        <header class="h-16 flex items-center flex-shrink-0 px-6 gap-4"
+            style="background: #181a20; border-bottom: 1px solid #2a2d35;">
+            <div class="flex-1 font-display font-semibold text-sm" style="color: #9ca3af;">ESPACE CHAUFFEUR</div>
+
+            <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg"
+                style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2);">
+                <span class="live-dot"></span>
+                <span class="text-xs font-semibold" style="color: #10b981;">En Service</span>
+            </div>
+
+            <button class="relative p-2.5 rounded-lg transition-all" style="color: #6b7280; background: #252830;"
+                onmouseover="this.style.background='#2a2d35'" onmouseout="this.style.background='#252830'">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+            </button>
+        </header>
+
+        <main class="flex-1 overflow-y-auto custom-scrollbar" style="background: #0e1015;">
+            <div class="p-6 max-w-[1400px] mx-auto page-enter">
+                <router-outlet></router-outlet>
+            </div>
+        </main>
+    </div>
+</div>
