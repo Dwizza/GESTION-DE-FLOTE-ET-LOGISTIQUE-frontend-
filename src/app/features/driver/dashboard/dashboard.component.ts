@@ -81,8 +81,8 @@ import Swal from 'sweetalert2';
                             </div>
                             <div>
                                 <p class="text-[10px] font-mono text-gray-500 uppercase">Véhicule</p>
-                                <p class="text-sm font-semibold text-gray-200">
-                                    {{ activeTrip.trucks[0]?.brand }} {{ activeTrip.trucks[0]?.registrationNumber }}
+                                <p class="text-sm font-semibold text-gray-200" *ngIf="activeTrip.trucks && activeTrip.trucks.length > 0">
+                                    {{ activeTrip.trucks[0].brand }} {{ activeTrip.trucks[0].registrationNumber }}
                                 </p>
                             </div>
                         </div>
