@@ -54,7 +54,6 @@ export class ManagerTripsListComponent implements OnInit {
     tripForm: FormGroup = this.fb.group({
         reference: ['', Validators.required],
         startDate: ['', Validators.required],
-        endDate: [''],
         status: ['PLANNED', Validators.required],
         driverId: ['', Validators.required],
         clientId: ['', Validators.required],
@@ -91,6 +90,10 @@ export class ManagerTripsListComponent implements OnInit {
         this.currentTripId = null;
         this.isModalOpen = true;
         this.tripForm.reset({ status: 'PLANNED', truckIds: [], trailerIds: [] });
+        // Hide currently in-trip trucks by reloading only available ones
+        this.driverService.getDrivers().subscribe((d: DriverResponse[]) => this.drivers = d.filter(driver => driver.available));
+        this.truckService.getTrucks().subscribe((t: TruckResponse[]) => this.trucks = t.filter(truck => truck.status === 'AVAILABLE'));
+        this.trailerService.getTrailers().subscribe((tr: TrailerResponse[]) => this.trailers = tr.filter(trailer => trailer.status === 'AVAILABLE'));
     }
 
     openUpdateModal(trip: TripResponse) {
@@ -112,7 +115,6 @@ export class ManagerTripsListComponent implements OnInit {
         this.tripForm.patchValue({
             reference: trip.reference,
             startDate: trip.startDate,
-            endDate: trip.endDate,
             status: trip.status || 'PLANNED',
             driverId: trip.driver?.id,
             clientId: trip.client?.id,
