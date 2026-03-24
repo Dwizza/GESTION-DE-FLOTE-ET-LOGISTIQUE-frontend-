@@ -29,80 +29,81 @@
         <div *ngFor="let x of [1,2,3,4]" class="h-14 rounded-lg" style="background: #1e2025;"></div>
     </div>
 
-    <!-- Table -->
-    <div *ngIf="!isLoading" class="fleet-card overflow-hidden">
-        <table class="fleet-table">
-            <thead>
-                <tr>
-                    <th>Chauffeur</th>
-                    <th>Permis / Expiration</th>
-                    <th>Statut</th>
-                    <th class="text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let d of drivers; let i = index" class="animate-fade-in"
-                    [style.animationDelay]="(i * 0.05) + 's'">
-                    <td>
-                        <div class="flex items-center gap-3">
-                            <img class="h-9 w-9 rounded-lg flex-shrink-0 object-cover"
-                                [src]="'https://ui-avatars.com/api/?name='+d.firstName+'+'+d.lastName+'&background=f59e0b&color=141518&bold=true'"
-                                alt="">
-                            <div>
-                                <p class="text-sm font-semibold" style="color: #f4f5f7;">{{ d.firstName }} {{
-                                    d.lastName }}</p>
-                                <p class="text-xs font-mono" style="color: #6b7280;">{{ d.email }}</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <p class="text-sm font-mono font-semibold" style="color: #f4f5f7;">{{ d.licenseNumber || 'Non défini' }}</p>
-                        <p class="text-xs mt-0.5" style="color: #6b7280;">Tél: {{ d.phoneNumber }}</p>
-                    </td>
-                    <td>
-                        <span *ngIf="d.available" class="badge-available">
-                            <span class="w-1.5 h-1.5 rounded-full" style="background: #10b981;"></span>
-                            Disponible
-                        </span>
-                        <span *ngIf="!d.available" class="badge-broken">
-                            <span class="w-1.5 h-1.5 rounded-full" style="background: #ef4444;"></span>
-                            Indisponible
-                        </span>
-                    </td>
-                    <td class="text-right">
-                        <button (click)="openDetailModal(d)" class="text-xs font-semibold mr-3 transition-colors"
-                            style="color: #9ca3af;" onmouseover="this.style.color='#f59e0b'"
-                            onmouseout="this.style.color='#9ca3af'">
-                            Détails
-                        </button>
-                        <button (click)="deleteDriver(d.id)" class="text-xs font-semibold transition-colors"
-                            style="color: #6b7280;" onmouseover="this.style.color='#ef4444'"
-                            onmouseout="this.style.color='#6b7280'">
-                            Supprimer
-                        </button>
-                    </td>
-                </tr>
+    <!-- Grid of Cards -->
+    <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
 
-                <!-- Empty State -->
-                <tr *ngIf="drivers.length === 0">
-                    <td colspan="4" class="py-20 text-center">
-                        <div class="flex flex-col items-center gap-3">
-                            <div class="h-14 w-14 rounded-xl flex items-center justify-center"
-                                style="background: #252830; border: 1px solid #2a2d35;">
-                                <svg class="h-7 w-7" style="color: #4b5563;" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
-                            </div>
-                            <p class="font-display font-semibold" style="color: #9ca3af;">Aucun chauffeur trouvé</p>
-                            <p class="text-sm" style="color: #4b5563;">Commencez par ajouter votre premier conducteur
-                            </p>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div *ngFor="let d of drivers; let i = index" class="fleet-card group animate-fade-in"
+            [style.animationDelay]="(i * 0.05) + 's'">
+            
+            <!-- Card Header -->
+            <div class="px-5 py-4 flex items-start justify-between" style="border-bottom: 1px solid #2a2d35;">
+                <div class="flex items-center gap-3">
+                    <img class="h-10 w-10 rounded-lg flex-shrink-0 object-cover"
+                        [src]="'https://ui-avatars.com/api/?name='+d.firstName+'+'+d.lastName+'&background=f59e0b&color=141518&bold=true'"
+                        alt="">
+                    <div>
+                        <h3 class="font-display font-bold text-sm" style="color: #f4f5f7;">{{ d.firstName }} {{ d.lastName }}</h3>
+                        <p class="text-xs font-mono" style="color: #6b7280;">{{ d.email }}</p>
+                    </div>
+                </div>
+                <!-- Status Badge -->
+                <span *ngIf="d.available" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold"
+                    style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2)">
+                    <span class="w-1.5 h-1.5 rounded-full" style="background: #10b981;"></span> Disponible
+                </span>
+                <span *ngIf="!d.available" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold"
+                    style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2)">
+                    <span class="w-1.5 h-1.5 rounded-full" style="background: #ef4444;"></span> Indisponible
+                </span>
+            </div>
+
+            <!-- Card Body -->
+            <div class="px-5 py-4">
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-xs uppercase tracking-widest font-semibold mb-1" style="color: #4b5563;">Permis de Conduire</p>
+                        <p class="text-sm font-mono font-bold" style="color: #f4f5f7;">{{ d.licenseNumber || 'Non défini' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-widest font-semibold mb-1" style="color: #4b5563;">Téléphone</p>
+                        <p class="text-sm font-semibold" style="color: #9ca3af;">{{ d.phoneNumber }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="px-5 py-3 flex justify-end gap-3"
+                style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
+                <button (click)="openDetailModal(d)"
+                    class="text-xs font-semibold transition-colors px-3 py-1.5 rounded-md"
+                    style="color: #9ca3af; background: #252830;"
+                    onmouseover="this.style.color='#f59e0b'; this.style.borderColor='rgba(245,158,11,0.3)';"
+                    onmouseout="this.style.color='#9ca3af'; this.style.borderColor='transparent';">
+                    Voir Détails
+                </button>
+                <button (click)="deleteDriver(d.id)" 
+                    class="text-xs font-semibold transition-all px-3 py-1.5 rounded-md"
+                    style="color: #ef4444; background: rgba(239,68,68,0.08);"
+                    onmouseover="this.style.background='rgba(239,68,68,0.18)';"
+                    onmouseout="this.style.background='rgba(239,68,68,0.08)';">
+                    Supprimer
+                </button>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="drivers.length === 0" class="col-span-full py-20 text-center fleet-card">
+            <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4"
+                style="background: #252830; border: 1px solid #2a2d35;">
+                <svg class="h-8 w-8" style="color: #4b5563;" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+            </div>
+            <p class="font-display font-semibold" style="color: #9ca3af;">Aucun chauffeur trouvé</p>
+            <p class="text-sm mr-1" style="color: #4b5563;">Commencez par ajouter votre premier conducteur</p>
+        </div>
     </div>
 </div>
 

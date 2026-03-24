@@ -30,78 +30,72 @@
         <div *ngFor="let x of [1,2,3]" class="h-14 rounded-lg" style="background: #1e2025;"></div>
     </div>
 
-    <!-- Table -->
-    <div *ngIf="!isLoading" class="fleet-card overflow-hidden">
-        <table class="fleet-table">
-            <thead>
-                <tr>
-                    <th>Responsable</th>
-                    <th>Statut</th>
-                    <th>Département</th>
-                    <th class="text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let m of managers; let i = index" class="animate-fade-in"
-                    [style.animationDelay]="(i * 0.05) + 's'">
-                    <td>
-                        <div class="flex items-center gap-3">
-                            <div class="h-9 w-9 rounded-lg flex-shrink-0 flex items-center justify-center font-bold text-sm"
-                                style="background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); font-family: 'Space Grotesk', sans-serif;">
-                                {{ m.firstName.charAt(0) }}{{ m.lastName.charAt(0) }}
-                            </div>
-                            <div>
-                                <p class="text-sm font-semibold" style="color: #f4f5f7;">{{ m.firstName }} {{
-                                    m.lastName }}</p>
-                                <p class="text-xs font-mono" style="color: #6b7280;">{{ m.email }}</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <span *ngIf="m.active" class="badge-available">
-                            <span class="w-1.5 h-1.5 rounded-full" style="background: #10b981;"></span>
-                            Actif
-                        </span>
-                        <span *ngIf="!m.active" class="badge-broken">
-                            <span class="w-1.5 h-1.5 rounded-full" style="background: #ef4444;"></span>
-                            Inactif
-                        </span>
-                    </td>
-                    <td>
-                        <span class="text-sm" style="color: #9ca3af;">{{ m.department || 'Opérations' }}</span>
-                    </td>
-                    <td class="text-right">
-                        <button class="text-xs font-semibold mr-3 transition-colors" style="color: #9ca3af;"
-                            onmouseover="this.style.color='#f59e0b'" onmouseout="this.style.color='#9ca3af'">
-                            Modifier
-                        </button>
-                        <button (click)="deleteManager(m.id)" class="text-xs font-semibold transition-colors"
-                            style="color: #6b7280;" onmouseover="this.style.color='#ef4444'"
-                            onmouseout="this.style.color='#6b7280'">
-                            Supprimer
-                        </button>
-                    </td>
-                </tr>
+    <!-- Grid -->
+    <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div *ngFor="let m of managers; let i = index" class="fleet-card group animate-fade-in"
+            [style.animationDelay]="(i * 0.05) + 's'">
+            <!-- Card Header -->
+            <div class="px-5 py-4 flex items-center justify-between" style="border-bottom: 1px solid #2a2d35;">
+                <div class="flex items-center gap-3">
+                    <div class="h-10 w-10 rounded-lg flex-shrink-0 flex items-center justify-center font-bold text-sm"
+                        style="background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); font-family: 'Space Grotesk', sans-serif;">
+                        {{ m.firstName.charAt(0) }}{{ m.lastName.charAt(0) }}
+                    </div>
+                </div>
+                <span *ngIf="m.active" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold"
+                    style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2)">
+                    Actif
+                </span>
+                <span *ngIf="!m.active" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold"
+                    style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2)">
+                    Inactif
+                </span>
+            </div>
 
-                <!-- Empty State -->
-                <tr *ngIf="managers.length === 0">
-                    <td colspan="4" class="py-20 text-center">
-                        <div class="flex flex-col items-center gap-3">
-                            <div class="h-14 w-14 rounded-xl flex items-center justify-center"
-                                style="background: #252830; border: 1px solid #2a2d35;">
-                                <svg class="h-7 w-7" style="color: #4b5563;" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                            </div>
-                            <p class="font-display font-semibold" style="color: #9ca3af;">Aucun responsable trouvé</p>
-                            <p class="text-sm" style="color: #4b5563;">Commencez par ajouter un nouveau responsable</p>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+            <!-- Card Body -->
+            <div class="px-5 py-4 space-y-3">
+                <div>
+                    <h3 class="font-display font-bold text-sm" style="color: #f4f5f7;">{{ m.firstName }} {{ m.lastName }}</h3>
+                    <p class="text-xs font-mono" style="color: #6b7280;">{{ m.email }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-1">Département</p>
+                    <p class="text-sm text-gray-300 font-medium">{{ m.department || 'Opérations' }}</p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="px-5 py-3 flex justify-end gap-3"
+                style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
+                <button class="text-xs font-semibold px-3 py-1.5 rounded-md transition-colors"
+                    style="color: #9ca3af; background: #252830;"
+                    onmouseover="this.style.color='#f59e0b'; this.style.borderColor='rgba(245,158,11,0.3)';"
+                    onmouseout="this.style.color='#9ca3af'; this.style.borderColor='transparent';">
+                    Modifier
+                </button>
+                <button (click)="deleteManager(m.id)" 
+                    class="text-xs font-semibold px-3 py-1.5 rounded-md transition-all"
+                    style="color: #ef4444; background: rgba(239,68,68,0.08);"
+                    onmouseover="this.style.background='rgba(239,68,68,0.18)';"
+                    onmouseout="this.style.background='rgba(239,68,68,0.08)';">
+                    Supprimer
+                </button>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="managers.length === 0" class="col-span-full py-20 text-center fleet-card">
+            <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4"
+                style="background: #252830; border: 1px solid #2a2d35;">
+                <svg class="h-8 w-8" style="color: #4b5563;" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+            </div>
+            <p class="font-display font-semibold" style="color: #9ca3af;">Aucun responsable trouvé</p>
+            <p class="text-sm mt-1" style="color: #4b5563;">Commencez par ajouter un nouveau responsable</p>
+        </div>
     </div>
 </div>
 
