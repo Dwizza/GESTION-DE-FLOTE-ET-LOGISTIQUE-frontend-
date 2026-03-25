@@ -121,6 +121,15 @@ export class ManagerDeliveriesListComponent implements OnInit {
         this.clientService.getClients().subscribe(c => this.clients = c);
     }
 
+    generateReference(prefix: string): string {
+        const date = new Date();
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const randomStr = Math.random().toString(36).substring(2, 6).toUpperCase();
+        return `${prefix}-${yyyy}${mm}${dd}-${randomStr}`;
+    }
+
     openModal() {
         this.isUpdateMode = false;
         this.currentDeliveryId = null;
@@ -129,6 +138,7 @@ export class ManagerDeliveriesListComponent implements OnInit {
         this.tempMarkers = [];
         this.deliveryPath = []; // This will hold all layers: [{path, color}]
         this.deliveryForm.reset({ status: 'CREATED', tripId: '' });
+        this.deliveryForm.patchValue({ reference: this.generateReference('LIV') });
     }
 
     openUpdateModal(delivery: DeliveryResponse) {

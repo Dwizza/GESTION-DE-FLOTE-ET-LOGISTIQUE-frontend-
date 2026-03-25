@@ -86,11 +86,21 @@ export class ManagerMaintenanceListComponent implements OnInit {
         }
     }
 
+    generateReference(prefix: string): string {
+        const date = new Date();
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const randomStr = Math.random().toString(36).substring(2, 6).toUpperCase();
+        return `${prefix}-${yyyy}${mm}${dd}-${randomStr}`;
+    }
+
     openModal() {
         this.isModalOpen = true;
         this.editingId = null;
         this.serviceType = 'TRUCK';
         this.maintenanceForm.reset({ cout: 0, dateMaintenance: new Date().toISOString().split('T')[0], type: 'PREVENTIVE', status: 'PLANNED' });
+        this.maintenanceForm.patchValue({ reference: this.generateReference('MNT') });
     }
 
     openEditModal(maintenance: MaintenanceResponse) {

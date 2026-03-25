@@ -85,11 +85,21 @@ export class ManagerTripsListComponent implements OnInit {
         this.clientService.getClients().subscribe((c: ClientResponse[]) => this.clients = c);
     }
 
+    generateReference(prefix: string): string {
+        const date = new Date();
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const randomStr = Math.random().toString(36).substring(2, 6).toUpperCase();
+        return `${prefix}-${yyyy}${mm}${dd}-${randomStr}`;
+    }
+
     openModal() {
         this.isUpdateMode = false;
         this.currentTripId = null;
         this.isModalOpen = true;
         this.tripForm.reset({ status: 'PLANNED', truckIds: [], trailerIds: [] });
+        this.tripForm.patchValue({ reference: this.generateReference('TRP') });
         // Hide currently in-trip trucks by reloading only available ones
         this.driverService.getDrivers().subscribe((d: DriverResponse[]) => this.drivers = d.filter(driver => driver.available));
         this.truckService.getTrucks().subscribe((t: TruckResponse[]) => this.trucks = t.filter(truck => truck.status === 'AVAILABLE'));

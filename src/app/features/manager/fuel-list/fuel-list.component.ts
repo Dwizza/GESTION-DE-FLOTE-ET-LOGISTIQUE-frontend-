@@ -63,6 +63,15 @@ export class ManagerFuelListComponent implements OnInit {
         this.truckService.getTrucks().subscribe((t: TruckResponse[]) => this.trucks = t);
     }
 
+    generateReference(prefix: string): string {
+        const date = new Date();
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const randomStr = Math.random().toString(36).substring(2, 6).toUpperCase();
+        return `${prefix}-${yyyy}${mm}${dd}-${randomStr}`;
+    }
+
     openModal(transaction?: CarburantTransactionResponse) {
         this.isModalOpen = true;
         this.editMode = !!transaction;
@@ -85,6 +94,7 @@ export class ManagerFuelListComponent implements OnInit {
                 cout: 0,
                 dateHeure: new Date().toISOString().split('T')[0]
             });
+            this.fuelForm.patchValue({ reference: this.generateReference('FL') });
         }
     }
 
