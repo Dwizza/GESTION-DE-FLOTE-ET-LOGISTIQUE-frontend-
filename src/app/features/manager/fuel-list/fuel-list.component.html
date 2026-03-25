@@ -31,46 +31,82 @@
         <div *ngFor="let x of [1,2,3,4]" class="h-14 rounded-lg surface-card"></div>
     </div>
 
-    <!-- Table -->
-    <div *ngIf="!isLoading" class="fleet-card overflow-hidden">
-        <table class="fleet-table border-collapse">
-            <thead>
-                <tr>
-                    <th>Ref</th>
-                    <th>Camion</th>
-                    <th>Date & Heure</th>
-                    <th>Station</th>
-                    <th>Litres</th>
-                    <th class="text-right">Coût (MAD)</th>
-                    <th class="text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let t of transactions; let i = index" class="animate-fade-in"
-                    [style.animationDelay]="(i * 0.05) + 's'">
-                    <td><span class="text-xs font-mono font-bold text-[#10b981]">{{ t.reference }}</span></td>
-                    <td>
-                        <div class="flex flex-col">
-                            <span class="text-sm font-semibold text-gray-100">{{ t.truck?.registrationNumber }}</span>
-                            <span class="text-[10px] text-gray-500 uppercase">{{ t.truck?.brand }}</span>
-                        </div>
-                    </td>
-                    <td><span class="text-xs text-gray-400 font-mono">{{ t.dateHeure | date:'dd/MM/yy HH:mm' }}</span>
-                    </td>
-                    <td><span class="text-sm text-gray-300">{{ t.stationName }}</span></td>
-                    <td><span class="text-sm font-bold text-[#10b981]">{{ t.quantite }} L</span></td>
-                    <td class="text-right font-mono font-bold">{{ t.cout | number:'1.0-0' }}</td>
-                    <td class="text-right">
-                        <div class="flex items-center justify-end gap-3">
-                            <button (click)="openModal(t)"
-                                class="text-xs font-semibold text-gray-400 hover:text-white">Modifier</button>
-                            <button (click)="deleteTransaction(t.id)"
-                                class="text-xs font-semibold text-gray-500 hover:text-red-500">Effacer</button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <!-- Grid -->
+    <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <div *ngFor="let t of transactions; let i = index" class="fleet-card group animate-fade-in flex flex-col"
+            [style.animationDelay]="(i * 0.05) + 's'">
+            <!-- Card Header -->
+            <div class="px-5 py-4 flex items-center justify-between" style="border-bottom: 1px solid #2a2d35;">
+                <span class="text-xs font-mono font-bold px-2 py-0.5 rounded" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2)">
+                    {{ t.reference }}
+                </span>
+                <span class="text-[10px] text-gray-400 font-mono">{{ t.dateHeure | date:'dd/MM/yy HH:mm' }}</span>
+            </div>
+
+            <!-- Card Body -->
+            <div class="px-5 py-5 space-y-4 flex-1">
+                <!-- Vehicle & Station -->
+                <div class="flex items-start gap-4">
+                    <div class="h-10 w-10 mt-1 rounded-lg flex items-center justify-center flex-shrink-0"
+                        style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);">
+                        <svg class="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-100 uppercase tracking-wide">{{ t.truck?.registrationNumber }}</p>
+                        <p class="text-[10px] text-gray-500 uppercase">{{ t.truck?.brand }}</p>
+                        <p class="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            {{ t.stationName }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Cost & Liters -->
+                <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-800/50">
+                    <div>
+                        <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-1">Volume</p>
+                        <p class="text-sm font-bold text-[#10b981]">{{ t.quantite }} <span class="text-[10px] text-gray-400 font-normal">L</span></p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-1">Coût Total</p>
+                        <p class="text-sm font-mono font-bold text-gray-200">{{ t.cout | number:'1.0-0' }} <span class="text-[10px] text-gray-400 font-sans font-normal">MAD</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="px-5 py-3 flex justify-end gap-2 mt-auto" style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
+                <button (click)="openModal(t)"
+                    class="p-1.5 rounded-md text-amber-500 hover:bg-amber-500/10 transition-colors"
+                    title="Modifier">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </button>
+                <button (click)="deleteTransaction(t.id)"
+                    class="p-1.5 rounded-md text-red-500 hover:bg-red-500/10 transition-colors"
+                    title="Supprimer">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Empty State -->
+        <div *ngIf="transactions.length === 0" class="col-span-full py-20 text-center fleet-card">
+             <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4 border border-gray-800 bg-gray-900">
+                <svg class="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            </div>
+            <p class="font-display font-semibold text-gray-400">Aucune transaction trouvée</p>
+        </div>
     </div>
 </div>
 

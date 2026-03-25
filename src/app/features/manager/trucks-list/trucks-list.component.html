@@ -73,14 +73,15 @@
             </div>
 
             <!-- Footer -->
-            <div class="px-5 py-3 flex justify-end gap-3"
+            <div class="px-5 py-3 flex justify-end gap-2"
                 style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
                 <button (click)="openDetailModal(t)"
-                    class="text-xs font-semibold transition-colors px-3 py-1.5 rounded-md"
-                    style="color: #9ca3af; background: #252830;"
-                    onmouseover="this.style.color='#10b981'; this.style.borderColor='rgba(16,185,129,0.3)';"
-                    onmouseout="this.style.color='#9ca3af'; this.style.borderColor='transparent';">
-                    Détails
+                    class="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+                    title="Détails">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
                 </button>
             </div>
         </div>

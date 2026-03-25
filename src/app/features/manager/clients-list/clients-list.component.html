@@ -23,60 +23,49 @@
         <div *ngFor="let x of [1,2,3,4]" class="h-14 rounded-lg" style="background: #1e2025;"></div>
     </div>
 
-    <!-- Table Section -->
-    <div *ngIf="!isLoading" class="fleet-card overflow-hidden">
-        <table class="fleet-table border-collapse">
-            <thead>
-                <tr>
-                    <th>Entreprise</th>
-                    <th>Contact</th>
-                    <th>Adresse</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let c of clients; let i = index"
-                    class="animate-fade-in transition-colors hover:bg-[#1a1c23]"
-                    [style.animationDelay]="(i * 0.05) + 's'">
-                    <td>
-                        <div class="flex items-center gap-3">
-                            <div class="h-9 w-9 rounded-lg flex items-center justify-center flex-shrink-0"
-                                style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2);">
-                                <span class="font-bold text-sm" style="color: #10b981;">{{ c.companyName.charAt(0) |
-                                    uppercase}}</span>
-                            </div>
-                            <div>
-                                <p class="text-sm font-semibold" style="color: #f4f5f7;">{{ c.companyName }}</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="flex flex-col">
-                            <span class="text-sm font-mono text-gray-300">{{ c.phone }}</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="text-sm text-gray-400 line-clamp-1 max-w-xs" [title]="c.address">{{ c.address
-                            }}</span>
-                    </td>
-                </tr>
+    <!-- Grid Section -->
+    <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div *ngFor="let c of clients; let i = index" class="fleet-card group animate-fade-in transition-colors hover:border-[#10b981]/30"
+            [style.animationDelay]="(i * 0.05) + 's'">
+            <!-- Card Header -->
+            <div class="px-5 py-4 flex items-center gap-4" style="border-bottom: 1px solid #2a2d35;">
+                <div class="h-12 w-12 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg"
+                    style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
+                    <span class="font-bold text-lg" style="color: #10b981;">{{ c.companyName.charAt(0) | uppercase}}</span>
+                </div>
+                <div>
+                    <h3 class="font-display font-bold text-sm" style="color: #f4f5f7;">{{ c.companyName }}</h3>
+                    <p class="text-[10px] uppercase font-mono mt-0.5 tracking-widest text-[#10b981]">Client Partenaire</p>
+                </div>
+            </div>
 
-                <!-- Empty State -->
-                <tr *ngIf="clients.length === 0">
-                    <td colspan="3" class="py-20 text-center">
-                        <div class="flex flex-col items-center gap-3">
-                            <div class="h-14 w-14 rounded-xl flex items-center justify-center"
-                                style="background: #252830; border: 1px solid #2a2d35;">
-                                <svg class="h-7 w-7" style="color: #4b5563;" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                            </div>
-                            <p class="font-display font-semibold" style="color: #9ca3af;">Aucun client trouvé</p>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+            <!-- Card Body -->
+            <div class="px-5 py-6 space-y-4">
+                <div>
+                    <p class="text-[10px] uppercase tracking-widest font-semibold mb-1" style="color: #4b5563;">Contact Base</p>
+                    <p class="text-sm font-semibold" style="color: #f4f5f7;">{{ c.phone }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] uppercase tracking-widest font-semibold mb-1" style="color: #4b5563;">Adresse</p>
+                    <p class="text-sm text-gray-300 line-clamp-2" [title]="c.address">{{ c.address }}</p>
+                </div>
+            </div>
+            
+            <!-- Empty Footer for aesthetics -->
+            <div class="h-3 rounded-b-xl" style="background: rgba(0,0,0,0.2); border-top: 1px solid #2a2d35;"></div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="clients.length === 0" class="col-span-full py-20 text-center fleet-card">
+            <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4"
+                style="background: #252830; border: 1px solid #2a2d35;">
+                <svg class="h-8 w-8" style="color: #4b5563;" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+            </div>
+            <p class="font-display font-semibold" style="color: #9ca3af;">Aucun client trouvé</p>
+        </div>
     </div>
 </div>
