@@ -29,133 +29,105 @@
         <div *ngFor="let x of [1,2,3,4]" class="h-14 rounded-lg surface-card"></div>
     </div>
 
-    <!-- Table -->
-    <div *ngIf="!isLoading" class="fleet-card overflow-hidden">
-        <table class="fleet-table">
-            <thead>
-                <tr>
-                    <th>Description & Client</th>
-                    <th>Origine / Destination</th>
-                    <th>Spécifications & Prix</th>
-                    <th>Trajet (Trip)</th>
-                    <th>Statut</th>
-                    <th class="text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let d of deliveries; let i = index" class="animate-fade-in"
-                    [style.animationDelay]="(i * 0.05) + 's'">
-                    <td>
-                        <p class="text-sm font-bold text-gray-100">{{ d.description }}</p>
-                        <p class="text-xs text-gray-500 mt-0.5">Client: <span class="text-gray-400">{{ d.client ?
-                                d.client.companyName : d.clientId }}</span></p>
-                    </td>
-                    <td>
-                        <div class="flex flex-col gap-1 text-xs">
-                            <span class="text-gray-400 flex items-center gap-1">
-                                <svg class="w-3 h-3 text-gray-600" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
-                                </svg>
-                                {{ d.pickupAddress }}
-                            </span>
-                            <span class="text-gray-300 flex items-center gap-1">
-                                <svg class="w-3 h-3 text-amber-500" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                                    </path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                {{ d.deliveryAddress }}
-                            </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="flex flex-col gap-1 text-xs">
-                            <span class="text-gray-400">Vol: <span class="font-bold text-gray-200">{{ d.volume }}
-                                    m³</span></span>
-                            <span class="text-gray-400">Pds: <span class="font-bold text-gray-200">{{ d.weight }}
-                                    t</span></span>
-                            <span class="text-emerald-400 font-bold">{{ d.prix | currency:'MAD':'symbol':'1.2-2'
-                                }}</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span *ngIf="d.trip"
-                            class="text-xs font-mono font-bold text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded border border-blue-400/20">
+    <!-- Grid -->
+    <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div *ngFor="let d of deliveries; let i = index" class="fleet-card group animate-fade-in flex flex-col"
+            [style.animationDelay]="(i * 0.05) + 's'">
+            
+            <!-- Card Header -->
+            <div class="px-5 py-4 flex items-start justify-between" style="border-bottom: 1px solid #2a2d35;">
+                <div class="flex items-start gap-3">
+                    <div class="h-10 w-10 mt-1 rounded-lg flex items-center justify-center flex-shrink-0"
+                        style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
+                        <svg class="h-5 w-5" style="color: #10b981;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                    </div>
+                    <div class="overflow-hidden">
+                        <h3 class="font-display font-bold text-sm text-gray-100 truncate w-full" [title]="d.description">{{ d.description }}</h3>
+                        <p class="text-xs mt-0.5 text-gray-400">Client: <span class="font-semibold text-gray-300">{{ d.client ? d.client.companyName : d.clientId }}</span></p>
+                    </div>
+                </div>
+                <div class="flex flex-col items-end shrink-0 ml-2">
+                     <span *ngIf="d.status === 'CREATED'" class="inline-flex items-center px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest" style="background: rgba(167, 139, 250, 0.1); color: #a78bfa; border: 1px solid rgba(167, 139, 250, 0.2)">Créée</span>
+                     <span *ngIf="d.status === 'PLANNED'" class="inline-flex items-center px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2)">Planifiée</span>
+                     <span *ngIf="d.status === 'IN_PROGRESS'" class="inline-flex items-center px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2)">En Cours</span>
+                     <span *ngIf="d.status === 'DELIVERED'" class="inline-flex items-center px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2)">Livrée</span>
+                     <p class="font-mono font-bold text-emerald-400 mt-2">{{ d.prix | currency:'MAD':'symbol':'1.2-2' }}</p>
+                </div>
+            </div>
+
+            <!-- Card Body - Timeline -->
+            <div class="px-5 py-4 flex-1">
+                <div class="relative pl-4 space-y-4 before:absolute before:inset-y-2 before:left-[7px] before:w-0.5 before:bg-gray-800">
+                    <!-- Pickup -->
+                    <div class="relative">
+                        <div class="absolute -left-[23px] top-1 h-3 w-3 rounded-full border-2 border-[#141518] bg-gray-600"></div>
+                        <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-0.5">Origine</p>
+                        <p class="text-sm font-medium text-gray-300 leading-snug">{{ d.pickupAddress }}</p>
+                    </div>
+                    <!-- Delivery -->
+                    <div class="relative">
+                        <div class="absolute -left-[23px] top-1 h-3 w-3 rounded-full border-2 border-[#141518] bg-amber-500"></div>
+                         <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-0.5">Destination</p>
+                        <p class="text-sm font-medium text-gray-300 leading-snug">{{ d.deliveryAddress }}</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mt-5 pt-4 border-t border-gray-800/50">
+                    <div>
+                        <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-1">Vol / Poids</p>
+                        <p class="text-sm font-mono font-bold text-gray-200">{{ d.volume }} <span class="text-xs text-gray-500 font-sans font-normal">m³</span> <span class="text-gray-600 mx-1">|</span> {{ d.weight }} <span class="text-xs text-gray-500 font-sans font-normal">t</span></p>
+                    </div>
+                    <div>
+                         <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-1">Trajet Assigné</p>
+                         <span *ngIf="d.trip" class="inline-flex text-xs font-mono font-bold text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded border border-blue-400/20">
                             {{ d.trip.reference }}
                         </span>
                         <span *ngIf="!d.trip" class="text-xs text-gray-600 italic">Non assigné</span>
-                    </td>
-                    <td>
-                        <span *ngIf="d.status === 'CREATED'"
-                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold"
-                            style="background: rgba(167, 139, 250, 0.1); color: #a78bfa; border: 1px solid rgba(167, 139, 250, 0.2)">Créée</span>
-                        <span *ngIf="d.status === 'PLANNED'"
-                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold"
-                            style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2)">Planifiée</span>
-                        <span *ngIf="d.status === 'IN_PROGRESS'"
-                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold"
-                            style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2)">En
-                            Cours</span>
-                        <span *ngIf="d.status === 'DELIVERED'"
-                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold"
-                            style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2)">Livrée</span>
-                    </td>
-                    <td class="text-right">
-                        <div class="flex items-center justify-end gap-2">
-                            <button (click)="openDetailsModal(d)"
-                                class="p-1.5 rounded-md text-emerald-400 hover:bg-emerald-400/10 transition-colors"
-                                title="Détails">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                            </button>
-                            <button (click)="openUpdateModal(d)"
-                                class="p-1.5 rounded-md text-amber-500 hover:bg-amber-500/10 transition-colors"
-                                title="Modifier">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                </svg>
-                            </button>
-                            <button (click)="deleteDelivery(d.id)"
-                                class="p-1.5 rounded-md text-red-500 hover:bg-red-500/10 transition-colors"
-                                title="Supprimer">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+                    </div>
+                </div>
+            </div>
 
-                <!-- Empty State -->
-                <tr *ngIf="deliveries.length === 0">
-                    <td colspan="6" class="py-20 text-center">
-                        <div class="flex flex-col items-center gap-3">
-                            <div
-                                class="h-14 w-14 rounded-xl flex items-center justify-center border border-gray-800 bg-gray-900">
-                                <svg class="h-7 w-7 text-gray-500" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                                </svg>
-                            </div>
-                            <p class="font-display font-semibold text-gray-400">Aucune livraison trouvée</p>
-                            <p class="text-sm text-gray-600">Enregistrez une nouvelle livraison pour commencer</p>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+            <!-- Footer -->
+            <div class="px-5 py-3 flex justify-end gap-2 mt-auto"
+                style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
+                <button (click)="openDetailsModal(d)"
+                    class="p-1.5 rounded-md text-emerald-400 hover:bg-emerald-400/10 transition-colors"
+                    title="Détails">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </button>
+                <button (click)="openUpdateModal(d)"
+                    class="p-1.5 rounded-md text-amber-500 hover:bg-amber-500/10 transition-colors"
+                    title="Modifier">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </button>
+                <button (click)="deleteDelivery(d.id)"
+                    class="p-1.5 rounded-md text-red-500 hover:bg-red-500/10 transition-colors"
+                    title="Supprimer">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="deliveries.length === 0" class="col-span-full py-20 text-center fleet-card">
+            <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4 border border-gray-800 bg-gray-900">
+                <svg class="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                </svg>
+            </div>
+            <p class="font-display font-semibold text-gray-400">Aucune livraison trouvée</p>
+            <p class="text-sm mt-1 text-gray-600">Enregistrez une nouvelle livraison pour commencer</p>
+        </div>
     </div>
 </div>
 

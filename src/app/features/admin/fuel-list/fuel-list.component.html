@@ -29,58 +29,91 @@
         <div *ngFor="let x of [1,2,3,4,5]" class="h-14 rounded-lg" style="background: #1e2025;"></div>
     </div>
 
-    <!-- Table -->
-    <div *ngIf="!isLoading" class="fleet-card overflow-hidden">
-        <table class="fleet-table">
-            <thead>
-                <tr>
-                    <th>Référence</th>
-                    <th>Camion</th>
-                    <th>Date</th>
-                    <th>Station</th>
-                    <th>Quantité (L)</th>
-                    <th>Coût (DH)</th>
-                    <th class="text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let t of transactions; let i = index"
-                    class="animate-fade-in transition-colors hover:bg-[#1a1c23]"
-                    [style.animationDelay]="(i * 0.05) + 's'">
-                    <td>
-                        <span class="text-xs font-mono font-bold px-2 py-1 rounded bg-[#252830]"
-                            style="color: #10b981; border: 1px solid rgba(16,185,129,0.2);">
+    <!-- Grid -->
+    <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div *ngFor="let t of transactions; let i = index" class="fleet-card group animate-fade-in relative overflow-hidden"
+            [style.animationDelay]="(i * 0.05) + 's'">
+            
+            <!-- Amount Accent -->
+            <div class="absolute top-0 left-0 w-full h-1" style="background: linear-gradient(90deg, #10b981, #059669);"></div>
+
+            <!-- Card Header -->
+            <div class="px-5 py-4 flex items-center justify-between" style="border-bottom: 1px solid #2a2d35;">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                         <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded"
+                            style="background: #252830; color: #10b981; border: 1px solid rgba(16,185,129,0.2);">
                             {{ t.reference }}
                         </span>
-                    </td>
-                    <td>
-                        <div class="flex items-center gap-2">
-                            <span class="text-sm font-semibold" style="color: #f4f5f7;">{{ t.truck?.registrationNumber
-                                || 'N/A' }}</span>
-                            <span class="text-xs text-gray-500">({{ t.truck?.brand }})</span>
-                        </div>
-                    </td>
-                    <td><span class="text-sm text-gray-400">{{ t.dateHeure | date:'dd/MM/yyyy HH:mm' }}</span></td>
-                    <td><span class="text-sm text-gray-300">{{ t.stationName }}</span></td>
-                    <td><span class="text-sm font-mono text-emerald-400 font-bold">{{ t.quantite }} L</span></td>
-                    <td><span class="text-sm font-mono text-emerald-400 font-bold">{{ t.cout | number:'1.2-2' }}
-                            DH</span></td>
-                    <td class="text-right">
-                        <button (click)="openModal(t)"
-                            class="text-xs font-semibold mr-3 text-gray-400 hover:text-emerald-500 transition-colors">Modifier</button>
-                        <button (click)="deleteTransaction(t.id)"
-                            class="text-xs font-semibold text-gray-500 hover:text-red-500 transition-colors">Supprimer</button>
-                    </td>
-                </tr>
-                <tr *ngIf="transactions.length === 0">
-                    <td colspan="7" class="py-20 text-center">
-                        <div class="flex flex-col items-center gap-3">
-                            <p class="font-display font-semibold text-gray-500">Aucune transaction trouvée</p>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                        <span class="text-[10px] text-gray-400 bg-gray-800/50 px-2 py-0.5 rounded border border-gray-700">
+                            {{ t.dateHeure | date:'dd/MM/yyyy' }}
+                        </span>
+                    </div>
+                </div>
+                 <div class="text-right flex flex-col items-end">
+                     <p class="text-lg font-mono font-bold text-emerald-400">{{ t.cout | number:'1.2-2' }} <span class="text-xs text-gray-500 font-sans">MAD</span></p>
+                 </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="px-5 py-4 space-y-3">
+                 <div class="flex items-center gap-3">
+                    <div class="h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                        style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
+                        <svg class="h-5 w-5" style="color: #10b981;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-0.5">Camion Assigné</p>
+                        <p class="text-sm font-bold text-gray-100 font-mono">{{ t.truck?.registrationNumber || 'N/A' }}</p>
+                        <p class="text-[10px] text-gray-400 uppercase tracking-widest">{{ t.truck?.brand || 'Non Spécifié' }}</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mt-3 pt-3 border-t border-gray-800">
+                    <div>
+                        <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-1">Station Service</p>
+                        <p class="text-sm font-medium text-gray-300">{{ t.stationName }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-1">Volume</p>
+                        <p class="text-sm font-bold font-mono text-emerald-400">{{ t.quantite }} <span class="text-xs text-gray-500 font-sans">L</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="px-5 py-3 flex justify-end gap-2"
+                style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
+                 <button (click)="openModal(t)"
+                    class="p-1.5 rounded-md text-blue-400 hover:bg-blue-400/10 transition-colors"
+                    title="Modifier">
+                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </button>
+                <button (click)="deleteTransaction(t.id)"
+                    class="p-1.5 rounded-md text-rose-500 hover:bg-rose-500/10 transition-colors"
+                    title="Supprimer">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="transactions.length === 0" class="col-span-full py-20 text-center fleet-card">
+            <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4 border border-gray-800 bg-gray-900">
+                 <svg class="h-8 w-8" style="color: #10b981;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            </div>
+            <p class="font-display font-semibold text-gray-400">Aucune transaction trouvée</p>
+            <p class="text-sm mt-1 text-gray-600">Ajoutez votre première transaction de carburant</p>
+        </div>
     </div>
 </div>
 

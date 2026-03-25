@@ -90,6 +90,13 @@
                     onmouseout="this.style.color='#9ca3af'; this.style.borderColor='transparent';">
                     Voir Détails
                 </button>
+                <button (click)="openEditModal(t)"
+                    class="text-xs font-semibold transition-colors px-3 py-1.5 rounded-md"
+                    style="color: #60a5fa; background: rgba(96,165,250,0.08);"
+                    onmouseover="this.style.background='rgba(96,165,250,0.18)';"
+                    onmouseout="this.style.background='rgba(96,165,250,0.08)';">
+                    Modifier
+                </button>
                 <button (click)="deleteTruck(t.id)" class="text-xs font-semibold transition-all px-3 py-1.5 rounded-md"
                     style="color: #ef4444; background: rgba(239,68,68,0.08);"
                     onmouseover="this.style.background='rgba(239,68,68,0.18)';"
@@ -122,7 +129,7 @@
         <!-- Header -->
         <div class="flex items-center justify-between px-6 py-5" style="border-bottom: 1px solid #2a2d35;">
             <div>
-                <h3 class="font-display font-bold text-lg" style="color: #f4f5f7;">Enregistrer un Camion</h3>
+                <h3 class="font-display font-bold text-lg" style="color: #f4f5f7;">{{ editingId ? 'Modifier Camion' : 'Enregistrer un Camion' }}</h3>
                 <p class="text-xs mt-0.5" style="color: #6b7280;">Remplissez les informations du véhicule</p>
             </div>
             <button (click)="closeModal()" class="p-2 rounded-lg transition-colors"

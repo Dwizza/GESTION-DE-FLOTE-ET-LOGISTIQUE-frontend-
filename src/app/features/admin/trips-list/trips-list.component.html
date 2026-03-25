@@ -30,118 +30,104 @@
         <div *ngFor="let x of [1,2,3,4]" class="h-14 rounded-lg surface-card"></div>
     </div>
 
-    <!-- Table -->
-    <div *ngIf="!isLoading" class="fleet-card overflow-hidden">
-        <table class="fleet-table">
-            <thead>
-                <tr>
-                    <th>Référence & Dates</th>
-                    <th>Client & Chauffeur</th>
-                    <th>Ressources</th>
-                    <th>Statut</th>
-                    <th class="text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let t of trips; let i = index" class="animate-fade-in"
-                    [style.animationDelay]="(i * 0.05) + 's'">
-                    <td>
-                        <p class="text-sm font-bold font-mono text-gray-100">{{ t.reference }}</p>
-                        <p class="text-xs text-gray-500 mt-0.5">
-                            {{ t.startDate | date:'dd MMM yyyy' }}
-                            <span *ngIf="t.endDate"> - {{ t.endDate | date:'dd MMM yyyy' }}</span>
-                        </p>
-                    </td>
-                    <td>
-                        <p class="text-sm font-semibold text-gray-100">{{ t.client ? t.client.companyName : 'N/A' }}</p>
-                        <p class="text-xs text-gray-500 font-mono flex items-center gap-1 mt-0.5" *ngIf="t.driver">
-                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                            </svg>
-                            {{ t.driver.firstName }} {{ t.driver.lastName }}
-                        </p>
-                    </td>
-                    <td>
-                        <div class="flex flex-col gap-1 text-xs">
-                            <span *ngIf="t.trucks" class="text-gray-400"><span class="font-bold text-gray-200">{{
-                                    t.trucks.length }}</span> Camions</span>
-                            <span *ngIf="!t.trucks" class="text-gray-400"><span class="font-bold text-gray-200">0</span>
-                                Camions</span>
+    <!-- Grid -->
+    <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div *ngFor="let t of trips; let i = index" class="fleet-card group animate-fade-in"
+            [style.animationDelay]="(i * 0.05) + 's'">
+            <!-- Card Header -->
+            <div class="px-5 py-4 flex items-start justify-between" style="border-bottom: 1px solid #2a2d35;">
+                <div>
+                    <h3 class="font-display font-bold text-sm text-gray-100">{{ t.reference }}</h3>
+                    <p class="text-xs text-gray-500 mt-0.5">
+                        {{ t.startDate | date:'dd MMM yyyy' }}
+                        <span *ngIf="t.endDate"> - {{ t.endDate | date:'dd MMM yyyy' }}</span>
+                    </p>
+                </div>
+                <span *ngIf="t.status === 'PLANNED'"
+                    class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold"
+                    style="background: rgba(167, 139, 250, 0.1); color: #a78bfa; border: 1px solid rgba(167, 139, 250, 0.2)">Planifié</span>
+                <span *ngIf="t.status === 'ONGOING'"
+                    class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold"
+                    style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2)">En
+                    Cours</span>
+                <span *ngIf="t.status === 'COMPLETED'"
+                    class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold"
+                    style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2)">Terminé</span>
+                <span *ngIf="t.status === 'CANCELLED'"
+                    class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold"
+                    style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2)">Annulé</span>
+            </div>
 
-                            <span *ngIf="t.trailers" class="text-gray-400"><span class="font-bold text-gray-200">{{
-                                    t.trailers.length }}</span> Remorques</span>
-                            <span *ngIf="!t.trailers" class="text-gray-400"><span
-                                    class="font-bold text-gray-200">0</span> Remorques</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span *ngIf="t.status === 'PLANNED'"
-                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold"
-                            style="background: rgba(167, 139, 250, 0.1); color: #a78bfa; border: 1px solid rgba(167, 139, 250, 0.2)">Planifié</span>
-                        <span *ngIf="t.status === 'ONGOING'"
-                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold"
-                            style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2)">En
-                            Cours</span>
-                        <span *ngIf="t.status === 'COMPLETED'"
-                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold"
-                            style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2)">Terminé</span>
-                        <span *ngIf="t.status === 'CANCELLED'"
-                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold"
-                            style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2)">Annulé</span>
-                    </td>
-                    <td class="text-right">
-                        <div class="flex items-center justify-end gap-2">
-                            <button (click)="openDetailsModal(t)"
-                                class="p-1.5 rounded-md text-blue-400 hover:bg-blue-400/10 transition-colors"
-                                title="Détails">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                            </button>
-                            <button (click)="openUpdateModal(t)"
-                                class="p-1.5 rounded-md text-amber-500 hover:bg-amber-500/10 transition-colors"
-                                title="Modifier">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                </svg>
-                            </button>
-                            <button (click)="deleteTrip(t.id)"
-                                class="p-1.5 rounded-md text-red-500 hover:bg-red-500/10 transition-colors"
-                                title="Supprimer">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+            <!-- Card Body -->
+            <div class="px-5 py-4 space-y-4">
+                <div>
+                    <p class="text-[10px] uppercase tracking-widest font-semibold mb-1 text-gray-500">Client & Chauffeur</p>
+                    <p class="text-sm font-semibold text-gray-100">{{ t.client ? t.client.companyName : 'N/A' }}</p>
+                    <p class="text-xs text-gray-400 font-mono flex items-center gap-1 mt-0.5" *ngIf="t.driver">
+                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        {{ t.driver.firstName }} {{ t.driver.lastName }}
+                    </p>
+                </div>
+                <div class="flex gap-4">
+                    <div class="flex-1 bg-gray-900/50 p-2 rounded-lg border border-gray-800 text-center">
+                        <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-0.5">Camions</p>
+                        <p class="text-sm font-bold text-gray-200">{{ t.trucks ? t.trucks.length : 0 }}</p>
+                    </div>
+                    <div class="flex-1 bg-gray-900/50 p-2 rounded-lg border border-gray-800 text-center">
+                        <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-0.5">Remorques</p>
+                        <p class="text-sm font-bold text-gray-200">{{ t.trailers ? t.trailers.length : 0 }}</p>
+                    </div>
+                </div>
+            </div>
 
-                <!-- Empty State -->
-                <tr *ngIf="trips.length === 0">
-                    <td colspan="5" class="py-20 text-center">
-                        <div class="flex flex-col items-center gap-3">
-                            <div
-                                class="h-14 w-14 rounded-xl flex items-center justify-center border border-gray-800 bg-gray-900">
-                                <svg class="h-7 w-7 text-gray-500" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7">
-                                    </path>
-                                </svg>
-                            </div>
-                            <p class="font-display font-semibold text-gray-400">Aucun trajet trouvé</p>
-                            <p class="text-sm text-gray-600">Planifiez votre premier itinéraire</p>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+            <!-- Footer -->
+            <div class="px-5 py-3 flex justify-end gap-2"
+                style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
+                <button (click)="openDetailsModal(t)"
+                    class="p-1.5 rounded-md text-blue-400 hover:bg-blue-400/10 transition-colors"
+                    title="Détails">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </button>
+                <button (click)="openUpdateModal(t)"
+                    class="p-1.5 rounded-md text-amber-500 hover:bg-amber-500/10 transition-colors"
+                    title="Modifier">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </button>
+                <button (click)="deleteTrip(t.id)"
+                    class="p-1.5 rounded-md text-red-500 hover:bg-red-500/10 transition-colors"
+                    title="Supprimer">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="trips.length === 0" class="col-span-full py-20 text-center fleet-card">
+            <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4 border border-gray-800 bg-gray-900">
+                <svg class="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7">
+                    </path>
+                </svg>
+            </div>
+            <p class="font-display font-semibold text-gray-400">Aucun trajet trouvé</p>
+            <p class="text-sm mt-1 text-gray-600">Planifiez votre premier itinéraire</p>
+        </div>
     </div>
 </div>
 

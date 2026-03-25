@@ -20,6 +20,7 @@ export class TrailersListComponent implements OnInit {
     isDetailModalOpen = false;
     isSubmitting = false;
     selectedTrailer: TrailerResponse | null = null;
+    editingId: string | null = null;
 
     trailerForm: FormGroup = this.fb.group({
         type: ['', Validators.required],
@@ -47,8 +48,20 @@ export class TrailersListComponent implements OnInit {
     }
 
     openModal() {
+        this.editingId = null;
         this.isModalOpen = true;
         this.trailerForm.reset({ status: 'AVAILABLE', maxWeight: 0, maxVolume: 0 });
+    }
+
+    openEditModal(trailer: TrailerResponse) {
+        this.editingId = trailer.id;
+        this.trailerForm.patchValue({
+            type: trailer.type,
+            maxWeight: trailer.maxWeight,
+            maxVolume: trailer.maxVolume,
+            status: trailer.status
+        });
+        this.isModalOpen = true;
     }
 
     closeModal() {
@@ -72,14 +85,19 @@ export class TrailersListComponent implements OnInit {
         }
 
         this.isSubmitting = true;
-        this.trailerService.createTrailer(this.trailerForm.value).subscribe({
+
+        const submitObs = this.editingId
+            ? this.trailerService.updateTrailer(this.editingId, this.trailerForm.value)
+            : this.trailerService.createTrailer(this.trailerForm.value);
+
+        submitObs.subscribe({
             next: () => {
                 this.isSubmitting = false;
                 this.closeModal();
                 this.loadTrailers();
             },
             error: (err) => {
-                console.error('Error creating trailer', err);
+                console.error('Error saving trailer', err);
                 this.isSubmitting = false;
             }
         });

@@ -41,43 +41,57 @@
 
         <div class="mb-10">
             <h3 class="text-xl font-bold border-l-4 border-slate-900 pl-3 mb-6">ANALYSE DES COÛTS</h3>
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-slate-900 text-white uppercase text-xs tracking-widest">
-                        <th class="p-3">Catégorie</th>
-                        <th class="p-3 text-right">Montant</th>
-                        <th class="p-3 text-right">% du Revenu</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="border-b border-slate-100">
-                        <td class="p-3 font-semibold text-slate-700 uppercase text-sm">Carburant</td>
-                        <td class="p-3 text-right font-mono">{{ metrics?.totalFuelCost | number:'1.2-2' }} DH</td>
-                        <td class="p-3 text-right text-xs text-slate-500">
-                            {{ (metrics ? (metrics.totalFuelCost / metrics.totalRevenue * 100) : 0) | number:'1.1-1' }}%
-                        </td>
-                    </tr>
-                    <tr class="border-b border-slate-100">
-                        <td class="p-3 font-semibold text-slate-700 uppercase text-sm">Maintenance</td>
-                        <td class="p-3 text-right font-mono">{{ metrics?.totalMaintenanceCost | number:'1.2-2' }} DH
-                        </td>
-                        <td class="p-3 text-right text-xs text-slate-500">
-                            {{ (metrics ? (metrics.totalMaintenanceCost / metrics.totalRevenue * 100) : 0) |
-                            number:'1.1-1' }}%
-                        </td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr class="bg-slate-50">
-                        <td class="p-3 font-black text-slate-900 uppercase">Total Dépenses</td>
-                        <td class="p-3 text-right font-black text-slate-900 font-mono">
-                            {{ (metrics ? (metrics.totalFuelCost + metrics.totalMaintenanceCost) : 0) | number:'1.2-2'
-                            }} DH
-                        </td>
-                        <td></td>
-                    </tr>
-                </tfoot>
-            </table>
+            <div class="space-y-4">
+                <!-- Row: Carburant -->
+                <div class="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded">
+                    <div class="flex items-center gap-3">
+                        <div class="h-10 w-10 rounded flex items-center justify-center bg-emerald-100 text-emerald-600">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-700 uppercase text-sm">Carburant</p>
+                            <p class="text-xs text-slate-500">Coûts de consommation énergétique</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-mono text-lg font-bold text-slate-900">{{ metrics?.totalFuelCost | number:'1.2-2' }} DH</p>
+                        <p class="text-xs text-slate-500 font-bold bg-slate-200 px-2 py-0.5 rounded inline-block mt-1">
+                            {{ (metrics ? (metrics.totalFuelCost / metrics.totalRevenue * 100) : 0) | number:'1.1-1' }}% du Revenu
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Row: Maintenance -->
+                <div class="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded">
+                    <div class="flex items-center gap-3">
+                        <div class="h-10 w-10 rounded flex items-center justify-center bg-rose-100 text-rose-600">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-700 uppercase text-sm">Maintenance</p>
+                            <p class="text-xs text-slate-500">Frais de réparation et d'entretien</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-mono text-lg font-bold text-slate-900">{{ metrics?.totalMaintenanceCost | number:'1.2-2' }} DH</p>
+                        <p class="text-xs text-slate-500 font-bold bg-slate-200 px-2 py-0.5 rounded inline-block mt-1">
+                            {{ (metrics ? (metrics.totalMaintenanceCost / metrics.totalRevenue * 100) : 0) | number:'1.1-1' }}% du Revenu
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Total -->
+                <div class="flex items-center justify-between p-4 bg-slate-900 rounded text-white mt-2 shadow-md">
+                    <p class="font-black uppercase tracking-wider">Total Dépenses</p>
+                    <p class="font-mono text-xl font-black">
+                        {{ (metrics ? (metrics.totalFuelCost + metrics.totalMaintenanceCost) : 0) | number:'1.2-2' }} DH
+                    </p>
+                </div>
+            </div>
         </div>
 
         <div class="mb-10">

@@ -32,146 +32,106 @@
         <div *ngFor="let x of [1,2,3,4]" class="h-14 rounded-lg surface-card"></div>
     </div>
 
-    <!-- Table -->
-    <div *ngIf="!isLoading" class="fleet-card overflow-hidden">
-        <table class="fleet-table">
-            <thead>
-                <tr>
-                    <th>Véhicule Associé</th>
-                    <th>Détails de l'Intervention</th>
-                    <th>Type & Statut</th>
-                    <th>Garage / Intervenant</th>
-                    <th>Date</th>
-                    <th class="text-right">Coût</th>
-                    <th class="text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let m of maintenances; let i = index" class="animate-fade-in"
-                    [style.animationDelay]="(i * 0.05) + 's'">
-                    <td>
-                        <div *ngIf="m.truck" class="flex flex-col">
-                            <span
-                                class="inline-flex items-center gap-1.5 text-xs font-bold text-gray-300 w-max px-2 py-0.5 rounded bg-gray-800">
-                                <svg class="w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-                                </svg>
-                                Camion
-                            </span>
-                            <span class="text-sm font-mono text-gray-100 mt-1">{{ m.truck.registrationNumber }}</span>
-                            <span class="text-[10px] text-gray-500 uppercase">{{ m.truck.brand }}</span>
-                        </div>
-                        <div *ngIf="m.trailer" class="flex flex-col">
-                            <span
-                                class="inline-flex items-center gap-1.5 text-xs font-bold text-gray-300 w-max px-2 py-0.5 rounded bg-gray-800">
-                                <svg class="w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                                </svg>
-                                Remorque
-                            </span>
-                            <span class="text-sm font-mono text-gray-100 mt-1">{{ m.trailer.type }}</span>
-                        </div>
+    <!-- Grid -->
+    <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div *ngFor="let m of maintenances; let i = index" class="fleet-card group animate-fade-in relative overflow-hidden"
+            [style.animationDelay]="(i * 0.05) + 's'">
+            
+            <!-- Type Accent -->
+            <div class="absolute top-0 left-0 w-1 h-full"
+                [ngClass]="{'bg-blue-500': m.type === 'PREVENTIVE', 'bg-red-500': m.type === 'CORRECTIVE', 'bg-amber-500': m.type === 'INSPECTION'}"></div>
 
-                        <div *ngIf="!m.truck && !m.trailer" class="flex flex-col">
-                            <span
-                                class="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 w-max px-2 py-0.5 rounded bg-gray-800/50 border border-gray-700/50">
-                                <svg class="w-3 h-3 text-gray-600" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
-                                    </path>
-                                </svg>
-                                Non Assigné
-                            </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div *ngIf="m.description" class="text-sm font-bold text-gray-100">{{ m.description }}</div>
-                        <div *ngIf="!m.description" class="flex items-center gap-1 text-gray-600">
-                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span class="text-[11px] italic">Non spécifié</span>
-                        </div>
-                        <div *ngIf="m.reference" class="text-[11px] font-mono text-gray-500 mt-0.5">Réf: {{ m.reference
-                            }}</div>
-                    </td>
-                    <td>
-                        <div class="flex flex-col gap-1">
-                            <span *ngIf="m.type === 'PREVENTIVE'"
-                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20 w-max">Préventive</span>
-                            <span *ngIf="m.type === 'CORRECTIVE'"
-                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400 border border-red-500/20 w-max">Corrective</span>
-                            <span *ngIf="m.type === 'INSPECTION'"
-                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 w-max">Inspection</span>
+            <!-- Card Header -->
+            <div class="px-5 py-4 ml-1 flex items-start justify-between" style="border-bottom: 1px solid #2a2d35;">
+                <div>
+                    <div *ngIf="m.truck" class="flex flex-col">
+                        <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-gray-400 w-max uppercase tracking-wider">
+                            Camion
+                        </span>
+                        <span class="text-sm font-bold font-mono text-gray-100 mt-1">{{ m.truck.registrationNumber }}</span>
+                    </div>
+                    <div *ngIf="m.trailer" class="flex flex-col">
+                        <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-gray-400 w-max uppercase tracking-wider">
+                            Remorque
+                        </span>
+                        <span class="text-sm font-bold font-mono text-gray-100 mt-1">{{ m.trailer.type }}</span>
+                    </div>
+                    <div *ngIf="!m.truck && !m.trailer" class="flex flex-col">
+                        <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-gray-500 w-max px-2 py-0.5 rounded bg-gray-800/50">
+                            Non Assigné
+                        </span>
+                    </div>
+                </div>
+                <div class="text-right flex flex-col items-end">
+                    <span *ngIf="m.type === 'PREVENTIVE'" class="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Préventive</span>
+                    <span *ngIf="m.type === 'CORRECTIVE'" class="text-[10px] font-bold text-red-400 uppercase tracking-widest">Corrective</span>
+                    <span *ngIf="m.type === 'INSPECTION'" class="text-[10px] font-bold text-amber-400 uppercase tracking-widest">Inspection</span>
+                    
+                    <span *ngIf="m.status === 'PLANNED'" class="text-xs text-gray-500 mt-1 font-semibold">Planifiée</span>
+                    <span *ngIf="m.status === 'IN_PROGRESS'" class="text-xs text-amber-500 mt-1 font-semibold">En Cours</span>
+                    <span *ngIf="m.status === 'COMPLETED'" class="text-xs text-emerald-500 mt-1 font-semibold">Terminée</span>
+                </div>
+            </div>
 
-                            <span *ngIf="m.status === 'PLANNED'" class="text-xs text-gray-400 mt-1">Planifiée</span>
-                            <span *ngIf="m.status === 'IN_PROGRESS'"
-                                class="text-xs text-amber-500 mt-1 font-semibold">En Cours</span>
-                            <span *ngIf="m.status === 'COMPLETED'"
-                                class="text-xs text-emerald-500 mt-1 font-semibold">Terminée</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span *ngIf="m.performedBy" class="text-sm text-gray-300">{{ m.performedBy }}</span>
-                        <div *ngIf="!m.performedBy" class="flex items-center gap-1 text-gray-600">
-                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1v1H9V7zm5 0h1v1h-1V7zm-5 4h1v1H9v-1zm5 0h1v1h-1v-1zm-3 4H9v2h4v-2z" />
-                            </svg>
-                            <span class="text-[11px] italic">Interne</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="text-sm text-gray-300">{{ m.dateMaintenance | date:'dd MMM yyyy' }}</span>
-                    </td>
-                    <td class="text-right">
-                        <span class="text-sm font-bold text-rose-400 font-mono">{{ m.cout |
-                            currency:'MAD':'symbol':'1.2-2' }}</span>
-                    </td>
-                    <td class="text-right">
-                        <div class="flex items-center justify-end gap-3">
-                            <button (click)="openDetailsModal(m)"
-                                class="text-xs font-semibold text-gray-400 hover:text-white transition-colors">
-                                Détails
-                            </button>
-                            <button (click)="openEditModal(m)"
-                                class="text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors">
-                                Modifier
-                            </button>
-                            <button (click)="deleteMaintenance(m.id)"
-                                class="text-xs font-semibold text-rose-500 hover:text-rose-400 transition-colors">
-                                Supprimer
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+            <!-- Card Body -->
+            <div class="px-5 py-4 ml-1 space-y-4">
+                <div>
+                    <p class="text-[10px] uppercase tracking-widest font-semibold mb-1 text-gray-500">Détails</p>
+                    <p class="text-sm text-gray-200 font-medium">{{ m.description || 'Non spécifié' }}</p>
+                    <p class="text-xs font-mono text-gray-500 mt-1" *ngIf="m.reference">Réf: {{ m.reference }}</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-[10px] uppercase tracking-widest font-semibold mb-1 text-gray-500">Date</p>
+                        <p class="text-sm text-gray-300">{{ m.dateMaintenance | date:'dd MMM yyyy' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase tracking-widest font-semibold mb-1 text-gray-500">Coût</p>
+                        <p class="text-sm font-bold text-rose-400 font-mono">{{ m.cout | currency:'MAD':'symbol':'1.2-2' }}</p>
+                    </div>
+                </div>
+            </div>
 
-                <!-- Empty State -->
-                <tr *ngIf="maintenances.length === 0">
-                    <td colspan="7" class="py-20 text-center">
-                        <div class="flex flex-col items-center gap-3">
-                            <div
-                                class="h-14 w-14 rounded-xl flex items-center justify-center border border-gray-800 bg-gray-900">
-                                <svg class="h-7 w-7 text-gray-500" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
-                                    </path>
-                                </svg>
-                            </div>
-                            <p class="font-display font-semibold text-gray-400">Aucun historique de maintenance</p>
-                            <p class="text-sm text-gray-600">Enregistrez les réparations de votre flotte ici</p>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+            <!-- Footer -->
+            <div class="px-5 py-3 ml-1 flex justify-end gap-2"
+                style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
+                <button (click)="openDetailsModal(m)"
+                    class="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+                    title="Détails">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </button>
+                <button (click)="openEditModal(m)"
+                    class="p-1.5 rounded-md text-blue-400 hover:bg-blue-400/10 transition-colors"
+                    title="Modifier">
+                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </button>
+                <button (click)="deleteMaintenance(m.id)"
+                    class="p-1.5 rounded-md text-rose-500 hover:bg-rose-500/10 transition-colors"
+                    title="Supprimer">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="maintenances.length === 0" class="col-span-full py-20 text-center fleet-card">
+            <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4 border border-gray-800 bg-gray-900">
+                <svg class="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                    </path>
+                </svg>
+            </div>
+            <p class="font-display font-semibold text-gray-400">Aucun historique de maintenance</p>
+            <p class="text-sm mt-1 text-gray-600">Enregistrez les réparations de votre flotte ici</p>
+        </div>
     </div>
 </div>
 

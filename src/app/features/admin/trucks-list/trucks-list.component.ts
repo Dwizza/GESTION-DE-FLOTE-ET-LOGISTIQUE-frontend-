@@ -20,6 +20,7 @@ export class TrucksListComponent implements OnInit {
     isDetailModalOpen = false;
     isSubmitting = false;
     selectedTruck: TruckResponse | null = null;
+    editingId: string | null = null;
 
     truckForm: FormGroup = this.fb.group({
         registrationNumber: ['', Validators.required],
@@ -47,8 +48,20 @@ export class TrucksListComponent implements OnInit {
     }
 
     openModal() {
+        this.editingId = null;
         this.isModalOpen = true;
         this.truckForm.reset({ status: 'AVAILABLE', totalMileage: 0 });
+    }
+
+    openEditModal(truck: TruckResponse) {
+        this.editingId = truck.id;
+        this.truckForm.patchValue({
+            registrationNumber: truck.registrationNumber,
+            brand: truck.brand,
+            totalMileage: truck.totalMileage,
+            status: truck.status
+        });
+        this.isModalOpen = true;
     }
 
     closeModal() {
@@ -72,14 +85,19 @@ export class TrucksListComponent implements OnInit {
         }
 
         this.isSubmitting = true;
-        this.truckService.createTruck(this.truckForm.value).subscribe({
+        
+        const submitObs = this.editingId 
+            ? this.truckService.updateTruck(this.editingId, this.truckForm.value)
+            : this.truckService.createTruck(this.truckForm.value);
+
+        submitObs.subscribe({
             next: () => {
                 this.isSubmitting = false;
                 this.closeModal();
                 this.loadTrucks();
             },
             error: (err) => {
-                console.error('Error creating truck', err);
+                console.error('Error saving truck', err);
                 this.isSubmitting = false;
             }
         });

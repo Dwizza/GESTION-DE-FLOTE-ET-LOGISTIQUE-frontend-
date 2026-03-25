@@ -30,86 +30,92 @@
         <div *ngFor="let x of [1,2,3,4]" class="h-14 rounded-lg" style="background: #1e2025;"></div>
     </div>
 
-    <!-- Table -->
-    <div *ngIf="!isLoading" class="fleet-card overflow-hidden">
-        <table class="fleet-table">
-            <thead>
-                <tr>
-                    <th>Identifiant</th>
-                    <th>Type</th>
-                    <th>Poids Max</th>
-                    <th>Volume Max</th>
-                    <th>Statut</th>
-                    <th class="text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let t of trailers; let i = index" class="animate-fade-in"
-                    [style.animationDelay]="(i * 0.05) + 's'">
-                    <td>
-                        <div class="flex items-center gap-3">
-                            <div class="h-8 w-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                                style="background: #252830; border: 1px solid #2a2d35;">
-                                <svg class="h-4 w-4" style="color: #6b7280;" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                </svg>
-                            </div>
-                            <span class="font-mono text-xs" style="color: #9ca3af;">{{ t.id | slice:0:10 }}...</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="font-semibold text-sm" style="color: #f4f5f7;">{{ t.type | titlecase }}</span>
-                    </td>
-                    <td>
-                        <span class="font-mono font-semibold" style="color: #f4f5f7;">{{ t.maxWeight }}</span>
-                        <span class="text-xs ml-1" style="color: #6b7280;">T</span>
-                    </td>
-                    <td>
-                        <span class="font-mono font-semibold" style="color: #f4f5f7;">{{ t.maxVolume }}</span>
-                        <span class="text-xs ml-1" style="color: #6b7280;">m³</span>
-                    </td>
-                    <td>
-                        <span [ngClass]="getStatusColor(t.status)">
-                            <span class="w-1.5 h-1.5 rounded-full"
-                                [style.background]="t.status === 'AVAILABLE' ? '#10b981' : t.status === 'IN_USE' ? '#60a5fa' : t.status === 'IN_MAINTENANCE' ? '#f59e0b' : '#ef4444'"></span>
-                            {{ t.status | titlecase }}
-                        </span>
-                    </td>
-                    <td class="text-right">
-                        <button (click)="openDetailModal(t)" class="text-xs font-semibold mr-3 transition-colors"
-                            style="color: #9ca3af;" onmouseover="this.style.color='#f59e0b'"
-                            onmouseout="this.style.color='#9ca3af'">
-                            Détails
-                        </button>
-                        <button (click)="deleteTrailer(t.id)" class="text-xs font-semibold transition-colors"
-                            style="color: #6b7280;" onmouseover="this.style.color='#ef4444'"
-                            onmouseout="this.style.color='#6b7280'">
-                            Retirer
-                        </button>
-                    </td>
-                </tr>
+    <!-- Grid -->
+    <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div *ngFor="let t of trailers; let i = index" class="fleet-card group animate-fade-in relative overflow-hidden"
+            [style.animationDelay]="(i * 0.05) + 's'">
+            
+            <!-- Type Accent -->
+            <div class="absolute top-0 left-0 w-1 h-full"
+                [style.background]="t.status === 'AVAILABLE' ? '#10b981' : t.status === 'IN_USE' ? '#60a5fa' : t.status === 'IN_MAINTENANCE' ? '#f59e0b' : '#ef4444'"></div>
 
-                <!-- Empty State -->
-                <tr *ngIf="trailers.length === 0">
-                    <td colspan="6" class="py-20 text-center">
-                        <div class="flex flex-col items-center gap-3">
-                            <div class="h-14 w-14 rounded-xl flex items-center justify-center"
-                                style="background: #252830; border: 1px solid #2a2d35;">
-                                <svg class="h-7 w-7" style="color: #4b5563;" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                </svg>
-                            </div>
-                            <p class="font-display font-semibold" style="color: #9ca3af;">Aucune remorque</p>
-                            <p class="text-sm" style="color: #4b5563;">Ajoutez votre première remorque</p>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+            <!-- Card Header -->
+            <div class="px-5 py-4 ml-1 flex items-start justify-between" style="border-bottom: 1px solid #2a2d35;">
+                <div class="flex items-center gap-3">
+                    <div class="h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                        style="background: #252830; border: 1px solid #2a2d35;">
+                        <svg class="h-5 w-5" style="color: #6b7280;" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-bold text-sm" style="color: #f4f5f7;">{{ t.type | titlecase }}</h3>
+                        <p class="text-xs font-mono" style="color: #9ca3af;">ID: {{ t.id | slice:0:8 }}...</p>
+                    </div>
+                </div>
+                <span [ngClass]="getStatusColor(t.status)" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest min-w-max"
+                     [style.color]="t.status === 'AVAILABLE' ? '#10b981' : t.status === 'IN_USE' ? '#60a5fa' : t.status === 'IN_MAINTENANCE' ? '#f59e0b' : '#ef4444'"
+                     [style.background]="t.status === 'AVAILABLE' ? 'rgba(16, 185, 129, 0.1)' : t.status === 'IN_USE' ? 'rgba(96, 165, 250, 0.1)' : t.status === 'IN_MAINTENANCE' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(239, 68, 68, 0.1)'"
+                     [style.border]="t.status === 'AVAILABLE' ? '1px solid rgba(16, 185, 129, 0.2)' : t.status === 'IN_USE' ? '1px solid rgba(96, 165, 250, 0.2)' : t.status === 'IN_MAINTENANCE' ? '1px solid rgba(245, 158, 11, 0.2)' : '1px solid rgba(239, 68, 68, 0.2)'">
+                    {{ t.status }}
+                </span>
+            </div>
+
+            <!-- Card Body -->
+            <div class="px-5 py-4 ml-1 grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-[10px] uppercase tracking-widest font-semibold mb-1" style="color: #6b7280;">Poids Max</p>
+                    <p class="text-sm font-mono font-bold" style="color: #f4f5f7;">{{ t.maxWeight }} <span class="text-xs text-gray-500 font-sans">T</span></p>
+                </div>
+                <div>
+                    <p class="text-[10px] uppercase tracking-widest font-semibold mb-1" style="color: #6b7280;">Volume Max</p>
+                    <p class="text-sm font-mono font-bold" style="color: #f4f5f7;">{{ t.maxVolume }} <span class="text-xs text-gray-500 font-sans">m³</span></p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="px-5 py-3 ml-1 flex justify-end gap-2"
+                style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
+                <button (click)="openDetailModal(t)"
+                    class="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+                    title="Détails">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </button>
+                <button (click)="openEditModal(t)"
+                    class="p-1.5 rounded-md text-blue-400 hover:text-white hover:bg-blue-500/10 transition-colors"
+                    title="Modifier">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </button>
+                <button (click)="deleteTrailer(t.id)"
+                    class="p-1.5 rounded-md text-rose-500 hover:bg-rose-500/10 transition-colors"
+                    title="Retirer">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="trailers.length === 0" class="col-span-full py-20 text-center fleet-card">
+            <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4"
+                style="background: #252830; border: 1px solid #2a2d35;">
+                <svg class="h-8 w-8" style="color: #4b5563;" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+            </div>
+            <p class="font-display font-semibold" style="color: #9ca3af;">Aucune remorque</p>
+            <p class="text-sm mt-1" style="color: #4b5563;">Ajoutez votre première remorque</p>
+        </div>
     </div>
 </div>
 
@@ -120,7 +126,7 @@
     <div class="modal-panel relative w-full max-w-md animate-slide-in-up">
         <div class="flex items-center justify-between px-6 py-5" style="border-bottom: 1px solid #2a2d35;">
             <div>
-                <h3 class="font-display font-bold text-lg" style="color: #f4f5f7;">Ajouter une Remorque</h3>
+                <h3 class="font-display font-bold text-lg" style="color: #f4f5f7;">{{ editingId ? 'Modifier la Remorque' : 'Ajouter une Remorque' }}</h3>
                 <p class="text-xs mt-0.5" style="color: #6b7280;">Renseignez les capacités du matériel</p>
             </div>
             <button (click)="closeModal()" class="p-2 rounded-lg" style="color: #6b7280; background: #252830;">
@@ -165,7 +171,7 @@
         <div class="flex justify-end gap-3 px-6 py-4" style="border-top: 1px solid #2a2d35;">
             <button (click)="closeModal()" class="btn-fleet-ghost">Annuler</button>
             <button (click)="onSubmit()" [disabled]="isSubmitting" class="btn-fleet">
-                {{ isSubmitting ? 'Ajout...' : 'Ajouter' }}
+                {{ isSubmitting ? 'Opération en cours...' : (editingId ? 'Modifier' : 'Ajouter') }}
             </button>
         </div>
     </div>
