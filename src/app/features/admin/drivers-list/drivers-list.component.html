@@ -72,21 +72,29 @@
             </div>
 
             <!-- Footer -->
-            <div class="px-5 py-3 flex justify-end gap-3"
+            <div class="px-5 py-3 flex justify-end gap-2"
                 style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
                 <button (click)="openDetailModal(d)"
-                    class="text-xs font-semibold transition-colors px-3 py-1.5 rounded-md"
-                    style="color: #9ca3af; background: #252830;"
-                    onmouseover="this.style.color='#f59e0b'; this.style.borderColor='rgba(245,158,11,0.3)';"
-                    onmouseout="this.style.color='#9ca3af'; this.style.borderColor='transparent';">
-                    Voir Détails
+                    class="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+                    title="Détails">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
                 </button>
-                <button (click)="deleteDriver(d.id)" 
-                    class="text-xs font-semibold transition-all px-3 py-1.5 rounded-md"
-                    style="color: #ef4444; background: rgba(239,68,68,0.08);"
-                    onmouseover="this.style.background='rgba(239,68,68,0.18)';"
-                    onmouseout="this.style.background='rgba(239,68,68,0.08)';">
-                    Supprimer
+                <button (click)="openEditModal(d)"
+                    class="p-1.5 rounded-md text-blue-400 hover:text-white hover:bg-blue-500/10 transition-colors"
+                    title="Modifier">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </button>
+                <button (click)="deleteDriver(d.id)"
+                    class="p-1.5 rounded-md text-rose-500 hover:bg-rose-500/10 transition-colors"
+                    title="Supprimer">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
                 </button>
             </div>
         </div>
@@ -115,7 +123,7 @@
         <!-- Header -->
         <div class="flex items-center justify-between px-6 py-5" style="border-bottom: 1px solid #2a2d35;">
             <div>
-                <h3 class="font-display font-bold text-lg" style="color: #f4f5f7;">Nouveau Chauffeur</h3>
+                <h3 class="font-display font-bold text-lg" style="color: #f4f5f7;">{{ editingId ? 'Modifier Chauffeur' : 'Nouveau Chauffeur' }}</h3>
                 <p class="text-xs mt-0.5" style="color: #6b7280;">Entrez les détails personnels et professionnels</p>
             </div>
             <button (click)="closeModal()" class="p-2 rounded-lg transition-colors"
@@ -138,7 +146,7 @@
                     <input type="text" formControlName="lastName" class="fleet-input" placeholder="Ex: Bennani">
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-2 gap-4" *ngIf="!editingId">
                 <div>
                     <label class="fleet-label">Email <span style="color: #ef4444;">*</span></label>
                     <input type="email" formControlName="email" class="fleet-input" placeholder="email@exemple.com">
@@ -172,7 +180,7 @@
         <div class="flex justify-end gap-3 px-6 py-4" style="border-top: 1px solid #2a2d35;">
             <button (click)="closeModal()" class="btn-fleet-ghost">Annuler</button>
             <button (click)="onSubmit()" [disabled]="isSubmitting" class="btn-fleet">
-                {{ isSubmitting ? 'Traitement...' : 'Ajouter le chauffeur' }}
+                {{ isSubmitting ? 'Traitement...' : (editingId ? 'Modifier le chauffeur' : 'Ajouter le chauffeur') }}
             </button>
         </div>
     </div>

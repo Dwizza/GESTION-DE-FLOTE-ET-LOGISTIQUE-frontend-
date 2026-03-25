@@ -23,6 +23,10 @@ export class TruckService {
         return this.http.post<TruckResponse>(this.apiUrl, truck);
     }
 
+    updateTruck(id: string, truck: any): Observable<TruckResponse> {
+        return this.http.put<TruckResponse>(`${this.apiUrl}/${id}`, truck);
+    }
+
     deleteTruck(id: string): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${id}`);
     }

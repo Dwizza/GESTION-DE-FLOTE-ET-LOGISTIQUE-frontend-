@@ -65,20 +65,21 @@
             </div>
 
             <!-- Footer -->
-            <div class="px-5 py-3 flex justify-end gap-3"
+            <div class="px-5 py-3 flex justify-end gap-2"
                 style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
-                <button class="text-xs font-semibold px-3 py-1.5 rounded-md transition-colors"
-                    style="color: #9ca3af; background: #252830;"
-                    onmouseover="this.style.color='#f59e0b'; this.style.borderColor='rgba(245,158,11,0.3)';"
-                    onmouseout="this.style.color='#9ca3af'; this.style.borderColor='transparent';">
-                    Modifier
+                <!-- Modifier button is purely aesthetic here per the original code (no click handler) -->
+                <button class="p-1.5 rounded-md text-blue-400 hover:text-white hover:bg-blue-500/10 transition-colors"
+                    title="Modifier">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
                 </button>
-                <button (click)="deleteManager(m.id)" 
-                    class="text-xs font-semibold px-3 py-1.5 rounded-md transition-all"
-                    style="color: #ef4444; background: rgba(239,68,68,0.08);"
-                    onmouseover="this.style.background='rgba(239,68,68,0.18)';"
-                    onmouseout="this.style.background='rgba(239,68,68,0.08)';">
-                    Supprimer
+                <button (click)="deleteManager(m.id)"
+                    class="p-1.5 rounded-md text-rose-500 hover:bg-rose-500/10 transition-colors"
+                    title="Supprimer">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
                 </button>
             </div>
         </div>

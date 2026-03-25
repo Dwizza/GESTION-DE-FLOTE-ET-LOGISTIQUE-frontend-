@@ -23,6 +23,10 @@ export class TrailerService {
         return this.http.post<TrailerResponse>(this.apiUrl, trailer);
     }
 
+    updateTrailer(id: string, trailer: any): Observable<TrailerResponse> {
+        return this.http.put<TrailerResponse>(`${this.apiUrl}/${id}`, trailer);
+    }
+
     deleteTrailer(id: string): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${id}`);
     }

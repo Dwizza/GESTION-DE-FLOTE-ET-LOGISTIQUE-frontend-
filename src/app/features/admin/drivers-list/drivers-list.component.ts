@@ -21,6 +21,8 @@ export class DriversListComponent implements OnInit {
     isDetailModalOpen = false;
     isSubmitting = false;
     selectedDriver: DriverResponse | null = null;
+    editingId: string | null = null;
+    editingDriver: DriverResponse | null = null;
 
     driverTrips: TripResponse[] = [];
     isLoadingTrips = false;
@@ -53,12 +55,43 @@ export class DriversListComponent implements OnInit {
     }
 
     openModal() {
+        this.editingId = null;
+        this.editingDriver = null;
         this.isModalOpen = true;
+        
+        this.driverForm.get('email')?.setValidators([Validators.required, Validators.email]);
+        this.driverForm.get('email')?.updateValueAndValidity();
+        this.driverForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
+        this.driverForm.get('password')?.updateValueAndValidity();
+
         this.driverForm.reset();
+    }
+
+    openEditModal(driver: DriverResponse) {
+        this.editingId = driver.id;
+        this.editingDriver = driver;
+        
+        this.driverForm.get('email')?.clearValidators();
+        this.driverForm.get('email')?.updateValueAndValidity();
+        this.driverForm.get('password')?.clearValidators();
+        this.driverForm.get('password')?.updateValueAndValidity();
+
+        this.driverForm.patchValue({
+            firstName: driver.firstName,
+            lastName: driver.lastName,
+            email: driver.email,
+            password: '',
+            licenseNumber: driver.licenseNumber,
+            phoneNumber: driver.phoneNumber
+        });
+        
+        this.isModalOpen = true;
     }
 
     closeModal() {
         this.isModalOpen = false;
+        this.editingId = null;
+        this.editingDriver = null;
     }
 
     openDetailModal(driver: DriverResponse) {
@@ -94,22 +127,43 @@ export class DriversListComponent implements OnInit {
         }
 
         this.isSubmitting = true;
-        const payload = this.driverForm.value;
+        
+        if (this.editingId && this.editingDriver) {
+            const formValue = this.driverForm.value;
+            const updatePayload = {
+                firstName: formValue.firstName,
+                lastName: formValue.lastName,
+                licenseNumber: formValue.licenseNumber,
+                phoneNumber: formValue.phoneNumber,
+                active: this.editingDriver.active,
+                available: this.editingDriver.available
+            };
 
-        // Convert date string if needed, depending on exact backend requirements
-        // For now we send it as is from the input[type=date]
-
-        this.driverService.createDriver(payload).subscribe({
-            next: () => {
-                this.isSubmitting = false;
-                this.closeModal();
-                this.loadDrivers();
-            },
-            error: (err) => {
-                console.error('Error creating driver', err);
-                this.isSubmitting = false;
-            }
-        });
+            this.driverService.updateDriver(this.editingId, updatePayload).subscribe({
+                next: () => {
+                    this.isSubmitting = false;
+                    this.closeModal();
+                    this.loadDrivers();
+                },
+                error: (err) => {
+                    console.error('Error updating driver', err);
+                    this.isSubmitting = false;
+                }
+            });
+        } else {
+            const createPayload = this.driverForm.value;
+            this.driverService.createDriver(createPayload).subscribe({
+                next: () => {
+                    this.isSubmitting = false;
+                    this.closeModal();
+                    this.loadDrivers();
+                },
+                error: (err) => {
+                    console.error('Error creating driver', err);
+                    this.isSubmitting = false;
+                }
+            });
+        }
     }
 
     deleteDriver(id: string) {
