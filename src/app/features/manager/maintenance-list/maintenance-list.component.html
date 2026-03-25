@@ -32,20 +32,27 @@
             <!-- Header -->
             <div class="px-5 py-4 flex items-start justify-between" style="border-bottom: 1px solid #2a2d35;">
                 <div class="flex items-center gap-3">
-                    <div *ngIf="m.truck" class="h-10 w-10 mt-1 rounded-lg flex items-center justify-center flex-shrink-0"
+                    <div *ngIf="m.truck"
+                        class="h-10 w-10 mt-1 rounded-lg flex items-center justify-center flex-shrink-0"
                         style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
-                        <svg class="h-5 w-5" style="color: #10b981;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        <svg class="h-5 w-5" style="color: #10b981;" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                         </svg>
                     </div>
-                    <div *ngIf="m.trailer" class="h-10 w-10 mt-1 rounded-lg flex items-center justify-center flex-shrink-0"
+                    <div *ngIf="m.trailer"
+                        class="h-10 w-10 mt-1 rounded-lg flex items-center justify-center flex-shrink-0"
                         style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);">
-                        <svg class="h-5 w-5" style="color: #60a5fa;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        <svg class="h-5 w-5" style="color: #60a5fa;" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
                     </div>
                     <div>
-                        <p class="text-[10px] uppercase font-bold tracking-widest" [ngStyle]="{'color': m.truck ? '#10b981' : '#60a5fa'}">
+                        <p class="text-[10px] uppercase font-bold tracking-widest"
+                            [ngStyle]="{'color': m.truck ? '#10b981' : '#60a5fa'}">
                             {{ m.truck ? 'Camion' : 'Remorque' }}
                         </p>
                         <p class="text-sm font-bold text-gray-100 font-mono mt-0.5">
@@ -58,45 +65,50 @@
                             'text-amber-500 bg-amber-500/10 border-amber-500/20': m.status === 'IN_PROGRESS',
                             'text-emerald-500 bg-emerald-500/10 border-emerald-500/20': m.status === 'COMPLETED',
                             'text-gray-400 bg-gray-500/10 border-gray-500/20': m.status === 'PLANNED'
-                        }" class="inline-flex px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest border">
+                        }"
+                        class="inline-flex px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest border">
                         {{ m.status }}
                     </span>
-                    <span class="text-[10px] text-gray-400 font-mono mt-2">{{ m.dateMaintenance | date:'dd/MM/yy' }}</span>
+                    <span class="text-[10px] text-gray-400 font-mono mt-2">{{ m.dateMaintenance | date:'dd/MM/yy'
+                        }}</span>
                 </div>
             </div>
 
             <!-- Body -->
             <div class="px-5 py-5 space-y-4 flex-1">
                 <div>
-                     <p class="text-sm font-semibold text-gray-100 leading-snug">{{ m.description }}</p>
-                     <p class="text-[10px] uppercase tracking-widest text-gray-500 mt-1 font-mono">
+                    <p class="text-sm font-semibold text-gray-100 leading-snug">{{ m.description }}</p>
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 mt-1 font-mono">
                         {{ m.reference }} <span class="mx-1">•</span> <span class="text-gray-400">{{ m.type }}</span>
-                     </p>
+                    </p>
                 </div>
-                
+
                 <div class="pt-4 border-t border-gray-800/50 flex items-center justify-between">
-                     <div>
+                    <div>
                         <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-0.5">Coût</p>
-                        <p class="text-sm font-mono font-bold text-emerald-400">{{ m.cout | currency:'MAD':'':'1.0-0' }} <span class="text-[10px] font-sans font-normal text-gray-400">MAD</span></p>
-                     </div>
+                        <p class="text-sm font-mono font-bold text-emerald-400">{{ m.cout | currency:'MAD':'':'1.0-0' }}
+                            <span class="text-[10px] font-sans font-normal text-gray-400">MAD</span></p>
+                    </div>
                 </div>
             </div>
 
             <!-- Actions Footer -->
-            <div class="px-5 py-3 flex justify-end gap-2 mt-auto" style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
+            <div class="px-5 py-3 flex justify-end gap-2 mt-auto"
+                style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
                 <button (click)="openDetailsModal(m)"
-                    class="p-1.5 rounded-md text-emerald-400 hover:bg-emerald-400/10 transition-colors"
-                    title="Détails">
+                    class="p-1.5 rounded-md text-emerald-400 hover:bg-emerald-400/10 transition-colors" title="Détails">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                 </button>
                 <button (click)="openEditModal(m)"
-                    class="p-1.5 rounded-md text-amber-500 hover:bg-amber-500/10 transition-colors"
-                    title="Modifier">
+                    class="p-1.5 rounded-md text-amber-500 hover:bg-amber-500/10 transition-colors" title="Modifier">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
                 </button>
             </div>
@@ -104,10 +116,12 @@
 
         <!-- Empty State -->
         <div *ngIf="maintenances.length === 0" class="col-span-full py-20 text-center fleet-card">
-            <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4 border border-gray-800 bg-gray-900">
+            <div
+                class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4 border border-gray-800 bg-gray-900">
                 <svg class="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                    </path>
                 </svg>
             </div>
             <p class="font-display font-semibold text-gray-400">Aucune intervention</p>
@@ -156,7 +170,8 @@
                 </div>
                 <div>
                     <label class="fleet-label">Référence Facture</label>
-                    <input type="text" formControlName="reference" class="fleet-input font-mono bg-gray-800/50 cursor-not-allowed opacity-70 border-gray-700/50"
+                    <input type="text" formControlName="reference"
+                        class="fleet-input font-mono bg-gray-800/50 cursor-not-allowed opacity-70 border-gray-700/50"
                         placeholder="Automatique" readonly>
                 </div>
                 <div>

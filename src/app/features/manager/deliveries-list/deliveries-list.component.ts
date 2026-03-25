@@ -363,3 +363,4 @@ export class ManagerDeliveriesListComponent implements OnInit {
         });
     }
 }
+}

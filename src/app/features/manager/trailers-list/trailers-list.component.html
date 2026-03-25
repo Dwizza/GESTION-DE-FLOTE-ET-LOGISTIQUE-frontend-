@@ -33,26 +33,31 @@
 
     <!-- Grid Section -->
     <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-        <div *ngFor="let t of trailers; let i = index" class="fleet-card group animate-fade-in transition-colors hover:border-[#10b981]/30 flex flex-col"
+        <div *ngFor="let t of trailers; let i = index"
+            class="fleet-card group animate-fade-in transition-colors hover:border-[#10b981]/30 flex flex-col"
             [style.animationDelay]="(i * 0.05) + 's'">
             <!-- Card Header -->
             <div class="px-5 py-4 flex items-center justify-between gap-4" style="border-bottom: 1px solid #2a2d35;">
                 <div class="flex items-center gap-3">
                     <div class="h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg"
                         style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
-                        <svg class="h-5 w-5" style="color: #10b981;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        <svg class="h-5 w-5" style="color: #10b981;" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
                     </div>
                     <div>
                         <h3 class="font-display font-bold text-sm" style="color: #f4f5f7;">{{ t.type | titlecase }}</h3>
-                        <p class="text-[10px] font-mono mt-0.5" style="color: #6b7280;">ID: {{ t.id | slice:0:8 }}...</p>
+                        <p class="text-[10px] font-mono mt-0.5" style="color: #6b7280;">ID: {{ t.id | slice:0:8 }}...
+                        </p>
                     </div>
                 </div>
                 <div class="flex-shrink-0">
-                    <span [ngClass]="getStatusColor(t.status)" class="inline-flex items-center gap-1.5 px-2 py-1 rounded text-[10px] uppercase font-bold tracking-widest bg-gray-900 border border-gray-800">
+                    <span [ngClass]="getStatusColor(t.status)"
+                        class="inline-flex items-center gap-1.5 px-2 py-1 rounded text-[10px] uppercase font-bold tracking-widest bg-gray-900 border border-gray-800">
                         <span class="w-1.5 h-1.5 rounded-full"
-                              [style.background]="t.status === 'AVAILABLE' ? '#10b981' : t.status === 'IN_USE' ? '#60a5fa' : t.status === 'IN_MAINTENANCE' ? '#f59e0b' : '#ef4444'"></span>
+                            [style.background]="t.status === 'AVAILABLE' ? '#10b981' : t.status === 'IN_USE' ? '#60a5fa' : t.status === 'IN_MAINTENANCE' ? '#f59e0b' : '#ef4444'"></span>
                         {{ t.status }}
                     </span>
                 </div>
@@ -63,23 +68,28 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="p-3 rounded-xl" style="background: rgba(0,0,0,0.2); border: 1px solid #2a2d35;">
                         <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-1">Poids Max</p>
-                        <p class="text-sm font-mono font-bold text-gray-100">{{ t.maxWeight }} <span class="text-[10px] text-gray-500 font-sans font-normal">Tonnes</span></p>
+                        <p class="text-sm font-mono font-bold text-gray-100">{{ t.maxWeight }} <span
+                                class="text-[10px] text-gray-500 font-sans font-normal">Tonnes</span></p>
                     </div>
                     <div class="p-3 rounded-xl" style="background: rgba(0,0,0,0.2); border: 1px solid #2a2d35;">
                         <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-1">Volume Max</p>
-                        <p class="text-sm font-mono font-bold text-gray-100">{{ t.maxVolume }} <span class="text-[10px] text-gray-500 font-sans font-normal">m³</span></p>
+                        <p class="text-sm font-mono font-bold text-gray-100">{{ t.maxVolume }} <span
+                                class="text-[10px] text-gray-500 font-sans font-normal">m³</span></p>
                     </div>
                 </div>
             </div>
 
             <!-- Footer Actions -->
-            <div class="px-5 py-3 flex justify-end gap-3 mt-auto" style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
+            <div class="px-5 py-3 flex justify-end gap-3 mt-auto"
+                style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
                 <button (click)="openDetailModal(t)"
                     class="p-1.5 rounded-md text-emerald-400 hover:bg-emerald-400/10 transition-colors"
                     title="Détails techniques">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                 </button>
             </div>
@@ -87,7 +97,8 @@
 
         <!-- Empty State -->
         <div *ngIf="trailers.length === 0" class="col-span-full py-20 text-center fleet-card">
-            <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4 border border-gray-800 bg-gray-900">
+            <div
+                class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4 border border-gray-800 bg-gray-900">
                 <svg class="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                         d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />

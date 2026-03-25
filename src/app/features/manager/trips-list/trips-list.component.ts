@@ -250,3 +250,4 @@ export class ManagerTripsListComponent implements OnInit {
         return control ? (control.value || []).includes(id) : false;
     }
 }
+}
