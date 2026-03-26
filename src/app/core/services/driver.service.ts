@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TripResponse } from '../models/trip.model';
 import { DriverResponse } from '../models/driver.model';
+import { PaginatedResponse } from '../models/pagination.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -16,6 +17,10 @@ export class DriverService {
         return this.http.get<TripResponse[]>(`${this.apiUrl}/trips`);
     }
 
+    getAssignedTripsPaginated(page: number = 0, size: number = 10): Observable<PaginatedResponse<TripResponse>> {
+        return this.http.get<PaginatedResponse<TripResponse>>(`${this.apiUrl}/trips/page?page=${page}&size=${size}`);
+    }
+
     acceptTrip(tripId: string) {
         return this.http.post<TripResponse>(`${this.apiUrl}/trips/${tripId}/accept`, {});
     }
@@ -24,13 +29,17 @@ export class DriverService {
         return this.http.post<TripResponse>(`${this.apiUrl}/trips/${tripId}/refuse`, {});
     }
 
-    completeTrip(tripId: string) {
-        return this.http.post<TripResponse>(`${this.apiUrl}/trips/${tripId}/complete`, {});
+    completeTrip(tripId: string, distance?: number) {
+        return this.http.post<TripResponse>(`${this.apiUrl}/trips/${tripId}/complete`, { distance });
     }
 
     // Management Methods
     getDrivers(): Observable<DriverResponse[]> {
         return this.http.get<DriverResponse[]>(`${environment.apiUrl}/admin/drivers`);
+    }
+
+    getDriversPaginated(page: number = 0, size: number = 10): Observable<PaginatedResponse<DriverResponse>> {
+        return this.http.get<PaginatedResponse<DriverResponse>>(`${environment.apiUrl}/admin/drivers/page?page=${page}&size=${size}`);
     }
 
     getDriverById(id: string): Observable<DriverResponse> {
@@ -51,5 +60,9 @@ export class DriverService {
 
     getDriverTrips(id: string): Observable<TripResponse[]> {
         return this.http.get<TripResponse[]>(`${environment.apiUrl}/admin/driver/${id}/trips`);
+    }
+
+    getDriverTripsPaginated(id: string, page: number = 0, size: number = 10): Observable<PaginatedResponse<TripResponse>> {
+        return this.http.get<PaginatedResponse<TripResponse>>(`${environment.apiUrl}/admin/driver/${id}/trips/page?page=${page}&size=${size}`);
     }
 }

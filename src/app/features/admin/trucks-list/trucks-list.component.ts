@@ -22,6 +22,13 @@ export class TrucksListComponent implements OnInit {
     selectedTruck: TruckResponse | null = null;
     editingId: string | null = null;
 
+    // Pagination
+    currentPage = 0;
+    pageSize = 10;
+    totalElements = 0;
+    totalPages = 0;
+    isLastPage = false;
+
     truckForm: FormGroup = this.fb.group({
         registrationNumber: ['', Validators.required],
         brand: ['', Validators.required],
@@ -35,9 +42,12 @@ export class TrucksListComponent implements OnInit {
 
     loadTrucks() {
         this.isLoading = true;
-        this.truckService.getTrucks().subscribe({
-            next: (data) => {
-                this.trucks = data;
+        this.truckService.getTrucksPaginated(this.currentPage, this.pageSize).subscribe({
+            next: (response) => {
+                this.trucks = response.content;
+                this.totalElements = response.totalElements;
+                this.totalPages = response.totalPages;
+                this.isLastPage = response.last;
                 this.isLoading = false;
             },
             error: (err) => {
@@ -45,6 +55,13 @@ export class TrucksListComponent implements OnInit {
                 this.isLoading = false;
             }
         });
+    }
+
+    onPageChange(page: number) {
+        if (page >= 0 && page < this.totalPages) {
+            this.currentPage = page;
+            this.loadTrucks();
+        }
     }
 
     openModal() {

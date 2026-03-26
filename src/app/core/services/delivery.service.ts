@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { DeliveryResponse } from '../models/delivery.model';
+import { PaginatedResponse } from '../models/pagination.model';
 
 @Injectable({
     providedIn: 'root'
@@ -13,6 +14,10 @@ export class DeliveryService {
 
     getDeliveries(): Observable<DeliveryResponse[]> {
         return this.http.get<DeliveryResponse[]>(this.apiUrl);
+    }
+
+    getDeliveriesPaginated(page: number = 0, size: number = 10): Observable<PaginatedResponse<DeliveryResponse>> {
+        return this.http.get<PaginatedResponse<DeliveryResponse>>(`${this.apiUrl}/page?page=${page}&size=${size}`);
     }
 
     createDelivery(delivery: any): Observable<DeliveryResponse> {

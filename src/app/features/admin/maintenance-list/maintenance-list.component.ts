@@ -36,6 +36,13 @@ export class MaintenanceListComponent implements OnInit {
   editingId: string | null = null;
   selectedMaintenance: MaintenanceResponse | null = null;
 
+  // Pagination
+  currentPage = 0;
+  pageSize = 10;
+  totalElements = 0;
+  totalPages = 0;
+  isLastPage = false;
+
   // We use a radio button to toggle whether we are servicing a truck or a trailer
   serviceType: 'TRUCK' | 'TRAILER' = 'TRUCK';
 
@@ -57,9 +64,12 @@ export class MaintenanceListComponent implements OnInit {
 
   loadData() {
     this.isLoading = true;
-    this.maintenanceService.getMaintenances().subscribe({
-      next: (data: MaintenanceResponse[]) => {
-        this.maintenances = data;
+    this.maintenanceService.getMaintenancesPaginated(this.currentPage, this.pageSize).subscribe({
+      next: (response) => {
+        this.maintenances = response.content;
+        this.totalElements = response.totalElements;
+        this.totalPages = response.totalPages;
+        this.isLastPage = response.last;
         this.isLoading = false;
       },
       error: (err: any) => {
@@ -77,6 +87,13 @@ export class MaintenanceListComponent implements OnInit {
     // Preload trucks and trailers for the dropdowns
     this.truckService.getTrucks().subscribe((t: TruckResponse[]) => this.trucks = t);
     this.trailerService.getTrailers().subscribe((tr: TrailerResponse[]) => this.trailers = tr);
+  }
+
+  onPageChange(page: number) {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadData();
+    }
   }
 
   setServiceType(type: 'TRUCK' | 'TRAILER') {

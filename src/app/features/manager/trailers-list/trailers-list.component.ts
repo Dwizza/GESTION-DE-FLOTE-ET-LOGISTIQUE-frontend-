@@ -21,6 +21,13 @@ export class ManagerTrailersListComponent implements OnInit {
     isSubmitting = false;
     selectedTrailer: TrailerResponse | null = null;
 
+    // Pagination
+    currentPage = 0;
+    pageSize = 10;
+    totalElements = 0;
+    totalPages = 0;
+    isLastPage = false;
+
     trailerForm: FormGroup = this.fb.group({
         type: ['', Validators.required],
         maxWeight: [0, [Validators.required, Validators.min(1)]],
@@ -34,9 +41,12 @@ export class ManagerTrailersListComponent implements OnInit {
 
     loadTrailers() {
         this.isLoading = true;
-        this.trailerService.getTrailers().subscribe({
-            next: (data: TrailerResponse[]) => {
-                this.trailers = data;
+        this.trailerService.getTrailersPaginated(this.currentPage, this.pageSize).subscribe({
+            next: (response) => {
+                this.trailers = response.content;
+                this.totalElements = response.totalElements;
+                this.totalPages = response.totalPages;
+                this.isLastPage = response.last;
                 this.isLoading = false;
             },
             error: (err: any) => {
@@ -44,6 +54,13 @@ export class ManagerTrailersListComponent implements OnInit {
                 this.isLoading = false;
             }
         });
+    }
+
+    onPageChange(page: number) {
+        if (page >= 0 && page < this.totalPages) {
+            this.currentPage = page;
+            this.loadTrailers();
+        }
     }
 
     openModal() {

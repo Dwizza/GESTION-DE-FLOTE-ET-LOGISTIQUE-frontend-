@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { TrailerResponse } from '../models/trailer.model';
+import { PaginatedResponse } from '../models/pagination.model';
 
 @Injectable({
     providedIn: 'root'
@@ -13,6 +14,10 @@ export class TrailerService {
 
     getTrailers(): Observable<TrailerResponse[]> {
         return this.http.get<TrailerResponse[]>(this.apiUrl);
+    }
+
+    getTrailersPaginated(page: number = 0, size: number = 10): Observable<PaginatedResponse<TrailerResponse>> {
+        return this.http.get<PaginatedResponse<TrailerResponse>>(`${this.apiUrl}/page?page=${page}&size=${size}`);
     }
 
     getTrailerById(id: string): Observable<TrailerResponse> {

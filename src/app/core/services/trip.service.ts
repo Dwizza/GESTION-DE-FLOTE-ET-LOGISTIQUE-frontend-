@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { TripResponse } from '../models/trip.model';
+import { PaginatedResponse } from '../models/pagination.model';
 
 @Injectable({
     providedIn: 'root'
@@ -13,6 +14,10 @@ export class TripService {
 
     getTrips(): Observable<TripResponse[]> {
         return this.http.get<TripResponse[]>(this.apiUrl);
+    }
+
+    getTripsPaginated(page: number = 0, size: number = 10): Observable<PaginatedResponse<TripResponse>> {
+        return this.http.get<PaginatedResponse<TripResponse>>(`${this.apiUrl}/page?page=${page}&size=${size}`);
     }
 
     createTrip(trip: any): Observable<TripResponse> {

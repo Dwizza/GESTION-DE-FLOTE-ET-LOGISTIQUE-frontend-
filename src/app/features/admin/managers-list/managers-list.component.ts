@@ -18,6 +18,13 @@ export class ManagersListComponent implements OnInit {
     isLoading = true;
     isModalOpen = false;
 
+    // Pagination
+    currentPage = 0;
+    pageSize = 10;
+    totalElements = 0;
+    totalPages = 0;
+    isLastPage = false;
+
     managerForm: FormGroup = this.fb.group({
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
@@ -33,9 +40,12 @@ export class ManagersListComponent implements OnInit {
 
     loadManagers() {
         this.isLoading = true;
-        this.managerManagementService.getManagers().subscribe({
-            next: (data: ManagerResponse[]) => {
-                this.managers = data;
+        this.managerManagementService.getManagersPaginated(this.currentPage, this.pageSize).subscribe({
+            next: (response) => {
+                this.managers = response.content;
+                this.totalElements = response.totalElements;
+                this.totalPages = response.totalPages;
+                this.isLastPage = response.last;
                 this.isLoading = false;
             },
             error: (err: any) => {
@@ -43,6 +53,13 @@ export class ManagersListComponent implements OnInit {
                 this.isLoading = false;
             }
         });
+    }
+
+    onPageChange(page: number) {
+        if (page >= 0 && page < this.totalPages) {
+            this.currentPage = page;
+            this.loadManagers();
+        }
     }
 
     openModal() {

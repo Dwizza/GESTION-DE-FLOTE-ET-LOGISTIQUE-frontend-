@@ -105,7 +105,7 @@ import Swal from 'sweetalert2';
       </div>
 
       <!-- Empty State -->
-      <div *ngIf="trips.length === 0" class="py-20 text-center fleet-card bg-transparent border-dashed">
+      <div *ngIf="trips.length === 0 && !isLoading" class="py-20 text-center fleet-card bg-transparent border-dashed">
         <div class="h-16 w-16 mx-auto rounded-full flex items-center justify-center mb-4" style="background: #141518; border: 1px solid #2a2d35;">
             <svg class="h-8 w-8" style="color: #4b5563;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
@@ -114,22 +114,74 @@ import Swal from 'sweetalert2';
         <h3 class="text-base font-bold text-white mb-1">Aucun trajet assigné</h3>
         <p class="text-sm" style="color: #4b5563;">Les nouvelles missions apparaîtront ici dès leur allocation.</p>
       </div>
+
+      <!-- Pagination -->
+      <div *ngIf="!isLoading && totalElements > 0" class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 mt-4 border-t border-gray-800/50">
+          <div class="text-xs font-mono text-gray-500">
+              Affichage de <span class="text-gray-300">{{ currentPage * pageSize + 1 }}</span> à
+              <span class="text-gray-300">{{ (currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize }}</span> sur
+              <span class="text-gray-300">{{ totalElements }}</span> trajets
+          </div>
+
+          <div class="flex items-center gap-2">
+              <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0"
+                  class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                  </svg>
+              </button>
+              <span class="text-xs font-mono px-3 py-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-300">
+                  Page {{ currentPage + 1 }} / {{ totalPages }}
+              </span>
+              <button (click)="onPageChange(currentPage + 1)" [disabled]="isLastPage"
+                  class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+              </button>
+          </div>
+      </div>
     </div>
   `
 })
 export class DriverTripsListComponent implements OnInit {
   private driverService = inject(DriverService);
   trips: TripResponse[] = [];
+  isLoading = false;
+
+  // Pagination
+  currentPage = 0;
+  pageSize = 10;
+  totalElements = 0;
+  totalPages = 0;
+  isLastPage = false;
 
   ngOnInit() {
     this.loadTrips();
   }
 
   loadTrips() {
-    this.driverService.getAssignedTrips().subscribe({
-      next: (data) => this.trips = data,
-      error: (err) => console.error('Error loading driver trips', err)
+    this.isLoading = true;
+    this.driverService.getAssignedTripsPaginated(this.currentPage, this.pageSize).subscribe({
+      next: (response) => {
+        this.trips = response.content;
+        this.totalElements = response.totalElements;
+        this.totalPages = response.totalPages;
+        this.isLastPage = response.last;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading driver trips', err);
+        this.isLoading = false;
+      }
     });
+  }
+
+  onPageChange(page: number) {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadTrips();
+    }
   }
 
   acceptTrip(trip: TripResponse) {

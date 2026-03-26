@@ -24,6 +24,13 @@ export class ClientsListComponent implements OnInit {
   selectedClientId: string | null = null;
   selectedClientDetails: ClientResponse | null = null;
 
+  // Pagination
+  currentPage = 0;
+  pageSize = 10;
+  totalElements = 0;
+  totalPages = 0;
+  isLastPage = false;
+
   clientForm: FormGroup = this.fb.group({
     companyName: ['', Validators.required],
     phone: ['', Validators.required],
@@ -38,9 +45,12 @@ export class ClientsListComponent implements OnInit {
 
   loadClients() {
     this.isLoading = true;
-    this.clientService.getClients().subscribe({
-      next: (data) => {
-        this.clients = data;
+    this.clientService.getClientsPaginated(this.currentPage, this.pageSize).subscribe({
+      next: (response) => {
+        this.clients = response.content;
+        this.totalElements = response.totalElements;
+        this.totalPages = response.totalPages;
+        this.isLastPage = response.last;
         this.isLoading = false;
       },
       error: (err) => {
@@ -54,6 +64,13 @@ export class ClientsListComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  onPageChange(page: number) {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadClients();
+    }
   }
 
   openModal(client?: ClientResponse) {

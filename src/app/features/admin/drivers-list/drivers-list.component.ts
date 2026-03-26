@@ -27,6 +27,20 @@ export class DriversListComponent implements OnInit {
     driverTrips: TripResponse[] = [];
     isLoadingTrips = false;
 
+    // Driver Pagination
+    currentPage = 0;
+    pageSize = 10;
+    totalElements = 0;
+    totalPages = 0;
+    isLastPage = false;
+
+    // Trip History Pagination (in modal)
+    tripCurrentPage = 0;
+    tripPageSize = 5; // Smaller size for modal
+    tripTotalElements = 0;
+    tripTotalPages = 0;
+    tripIsLastPage = false;
+
     driverForm: FormGroup = this.fb.group({
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
@@ -42,9 +56,12 @@ export class DriversListComponent implements OnInit {
 
     loadDrivers() {
         this.isLoading = true;
-        this.driverService.getDrivers().subscribe({
-            next: (data) => {
-                this.drivers = data;
+        this.driverService.getDriversPaginated(this.currentPage, this.pageSize).subscribe({
+            next: (response) => {
+                this.drivers = response.content;
+                this.totalElements = response.totalElements;
+                this.totalPages = response.totalPages;
+                this.isLastPage = response.last;
                 this.isLoading = false;
             },
             error: (err) => {
@@ -52,6 +69,13 @@ export class DriversListComponent implements OnInit {
                 this.isLoading = false;
             }
         });
+    }
+
+    onPageChange(page: number) {
+        if (page >= 0 && page < this.totalPages) {
+            this.currentPage = page;
+            this.loadDrivers();
+        }
     }
 
     openModal() {
@@ -97,15 +121,18 @@ export class DriversListComponent implements OnInit {
     openDetailModal(driver: DriverResponse) {
         this.selectedDriver = driver;
         this.isDetailModalOpen = true;
+        this.tripCurrentPage = 0;
         this.loadDriverTrips(driver.id);
     }
 
     loadDriverTrips(driverId: string) {
         this.isLoadingTrips = true;
-        this.driverTrips = [];
-        this.driverService.getDriverTrips(driverId).subscribe({
-            next: (data) => {
-                this.driverTrips = data;
+        this.driverService.getDriverTripsPaginated(driverId, this.tripCurrentPage, this.tripPageSize).subscribe({
+            next: (response) => {
+                this.driverTrips = response.content;
+                this.tripTotalElements = response.totalElements;
+                this.tripTotalPages = response.totalPages;
+                this.tripIsLastPage = response.last;
                 this.isLoadingTrips = false;
             },
             error: (err) => {
@@ -113,6 +140,13 @@ export class DriversListComponent implements OnInit {
                 this.isLoadingTrips = false;
             }
         });
+    }
+
+    onTripPageChange(page: number) {
+        if (page >= 0 && page < this.tripTotalPages && this.selectedDriver) {
+            this.tripCurrentPage = page;
+            this.loadDriverTrips(this.selectedDriver.id);
+        }
     }
 
     closeDetailModal() {

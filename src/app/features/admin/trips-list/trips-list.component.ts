@@ -43,6 +43,13 @@ export class TripsListComponent implements OnInit {
   selectedTripDetails: TripResponse | null = null;
   isSubmitting = false;
 
+  // Pagination
+  currentPage = 0;
+  pageSize = 10;
+  totalElements = 0;
+  totalPages = 0;
+  isLastPage = false;
+
   tripForm: FormGroup = this.fb.group({
     reference: ['', Validators.required],
     startDate: ['', Validators.required],
@@ -61,9 +68,12 @@ export class TripsListComponent implements OnInit {
 
   loadData() {
     this.isLoading = true;
-    this.tripService.getTrips().subscribe({
-      next: (data: TripResponse[]) => {
-        this.trips = data;
+    this.tripService.getTripsPaginated(this.currentPage, this.pageSize).subscribe({
+      next: (response) => {
+        this.trips = response.content;
+        this.totalElements = response.totalElements;
+        this.totalPages = response.totalPages;
+        this.isLastPage = response.last;
         this.isLoading = false;
       },
       error: (err: any) => {
@@ -72,11 +82,18 @@ export class TripsListComponent implements OnInit {
       }
     });
 
-    // Preload resources for creation form
+    // Preload resources for creation form (available resources)
     this.driverService.getDrivers().subscribe((d: DriverResponse[]) => this.drivers = d.filter(driver => driver.available));
     this.truckService.getTrucks().subscribe((t: TruckResponse[]) => this.trucks = t.filter(truck => truck.status === 'AVAILABLE'));
     this.trailerService.getTrailers().subscribe((tr: TrailerResponse[]) => this.trailers = tr.filter(trailer => trailer.status === 'AVAILABLE'));
     this.clientService.getClients().subscribe((c: ClientResponse[]) => this.clients = c);
+  }
+
+  onPageChange(page: number) {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadData();
+    }
   }
 
   generateReference(prefix: string): string {

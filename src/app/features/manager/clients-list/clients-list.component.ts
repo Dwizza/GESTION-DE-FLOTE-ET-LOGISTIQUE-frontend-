@@ -16,15 +16,25 @@ export class ManagerClientsListComponent implements OnInit {
     clients: ClientResponse[] = [];
     isLoading = true;
 
+    // Pagination
+    currentPage = 0;
+    pageSize = 10;
+    totalElements = 0;
+    totalPages = 0;
+    isLastPage = false;
+
     ngOnInit(): void {
         this.loadClients();
     }
 
     loadClients() {
         this.isLoading = true;
-        this.clientService.getClients().subscribe({
-            next: (data: ClientResponse[]) => {
-                this.clients = data;
+        this.clientService.getClientsPaginated(this.currentPage, this.pageSize).subscribe({
+            next: (response) => {
+                this.clients = response.content;
+                this.totalElements = response.totalElements;
+                this.totalPages = response.totalPages;
+                this.isLastPage = response.last;
                 this.isLoading = false;
             },
             error: (err: any) => {
@@ -38,5 +48,12 @@ export class ManagerClientsListComponent implements OnInit {
                 this.isLoading = false;
             }
         });
+    }
+
+    onPageChange(page: number) {
+        if (page >= 0 && page < this.totalPages) {
+            this.currentPage = page;
+            this.loadClients();
+        }
     }
 }

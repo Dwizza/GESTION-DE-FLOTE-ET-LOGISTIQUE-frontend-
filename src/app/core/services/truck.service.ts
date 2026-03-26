@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { TruckResponse } from '../models/truck.model';
+import { PaginatedResponse } from '../models/pagination.model';
 
 @Injectable({
     providedIn: 'root'
@@ -13,6 +14,10 @@ export class TruckService {
 
     getTrucks(): Observable<TruckResponse[]> {
         return this.http.get<TruckResponse[]>(this.apiUrl);
+    }
+
+    getTrucksPaginated(page: number = 0, size: number = 10): Observable<PaginatedResponse<TruckResponse>> {
+        return this.http.get<PaginatedResponse<TruckResponse>>(`${this.apiUrl}/page?page=${page}&size=${size}`);
     }
 
     getTruckById(id: string): Observable<TruckResponse> {

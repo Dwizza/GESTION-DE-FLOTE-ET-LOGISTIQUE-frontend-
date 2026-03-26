@@ -27,6 +27,13 @@ export class ManagerFuelListComponent implements OnInit {
     editMode = false;
     selectedId: string | null = null;
 
+    // Pagination
+    currentPage = 0;
+    pageSize = 10;
+    totalElements = 0;
+    totalPages = 0;
+    isLastPage = false;
+
     fuelForm: FormGroup = this.fb.group({
         reference: ['', Validators.required],
         truckId: ['', Validators.required],
@@ -43,9 +50,12 @@ export class ManagerFuelListComponent implements OnInit {
 
     loadData() {
         this.isLoading = true;
-        this.fuelService.getFuelTransactions().subscribe({
-            next: (data: CarburantTransactionResponse[]) => {
-                this.transactions = data;
+        this.fuelService.getFuelTransactionsPaginated(this.currentPage, this.pageSize).subscribe({
+            next: (response) => {
+                this.transactions = response.content;
+                this.totalElements = response.totalElements;
+                this.totalPages = response.totalPages;
+                this.isLastPage = response.last;
                 this.isLoading = false;
             },
             error: (err: any) => {
@@ -61,6 +71,13 @@ export class ManagerFuelListComponent implements OnInit {
         });
 
         this.truckService.getTrucks().subscribe((t: TruckResponse[]) => this.trucks = t);
+    }
+
+    onPageChange(page: number) {
+        if (page >= 0 && page < this.totalPages) {
+            this.currentPage = page;
+            this.loadData();
+        }
     }
 
     generateReference(prefix: string): string {

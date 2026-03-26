@@ -46,6 +46,13 @@ export class DeliveriesListComponent implements OnInit {
   selectedDeliveryDetails: DeliveryResponse | null = null;
   isSubmitting = false;
 
+  // Pagination
+  currentPage = 0;
+  pageSize = 10;
+  totalElements = 0;
+  totalPages = 0;
+  isLastPage = false;
+
   deliveryForm: FormGroup = this.fb.group({
     reference: ['', Validators.required],
     description: [''],
@@ -105,9 +112,12 @@ export class DeliveriesListComponent implements OnInit {
 
   loadData() {
     this.isLoading = true;
-    this.deliveryService.getDeliveries().subscribe({
-      next: (data: DeliveryResponse[]) => {
-        this.deliveries = data;
+    this.deliveryService.getDeliveriesPaginated(this.currentPage, this.pageSize).subscribe({
+      next: (response) => {
+        this.deliveries = response.content;
+        this.totalElements = response.totalElements;
+        this.totalPages = response.totalPages;
+        this.isLastPage = response.last;
         this.isLoading = false;
       },
       error: (err: any) => {
@@ -119,6 +129,13 @@ export class DeliveriesListComponent implements OnInit {
     // Preload trips to link deliveries to trips
     this.tripService.getTrips().subscribe((t: TripResponse[]) => this.trips = t);
     this.clientService.getClients().subscribe((c: ClientResponse[]) => this.clients = c);
+  }
+
+  onPageChange(page: number) {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadData();
+    }
   }
 
   openModal() {
