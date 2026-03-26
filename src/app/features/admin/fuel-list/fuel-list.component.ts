@@ -35,7 +35,6 @@ export class FuelListComponent implements OnInit {
   isLastPage = false;
 
   fuelForm: FormGroup = this.fb.group({
-    reference: ['', Validators.required],
     truckId: ['', Validators.required],
     dateHeure: ['', Validators.required],
     quantite: [0, [Validators.required, Validators.min(0.1)]],
@@ -87,7 +86,6 @@ export class FuelListComponent implements OnInit {
     if (transaction) {
       this.selectedId = transaction.id;
       this.fuelForm.patchValue({
-        reference: transaction.reference,
         truckId: transaction.truckId,
         dateHeure: transaction.dateHeure.split('T')[0],
         quantite: transaction.quantite,

@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { DeliveryService } from '../../../core/services/delivery.service';
 import { TripService } from '../../../core/services/trip.service';
 import { ClientService } from '../../../core/services/client.service';
+
 import Swal from 'sweetalert2';
 import { DeliveryResponse } from '../../../core/models/delivery.model';
 import { TripResponse } from '../../../core/models/trip.model';
@@ -26,6 +27,7 @@ export class DeliveriesListComponent implements OnInit {
   private clientService = inject(ClientService);
   private trackingService = inject(TrackingService);
   private geocodingService = inject(GeocodingService);
+
   private fb = inject(FormBuilder);
 
   // Map Data
@@ -54,7 +56,6 @@ export class DeliveriesListComponent implements OnInit {
   isLastPage = false;
 
   deliveryForm: FormGroup = this.fb.group({
-    reference: ['', Validators.required],
     description: [''],
     weight: [null, [Validators.required, Validators.min(0.1)]],
     volume: [null, [Validators.required, Validators.min(0.1)]],
@@ -145,6 +146,7 @@ export class DeliveriesListComponent implements OnInit {
     this.selectionType = null;
     this.tempMarkers = [];
     this.deliveryForm.reset({ status: 'CREATED', tripId: '' });
+
   }
 
   openUpdateModal(delivery: DeliveryResponse) {
@@ -155,7 +157,6 @@ export class DeliveriesListComponent implements OnInit {
     this.updateTempMarkers(delivery);
 
     this.deliveryForm.patchValue({
-      reference: delivery.reference,
       description: delivery.description,
       weight: delivery.weight,
       volume: delivery.volume,
@@ -307,6 +308,8 @@ export class DeliveriesListComponent implements OnInit {
 
     this.isSubmitting = true;
     const payload = this.deliveryForm.value;
+
+
 
     const request$ = this.isUpdateMode && this.currentDeliveryId
       ? this.deliveryService.updateDelivery(this.currentDeliveryId, payload)

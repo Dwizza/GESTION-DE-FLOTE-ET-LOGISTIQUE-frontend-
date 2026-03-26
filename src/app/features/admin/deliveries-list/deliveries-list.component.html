@@ -183,16 +183,8 @@
         <div class="overflow-y-auto custom-scrollbar flex-1 p-6">
             <form [formGroup]="deliveryForm" class="space-y-6">
 
-                <!-- Reference -->
-                <div>
-                    <label class="fleet-label">Référence <span class="text-red-500">*</span></label>
-                    <input type="text" formControlName="reference" class="fleet-input font-mono bg-gray-800/50 cursor-not-allowed opacity-70 border-gray-700/50" 
-                        [class.border-red-500]="deliveryForm.get('reference')?.invalid && deliveryForm.get('reference')?.touched"
-                        placeholder="Automatique" readonly>
-                    <p class="text-[10px] text-red-500 mt-1" *ngIf="deliveryForm.get('reference')?.invalid && deliveryForm.get('reference')?.touched">
-                        Référence requise
-                    </p>
-                </div>
+
+                <!-- Specs -->
 
                 <!-- Specs -->
                 <div class="pt-4 border-t border-gray-800 grid grid-cols-2 md:grid-cols-4 gap-4">

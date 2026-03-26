@@ -8,6 +8,7 @@ import { DriverService } from '../../../core/services/driver.service';
 import { TruckService } from '../../../core/services/truck.service';
 import { TrailerService } from '../../../core/services/trailer.service';
 import { ClientService } from '../../../core/services/client.service';
+
 import { TripResponse } from '../../../core/models/trip.model';
 import { DriverResponse } from '../../../core/models/driver.model';
 import { TruckResponse } from '../../../core/models/truck.model';
@@ -26,6 +27,7 @@ export class TripsListComponent implements OnInit {
   private truckService = inject(TruckService);
   private trailerService = inject(TrailerService);
   private clientService = inject(ClientService);
+
   private fb = inject(FormBuilder);
   private http = inject(HttpClient);
 
@@ -51,7 +53,6 @@ export class TripsListComponent implements OnInit {
   isLastPage = false;
 
   tripForm: FormGroup = this.fb.group({
-    reference: ['', Validators.required],
     startDate: ['', Validators.required],
     status: ['PLANNED', Validators.required],
     driverId: ['', Validators.required],
@@ -96,21 +97,13 @@ export class TripsListComponent implements OnInit {
     }
   }
 
-  generateReference(prefix: string): string {
-    const date = new Date();
-    const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, '0');
-    const dd = String(date.getDate()).padStart(2, '0');
-    const randomStr = Math.random().toString(36).substring(2, 6).toUpperCase();
-    return `${prefix}-${yyyy}${mm}${dd}-${randomStr}`;
-  }
+
 
   openModal() {
     this.isUpdateMode = false;
     this.currentTripId = null;
     this.isModalOpen = true;
     this.tripForm.reset({ status: 'PLANNED', truckIds: [], trailerIds: [] });
-    this.tripForm.patchValue({ reference: this.generateReference('TRP') });
     // Hide currently in-trip trucks by reloading only available ones
     this.driverService.getDrivers().subscribe((d: DriverResponse[]) => this.drivers = d.filter(driver => driver.available));
     this.truckService.getTrucks().subscribe((t: TruckResponse[]) => this.trucks = t.filter(truck => truck.status === 'AVAILABLE'));
@@ -134,7 +127,6 @@ export class TripsListComponent implements OnInit {
     });
 
     this.tripForm.patchValue({
-      reference: trip.reference,
       startDate: trip.startDate,
       status: trip.status || 'PLANNED',
       driverId: trip.driver?.id,
@@ -163,6 +155,8 @@ export class TripsListComponent implements OnInit {
 
     this.isSubmitting = true;
     const payload = this.tripForm.value;
+
+
 
     // Convert single selection to array if necessary, depending on how the multiselect binds
     if (!Array.isArray(payload.truckIds) && payload.truckIds) {

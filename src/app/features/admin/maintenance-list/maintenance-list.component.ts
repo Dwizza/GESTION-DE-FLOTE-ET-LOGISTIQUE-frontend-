@@ -47,7 +47,6 @@ export class MaintenanceListComponent implements OnInit {
   serviceType: 'TRUCK' | 'TRAILER' = 'TRUCK';
 
   maintenanceForm: FormGroup = this.fb.group({
-    reference: ['', Validators.required],
     description: ['', Validators.required],
     type: ['PREVENTIVE', Validators.required],
     status: ['PLANNED', Validators.required],
@@ -123,7 +122,6 @@ export class MaintenanceListComponent implements OnInit {
     }
 
     this.maintenanceForm.patchValue({
-      reference: maintenance.reference,
       description: maintenance.description,
       type: maintenance.type,
       status: maintenance.status,

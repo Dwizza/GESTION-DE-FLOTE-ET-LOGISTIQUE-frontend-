@@ -327,6 +327,27 @@ export class DriverDashboardComponent implements OnInit {
     });
   }
 
+  async calculateTripDistance(trip: TripResponse): Promise<number> {
+    if (!trip.deliveries || trip.deliveries.length === 0) return 0;
+    
+    let totalDistance = 0;
+    for (const delivery of trip.deliveries) {
+      if (delivery.pickupLatitude && delivery.deliveryLatitude) {
+        try {
+          const url = `https://router.project-osrm.org/route/v1/driving/${delivery.pickupLongitude},${delivery.pickupLatitude};${delivery.deliveryLongitude},${delivery.deliveryLatitude}?overview=false`;
+          const response = await fetch(url);
+          const data = await response.json();
+          if (data.routes && data.routes[0]) {
+            totalDistance += data.routes[0].distance; // distance in meters
+          }
+        } catch (e) {
+          console.error('Error calculating distance for delivery', delivery.reference, e);
+        }
+      }
+    }
+    return totalDistance / 1000; // convert to km
+  }
+
   acceptTrip(trip: TripResponse) {
     Swal.fire({
       title: 'Démarrer la Mission?',
@@ -370,14 +391,21 @@ export class DriverDashboardComponent implements OnInit {
       confirmButtonColor: '#10b981',
       cancelButtonColor: '#2a2d35',
       confirmButtonText: 'Oui, Terminer',
-      cancelButtonText: 'Annuler'
+      cancelButtonText: 'Annuler',
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        const distance = await this.calculateTripDistance(trip);
+        return distance;
+      },
+      allowOutsideClick: () => !Swal.isLoading()
     }).then((result) => {
       if (result.isConfirmed) {
-        this.driverService.completeTrip(trip.id).subscribe({
+        const distance = result.value;
+        this.driverService.completeTrip(trip.id, distance).subscribe({
           next: () => {
             Swal.fire({
                 title: 'Mission Terminée!',
-                text: 'Le trajet a été archivé avec succès.',
+                text: `Le trajet a été archivé. Distance calculée: ${distance.toFixed(2)} km`,
                 icon: 'success',
                 background: '#1a1c23',
                 color: '#f4f5f7',

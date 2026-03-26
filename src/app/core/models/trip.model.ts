@@ -1,3 +1,5 @@
+import { DeliveryResponse } from './delivery.model';
+
 export interface TripResponse {
     id: string;
     reference: string;
@@ -28,4 +30,5 @@ export interface TripResponse {
         id: string;
         type: string;
     }[];
+    deliveries: DeliveryResponse[];
 }

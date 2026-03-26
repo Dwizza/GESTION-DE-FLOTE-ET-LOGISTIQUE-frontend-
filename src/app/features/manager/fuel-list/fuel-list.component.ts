@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FuelService } from '../../../core/services/fuel.service';
 import { TruckService } from '../../../core/services/truck.service';
+
 import { CarburantTransactionResponse } from '../../../core/models/fuel.model';
 import { TruckResponse } from '../../../core/models/truck.model';
 import Swal from 'sweetalert2';
@@ -16,6 +17,7 @@ import Swal from 'sweetalert2';
 export class ManagerFuelListComponent implements OnInit {
     private fuelService = inject(FuelService);
     private truckService = inject(TruckService);
+
     private fb = inject(FormBuilder);
 
     transactions: CarburantTransactionResponse[] = [];
@@ -35,7 +37,6 @@ export class ManagerFuelListComponent implements OnInit {
     isLastPage = false;
 
     fuelForm: FormGroup = this.fb.group({
-        reference: ['', Validators.required],
         truckId: ['', Validators.required],
         dateHeure: ['', Validators.required],
         quantite: [0, [Validators.required, Validators.min(0.1)]],
@@ -80,14 +81,7 @@ export class ManagerFuelListComponent implements OnInit {
         }
     }
 
-    generateReference(prefix: string): string {
-        const date = new Date();
-        const yyyy = date.getFullYear();
-        const mm = String(date.getMonth() + 1).padStart(2, '0');
-        const dd = String(date.getDate()).padStart(2, '0');
-        const randomStr = Math.random().toString(36).substring(2, 6).toUpperCase();
-        return `${prefix}-${yyyy}${mm}${dd}-${randomStr}`;
-    }
+
 
     openModal(transaction?: CarburantTransactionResponse) {
         this.isModalOpen = true;
@@ -96,7 +90,6 @@ export class ManagerFuelListComponent implements OnInit {
         if (transaction) {
             this.selectedId = transaction.id;
             this.fuelForm.patchValue({
-                reference: transaction.reference,
                 truckId: transaction.truckId,
                 dateHeure: transaction.dateHeure.split('T')[0],
                 quantite: transaction.quantite,
@@ -111,7 +104,7 @@ export class ManagerFuelListComponent implements OnInit {
                 cout: 0,
                 dateHeure: new Date().toISOString().split('T')[0]
             });
-            this.fuelForm.patchValue({ reference: this.generateReference('FL') });
+
         }
     }
 
@@ -128,6 +121,8 @@ export class ManagerFuelListComponent implements OnInit {
 
         this.isSubmitting = true;
         const val = this.fuelForm.value;
+
+
 
         const payload = {
             ...val,

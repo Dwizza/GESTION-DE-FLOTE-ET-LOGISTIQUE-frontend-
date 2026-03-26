@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { MaintenanceService } from '../../../core/services/maintenance.service';
 import { TruckService } from '../../../core/services/truck.service';
 import { TrailerService } from '../../../core/services/trailer.service';
+
 import Swal from 'sweetalert2';
 import { MaintenanceResponse } from '../../../core/models/maintenance.model';
 import { TruckResponse } from '../../../core/models/truck.model';
@@ -20,6 +21,7 @@ export class ManagerMaintenanceListComponent implements OnInit {
     private maintenanceService = inject(MaintenanceService);
     private truckService = inject(TruckService);
     private trailerService = inject(TrailerService);
+
     private fb = inject(FormBuilder);
     private http = inject(HttpClient);
 
@@ -45,7 +47,6 @@ export class ManagerMaintenanceListComponent implements OnInit {
     serviceType: 'TRUCK' | 'TRAILER' = 'TRUCK';
 
     maintenanceForm: FormGroup = this.fb.group({
-        reference: ['', Validators.required],
         description: ['', Validators.required],
         type: ['PREVENTIVE', Validators.required],
         status: ['PLANNED', Validators.required],
@@ -103,21 +104,13 @@ export class ManagerMaintenanceListComponent implements OnInit {
         }
     }
 
-    generateReference(prefix: string): string {
-        const date = new Date();
-        const yyyy = date.getFullYear();
-        const mm = String(date.getMonth() + 1).padStart(2, '0');
-        const dd = String(date.getDate()).padStart(2, '0');
-        const randomStr = Math.random().toString(36).substring(2, 6).toUpperCase();
-        return `${prefix}-${yyyy}${mm}${dd}-${randomStr}`;
-    }
+
 
     openModal() {
         this.isModalOpen = true;
         this.editingId = null;
         this.serviceType = 'TRUCK';
         this.maintenanceForm.reset({ cout: 0, dateMaintenance: new Date().toISOString().split('T')[0], type: 'PREVENTIVE', status: 'PLANNED' });
-        this.maintenanceForm.patchValue({ reference: this.generateReference('MNT') });
     }
 
     openEditModal(maintenance: MaintenanceResponse) {
@@ -131,7 +124,6 @@ export class ManagerMaintenanceListComponent implements OnInit {
         }
 
         this.maintenanceForm.patchValue({
-            reference: maintenance.reference,
             description: maintenance.description,
             type: maintenance.type,
             status: maintenance.status,
@@ -165,6 +157,8 @@ export class ManagerMaintenanceListComponent implements OnInit {
         }
 
         const payload = this.maintenanceForm.value;
+
+
 
         if (this.serviceType === 'TRUCK') {
             payload.trailerId = null;
