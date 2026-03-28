@@ -18,7 +18,7 @@ export class ManagerClientsListComponent implements OnInit {
 
     // Pagination
     currentPage = 0;
-    pageSize = 10;
+    pageSize = 6;
     totalElements = 0;
     totalPages = 0;
     isLastPage = false;

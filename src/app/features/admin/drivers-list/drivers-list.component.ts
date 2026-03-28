@@ -29,7 +29,7 @@ export class DriversListComponent implements OnInit {
 
     // Driver Pagination
     currentPage = 0;
-    pageSize = 10;
+    pageSize = 6;
     totalElements = 0;
     totalPages = 0;
     isLastPage = false;
