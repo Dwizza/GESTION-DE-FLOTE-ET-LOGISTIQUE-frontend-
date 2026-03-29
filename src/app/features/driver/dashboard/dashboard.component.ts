@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DriverService } from '../../../core/services/driver.service';
@@ -17,8 +17,10 @@ import Swal from 'sweetalert2';
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <div class="flex items-center gap-3 mb-1">
-                <span class="live-dot"></span>
-                <span class="text-xs font-mono uppercase tracking-widest" style="color: #4b5563;">VOTRE CENTRE DE CONTRÔLE</span>
+                <span class="live-dot" [class.active]="watchId !== null"></span>
+                <span class="text-xs font-mono uppercase tracking-widest" [style.color]="watchId !== null ? '#10b981' : '#4b5563'">
+                    {{ watchId !== null ? 'SUIVI GPS ACTIF' : 'VOTRE CENTRE DE CONTRÔLE' }}
+                </span>
             </div>
             <h1 class="section-title">Tableau de Bord</h1>
             <p class="section-subtitle">Gérez vos missions et suivez vos livraisons en temps réel</p>
@@ -262,7 +264,7 @@ import Swal from 'sweetalert2';
     </div>
   `
 })
-export class DriverDashboardComponent implements OnInit {
+export class DriverDashboardComponent implements OnInit, OnDestroy {
   private driverService = inject(DriverService);
   private trackingService = inject(TrackingService);
 
@@ -278,8 +280,14 @@ export class DriverDashboardComponent implements OnInit {
   pendingTripsCount = 0;
   completedTripsCount = 0;
 
+  public watchId: number | null = null;
+
   ngOnInit() {
     this.loadData();
+  }
+
+  ngOnDestroy() {
+    this.stopTracking();
   }
 
   loadData() {
@@ -296,9 +304,11 @@ export class DriverDashboardComponent implements OnInit {
 
         if (this.activeTrip) {
           this.loadTripPath(this.activeTrip.id);
+          this.startTracking();
         } else {
             this.activeMarkers = [];
             this.activePolylines = [];
+            this.stopTracking();
         }
       }
     });
@@ -325,6 +335,35 @@ export class DriverDashboardComponent implements OnInit {
         }
       }
     });
+  }
+
+  startTracking() {
+    if (this.watchId !== null) return;
+    if (!this.activeTrip || !this.activeTrip.trucks || this.activeTrip.trucks.length === 0) return;
+
+    const truckId = this.activeTrip.trucks[0].id;
+
+    if ('geolocation' in navigator) {
+      this.watchId = navigator.geolocation.watchPosition(
+        (pos) => {
+          this.trackingService.recordPoint(truckId, pos.coords.latitude, pos.coords.longitude).subscribe({
+             next: () => {
+                // Refresh path to show new point on map
+                if (this.activeTrip) this.loadTripPath(this.activeTrip.id);
+             }
+          });
+        },
+        (err) => console.error('Geolocation error', err),
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    }
+  }
+
+  stopTracking() {
+    if (this.watchId !== null) {
+      navigator.geolocation.clearWatch(this.watchId);
+      this.watchId = null;
+    }
   }
 
   async calculateTripDistance(trip: TripResponse): Promise<number> {

@@ -1,8 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { Store } from '@ngrx/store';
+import * as AuthActions from '../../../core/store/auth/auth.actions';
+import { selectAuthError, selectIsLoading } from '../../../core/store/auth/auth.selectors';
 
 @Component({
     selector: 'app-login',
@@ -10,9 +12,9 @@ import { AuthService } from '../../../core/services/auth.service';
     imports: [CommonModule, ReactiveFormsModule],
     templateUrl: './login.component.html',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
     private fb = inject(FormBuilder);
-    private authService = inject(AuthService);
+    private store = inject(Store);
     private router = inject(Router);
 
     loginForm: FormGroup = this.fb.group({
@@ -20,8 +22,12 @@ export class LoginComponent {
         password: ['', [Validators.required, Validators.minLength(4)]]
     });
 
-    isLoading = false;
-    errorMessage = '';
+    isLoading$ = this.store.select(selectIsLoading);
+    errorMessage$ = this.store.select(selectAuthError);
+
+    ngOnInit(): void {
+        // Clear any previous errors on init
+    }
 
     onSubmit(): void {
         if (this.loginForm.invalid) {
@@ -29,48 +35,8 @@ export class LoginComponent {
             return;
         }
 
-        this.isLoading = true;
-        this.errorMessage = '';
-
-        this.authService.login(this.loginForm.value).subscribe({
-            next: (res: any) => {
-                this.isLoading = false;
-
-                const token = this.authService.getToken();
-                if (token) {
-                    try {
-                        const payload = JSON.parse(atob(token.split('.')[1]));
-                        const role = payload.role || (payload.roles && payload.roles[0]);
-                        const roles = payload.role ? [payload.role] : (payload.roles || []);
-                        console.log('Login Payload:', payload);
-                        console.log('Detected Roles:', roles);
-
-                        if (role === 'ADMIN' || roles.includes('ADMIN')) {
-                            console.log('Navigating to Admin Dashboard');
-                            this.router.navigate(['/admin/dashboard']);
-                        } else if (roles.includes('LOGISTICS_MANAGER')) {
-                            console.log('Navigating to Manager Dashboard');
-                            this.router.navigate(['/manager/dashboard']);
-                        } else if (roles.includes('DRIVER')) {
-                            console.log('Navigating to Driver Dashboard');
-                            this.router.navigate(['/driver/dashboard']);
-                        } else {
-                            console.log('Navigating to Default Dashboard (Fallback)');
-                            this.router.navigate(['/dashboard']);
-                        }
-                    } catch (e) {
-                        this.router.navigate(['/']);
-                    }
-                } else {
-                    this.router.navigate(['/']);
-                }
-            },
-            error: (err: any) => {
-                this.isLoading = false;
-                this.errorMessage = err.error?.message || 'Identifiants invalides. Veuillez réessayer.';
-                console.error('Login error', err);
-            }
-        });
+        const credentials = this.loginForm.value;
+        this.store.dispatch(AuthActions.login({ credentials }));
     }
 
     // Helper getters for easy access in the template

@@ -19,4 +19,8 @@ export class TrackingService {
   getTripPath(tripId: string): Observable<TrackingPoint[]> {
     return this.http.get<TrackingPoint[]>(`${this.apiUrl}/trip/${tripId}`);
   }
+
+  recordPoint(truckId: string, latitude: number, longitude: number): Observable<void> {
+    return this.http.post<void>(this.apiUrl, { truckId, latitude, longitude });
+  }
 }
