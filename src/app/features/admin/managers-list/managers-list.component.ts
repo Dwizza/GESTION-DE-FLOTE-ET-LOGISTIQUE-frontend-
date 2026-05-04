@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ManagerManagementService } from '../../../core/services/manager-management.service';
 import { ManagerResponse } from '../../../core/models/manager.model';
@@ -7,7 +7,7 @@ import { ManagerResponse } from '../../../core/models/manager.model';
 @Component({
     selector: 'app-managers-list',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [ReactiveFormsModule],
     templateUrl: './managers-list.component.html'
 })
 export class ManagersListComponent implements OnInit {

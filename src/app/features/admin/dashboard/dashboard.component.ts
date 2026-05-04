@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule, RouterLink } from '@angular/router';
 import { AnalyticsService } from '../../../core/services/analytics.service';
 import { AnalyticsResponse } from '../../../core/models/analytics.model';
@@ -23,7 +23,7 @@ interface BarItem {
 @Component({
     selector: 'app-dashboard',
     standalone: true,
-    imports: [CommonModule, RouterModule, RouterLink],
+    imports: [RouterModule, RouterLink],
     templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {

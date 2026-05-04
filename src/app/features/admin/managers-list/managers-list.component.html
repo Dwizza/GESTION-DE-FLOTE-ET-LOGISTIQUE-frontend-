@@ -1,183 +1,193 @@
 <!-- ─── Managers List ─────────────────────────── -->
 <div class="space-y-6">
 
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-            <div class="flex items-center gap-2 mb-1">
-                <svg class="h-4 w-4" style="color: #f59e0b;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                <span class="text-xs font-mono uppercase tracking-widest" style="color: #6b7280;">Gestion
-                    Personnel</span>
-            </div>
-            <h1 class="section-title">Responsables</h1>
-            <p class="section-subtitle">Gérez les accès et les comptes des responsables flotte</p>
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2 mb-1">
+        <svg class="h-4 w-4" style="color: #f59e0b;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <span class="text-xs font-mono uppercase tracking-widest" style="color: #6b7280;">Gestion
+          Personnel</span>
         </div>
-        <button (click)="openModal()" class="btn-fleet flex-shrink-0">
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Ajouter un Responsable
+        <h1 class="section-title">Responsables</h1>
+        <p class="section-subtitle">Gérez les accès et les comptes des responsables flotte</p>
+      </div>
+      <button (click)="openModal()" class="btn-fleet flex-shrink-0">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+            d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          Ajouter un Responsable
         </button>
-    </div>
+      </div>
 
-    <!-- Loading Skeleton -->
-    <div *ngIf="isLoading" class="animate-pulse space-y-2">
-        <div class="h-10 rounded-lg" style="background: #1e2025;"></div>
-        <div *ngFor="let x of [1,2,3]" class="h-14 rounded-lg" style="background: #1e2025;"></div>
-    </div>
+      <!-- Loading Skeleton -->
+      @if (isLoading) {
+        <div class="animate-pulse space-y-2">
+          <div class="h-10 rounded-lg" style="background: #1e2025;"></div>
+          @for (x of [1,2,3]; track x) {
+            <div class="h-14 rounded-lg" style="background: #1e2025;"></div>
+          }
+        </div>
+      }
 
-    <!-- Grid -->
-    <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        <div *ngFor="let m of managers; let i = index" class="fleet-card group animate-fade-in"
-            [style.animationDelay]="(i * 0.05) + 's'">
-            <!-- Card Header -->
-            <div class="px-5 py-4 flex items-center justify-between" style="border-bottom: 1px solid #2a2d35;">
+      <!-- Grid -->
+      @if (!isLoading) {
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          @for (m of managers; track m; let i = $index) {
+            <div class="fleet-card group animate-fade-in"
+              [style.animationDelay]="(i * 0.05) + 's'">
+              <!-- Card Header -->
+              <div class="px-5 py-4 flex items-center justify-between" style="border-bottom: 1px solid #2a2d35;">
                 <div class="flex items-center gap-3">
-                    <div class="h-10 w-10 rounded-lg flex-shrink-0 flex items-center justify-center font-bold text-sm"
-                        style="background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); font-family: 'Space Grotesk', sans-serif;">
-                        {{ m.firstName.charAt(0) }}{{ m.lastName.charAt(0) }}
-                    </div>
+                  <div class="h-10 w-10 rounded-lg flex-shrink-0 flex items-center justify-center font-bold text-sm"
+                    style="background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); font-family: 'Space Grotesk', sans-serif;">
+                    {{ m.firstName.charAt(0) }}{{ m.lastName.charAt(0) }}
+                  </div>
                 </div>
-                <span *ngIf="m.active" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold"
+                @if (m.active) {
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold"
                     style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2)">
                     Actif
-                </span>
-                <span *ngIf="!m.active" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold"
+                  </span>
+                }
+                @if (!m.active) {
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold"
                     style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2)">
                     Inactif
-                </span>
-            </div>
-
-            <!-- Card Body -->
-            <div class="px-5 py-4 space-y-3">
+                  </span>
+                }
+              </div>
+              <!-- Card Body -->
+              <div class="px-5 py-4 space-y-3">
                 <div>
-                    <h3 class="font-display font-bold text-sm" style="color: #f4f5f7;">{{ m.firstName }} {{ m.lastName }}</h3>
-                    <p class="text-xs font-mono" style="color: #6b7280;">{{ m.email }}</p>
+                  <h3 class="font-display font-bold text-sm" style="color: #f4f5f7;">{{ m.firstName }} {{ m.lastName }}</h3>
+                  <p class="text-xs font-mono" style="color: #6b7280;">{{ m.email }}</p>
                 </div>
                 <div>
-                    <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-1">Département</p>
-                    <p class="text-sm text-gray-300 font-medium">{{ m.department || 'Opérations' }}</p>
+                  <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-1">Département</p>
+                  <p class="text-sm text-gray-300 font-medium">{{ m.department || 'Opérations' }}</p>
                 </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="px-5 py-3 flex justify-end gap-2"
+              </div>
+              <!-- Footer -->
+              <div class="px-5 py-3 flex justify-end gap-2"
                 style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
                 <!-- Modifier button is purely aesthetic here per the original code (no click handler) -->
                 <button class="p-1.5 rounded-md text-blue-400 hover:text-white hover:bg-blue-500/10 transition-colors"
-                    title="Modifier">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                    </svg>
+                  title="Modifier">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
                 </button>
                 <button (click)="deleteManager(m.id)"
-                    class="p-1.5 rounded-md text-rose-500 hover:bg-rose-500/10 transition-colors"
-                    title="Supprimer">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
+                  class="p-1.5 rounded-md text-rose-500 hover:bg-rose-500/10 transition-colors"
+                  title="Supprimer">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
                 </button>
+              </div>
             </div>
-        </div>
-
-        <!-- Empty State -->
-        <div *ngIf="managers.length === 0" class="col-span-full py-20 text-center fleet-card">
-            <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4"
+          }
+          <!-- Empty State -->
+          @if (managers.length === 0) {
+            <div class="col-span-full py-20 text-center fleet-card">
+              <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4"
                 style="background: #252830; border: 1px solid #2a2d35;">
                 <svg class="h-8 w-8" style="color: #4b5563;" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <p class="font-display font-semibold" style="color: #9ca3af;">Aucun responsable trouvé</p>
+                <p class="text-sm mt-1" style="color: #4b5563;">Commencez par ajouter un nouveau responsable</p>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Pagination -->
+        @if (!isLoading && totalElements > 0) {
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-800/50">
+            <div class="text-xs font-mono text-gray-500">
+              Affichage de <span class="text-gray-300">{{ currentPage * pageSize + 1 }}</span> à
+              <span class="text-gray-300">{{ (currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize }}</span> sur
+              <span class="text-gray-300">{{ totalElements }}</span> responsables
             </div>
-            <p class="font-display font-semibold" style="color: #9ca3af;">Aucun responsable trouvé</p>
-            <p class="text-sm mt-1" style="color: #4b5563;">Commencez par ajouter un nouveau responsable</p>
-        </div>
-    </div>
-
-    <!-- Pagination -->
-    <div *ngIf="!isLoading && totalElements > 0" class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-800/50">
-        <div class="text-xs font-mono text-gray-500">
-            Affichage de <span class="text-gray-300">{{ currentPage * pageSize + 1 }}</span> à
-            <span class="text-gray-300">{{ (currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize }}</span> sur
-            <span class="text-gray-300">{{ totalElements }}</span> responsables
-        </div>
-
-        <div class="flex items-center gap-2">
-            <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0"
+            <div class="flex items-center gap-2">
+              <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0"
                 class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
-            </button>
-
-            <div class="flex items-center gap-1">
+              </button>
+              <div class="flex items-center gap-1">
                 <span class="text-xs font-mono px-3 py-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-300">
-                    Page {{ currentPage + 1 }} / {{ totalPages }}
+                  Page {{ currentPage + 1 }} / {{ totalPages }}
                 </span>
-            </div>
-
-            <button (click)="onPageChange(currentPage + 1)" [disabled]="isLastPage"
+              </div>
+              <button (click)="onPageChange(currentPage + 1)" [disabled]="isLastPage"
                 class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
-            </button>
-        </div>
-    </div>
-</div>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
 
-<!-- ─── Modal: Créer Responsable ────────────────── -->
-<div *ngIf="isModalOpen" class="fixed z-50 inset-0 flex items-center justify-center p-4" role="dialog"
-    aria-modal="true">
-    <div class="fixed inset-0 modal-backdrop" (click)="closeModal()"></div>
-    <div class="modal-panel relative w-full max-w-lg animate-slide-in-up">
-        <!-- Header -->
-        <div class="flex items-center justify-between px-6 py-5" style="border-bottom: 1px solid #2a2d35;">
-            <div>
+      <!-- ─── Modal: Créer Responsable ────────────────── -->
+      @if (isModalOpen) {
+        <div class="fixed z-50 inset-0 flex items-center justify-center p-4" role="dialog"
+          aria-modal="true">
+          <div class="fixed inset-0 modal-backdrop" (click)="closeModal()"></div>
+          <div class="modal-panel relative w-full max-w-lg animate-slide-in-up">
+            <!-- Header -->
+            <div class="flex items-center justify-between px-6 py-5" style="border-bottom: 1px solid #2a2d35;">
+              <div>
                 <h3 class="font-display font-bold text-lg" style="color: #f4f5f7;">Nouveau Responsable</h3>
                 <p class="text-xs mt-0.5" style="color: #6b7280;">Créez un compte responsable pour la flotte</p>
-            </div>
-            <button (click)="closeModal()" class="p-2 rounded-lg transition-colors"
+              </div>
+              <button (click)="closeModal()" class="p-2 rounded-lg transition-colors"
                 style="color: #6b7280; background: #252830;">
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
-            </button>
-        </div>
-
-        <!-- Form Body -->
-        <form [formGroup]="managerForm" class="px-6 py-5 space-y-4">
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="fleet-label">Prénom</label>
-                    <input type="text" formControlName="firstName" class="fleet-input" placeholder="Ex: Hassan">
-                </div>
-                <div>
-                    <label class="fleet-label">Nom</label>
-                    <input type="text" formControlName="lastName" class="fleet-input" placeholder="Ex: El Amrani">
-                </div>
+              </button>
             </div>
-            <div>
+            <!-- Form Body -->
+            <form [formGroup]="managerForm" class="px-6 py-5 space-y-4">
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="fleet-label">Prénom</label>
+                  <input type="text" formControlName="firstName" class="fleet-input" placeholder="Ex: Hassan">
+                </div>
+                <div>
+                  <label class="fleet-label">Nom</label>
+                  <input type="text" formControlName="lastName" class="fleet-input" placeholder="Ex: El Amrani">
+                </div>
+              </div>
+              <div>
                 <label class="fleet-label">Email</label>
                 <input type="email" formControlName="email" class="fleet-input" placeholder="email@exemple.com">
-            </div>
-            <div>
+              </div>
+              <div>
                 <label class="fleet-label">Mot de passe provisoire</label>
                 <input type="password" formControlName="password" class="fleet-input" placeholder="Min. 8 caractères">
-            </div>
-        </form>
-
-        <!-- Footer -->
-        <div class="flex justify-end gap-3 px-6 py-4" style="border-top: 1px solid #2a2d35;">
-            <button (click)="closeModal()" class="btn-fleet-ghost">Annuler</button>
-            <button (click)="onSubmit()" [disabled]="isSubmitting" class="btn-fleet">
+              </div>
+            </form>
+            <!-- Footer -->
+            <div class="flex justify-end gap-3 px-6 py-4" style="border-top: 1px solid #2a2d35;">
+              <button (click)="closeModal()" class="btn-fleet-ghost">Annuler</button>
+              <button (click)="onSubmit()" [disabled]="isSubmitting" class="btn-fleet">
                 {{ isSubmitting ? 'Création...' : 'Ajouter' }}
-            </button>
+              </button>
+            </div>
+          </div>
         </div>
-    </div>
-</div>
+      }

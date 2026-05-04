@@ -1,12 +1,12 @@
 import { Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges, ElementRef, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 declare var L: any;
 
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div #mapContainer class="w-full h-full rounded-xl overflow-hidden shadow-inner border border-[#2a2d35]" 
          [class.cursor-crosshair]="selectionMode"

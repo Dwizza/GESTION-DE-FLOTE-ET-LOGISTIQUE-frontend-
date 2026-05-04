@@ -13,38 +13,38 @@ import Swal from 'sweetalert2';
       <!-- Header -->
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <div class="flex items-center gap-3 mb-1">
-                <span class="live-dot"></span>
-                <span class="text-xs font-mono uppercase tracking-widest" style="color: #4b5563;">VOS ASSIGNATIONS</span>
-            </div>
-            <h1 class="section-title">Mes Trajets</h1>
-            <p class="section-subtitle">Gérez vos missions et mettez à jour vos statuts de livraison</p>
+          <div class="flex items-center gap-3 mb-1">
+            <span class="live-dot"></span>
+            <span class="text-xs font-mono uppercase tracking-widest" style="color: #4b5563;">VOS ASSIGNATIONS</span>
+          </div>
+          <h1 class="section-title">Mes Trajets</h1>
+          <p class="section-subtitle">Gérez vos missions et mettez à jour vos statuts de livraison</p>
         </div>
         <button (click)="loadTrips()" class="btn-fleet-ghost">
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            Actualiser
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          Actualiser
         </button>
       </div>
-
+    
       <!-- Content Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div *ngFor="let trip of trips" class="fleet-card p-0 overflow-hidden">
-          <!-- Card Header Decoration -->
-          <div class="h-1.5 w-full" [ngStyle]="{'background': trip.status === 'ONGOING' ? '#3b82f6' : (trip.status === 'PLANNED' ? '#f59e0b' : '#10b981')}"></div>
-          
-          <div class="p-6">
-            <div class="flex items-center justify-between mb-6">
+        @for (trip of trips; track trip) {
+          <div class="fleet-card p-0 overflow-hidden">
+            <!-- Card Header Decoration -->
+            <div class="h-1.5 w-full" [ngStyle]="{'background': trip.status === 'ONGOING' ? '#3b82f6' : (trip.status === 'PLANNED' ? '#f59e0b' : '#10b981')}"></div>
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center gap-3">
-                    <div class="h-10 w-10 rounded-lg flex items-center justify-center font-mono font-bold text-sm"
-                        style="background: #1e2025; border: 1px solid #2a2d35; color: #3b82f6;">
-                        TR
-                    </div>
-                    <div>
-                        <h3 class="text-base font-bold text-white tracking-tight uppercase">{{ trip.reference }}</h3>
-                        <p class="text-[10px] font-mono" style="color: #4b5563;">#{{ trip.id.substring(0,8) }}</p>
-                    </div>
+                  <div class="h-10 w-10 rounded-lg flex items-center justify-center font-mono font-bold text-sm"
+                    style="background: #1e2025; border: 1px solid #2a2d35; color: #3b82f6;">
+                    TR
+                  </div>
+                  <div>
+                    <h3 class="text-base font-bold text-white tracking-tight uppercase">{{ trip.reference }}</h3>
+                    <p class="text-[10px] font-mono" style="color: #4b5563;">#{{ trip.id.substring(0,8) }}</p>
+                  </div>
                 </div>
                 <span [ngClass]="{
                   'badge-maintenance': trip.status === 'PLANNED',
@@ -54,95 +54,100 @@ import Swal from 'sweetalert2';
                 }">
                   {{ trip.status }}
                 </span>
-            </div>
-
-            <div class="grid grid-cols-2 gap-6 mb-6">
-              <div class="space-y-1">
-                <span class="fleet-label">Client</span>
-                <p class="text-sm font-semibold text-white truncate">{{ trip.client.companyName }}</p>
               </div>
-              <div class="space-y-1">
-                <span class="fleet-label">Date de Départ</span>
-                <p class="text-sm font-semibold text-white">{{ trip.startDate | date:'dd MMM, HH:mm' }}</p>
+              <div class="grid grid-cols-2 gap-6 mb-6">
+                <div class="space-y-1">
+                  <span class="fleet-label">Client</span>
+                  <p class="text-sm font-semibold text-white truncate">{{ trip.client.companyName }}</p>
+                </div>
+                <div class="space-y-1">
+                  <span class="fleet-label">Date de Départ</span>
+                  <p class="text-sm font-semibold text-white">{{ trip.startDate | date:'dd MMM, HH:mm' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <span class="fleet-label">Camion</span>
+                  <p class="text-sm font-semibold" style="color: #9ca3af;">{{ trip.trucks && trip.trucks.length > 0 ? trip.trucks[0].registrationNumber : 'N/A' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <span class="fleet-label">Remorque</span>
+                  <p class="text-sm font-semibold" style="color: #9ca3af;">{{ trip.trailers && trip.trailers.length > 0 ? trip.trailers[0].type : 'N/A' }}</p>
+                </div>
               </div>
-              <div class="space-y-1">
-                <span class="fleet-label">Camion</span>
-                <p class="text-sm font-semibold" style="color: #9ca3af;">{{ trip.trucks && trip.trucks.length > 0 ? trip.trucks[0].registrationNumber : 'N/A' }}</p>
-              </div>
-              <div class="space-y-1">
-                <span class="fleet-label">Remorque</span>
-                <p class="text-sm font-semibold" style="color: #9ca3af;">{{ trip.trailers && trip.trailers.length > 0 ? trip.trailers[0].type : 'N/A' }}</p>
-              </div>
-            </div>
-
-            <!-- Action Area -->
-            <div *ngIf="trip.status === 'PLANNED'" class="flex items-center gap-3 pt-4" style="border-top: 1px solid #1e2025;">
-              <button (click)="acceptTrip(trip)" class="btn-fleet flex-1">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                Accepter le Trajet
-              </button>
-              <button (click)="refuseTrip(trip)" class="btn-fleet-ghost flex-1 justify-center border-red-500/20 hover:bg-red-500/10 hover:text-red-400">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                Refuser
-              </button>
-            </div>
-
-            <div *ngIf="trip.status === 'ONGOING'" class="flex items-center gap-3 pt-4" style="border-top: 1px solid #1e2025;">
-              <button (click)="completeTrip(trip)" class="btn-fleet flex-1"
-                style="background: linear-gradient(135deg, #10b981, #059669); border: none;">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                Terminer la Mission
-              </button>
+              <!-- Action Area -->
+              @if (trip.status === 'PLANNED') {
+                <div class="flex items-center gap-3 pt-4" style="border-top: 1px solid #1e2025;">
+                  <button (click)="acceptTrip(trip)" class="btn-fleet flex-1">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Accepter le Trajet
+                  </button>
+                  <button (click)="refuseTrip(trip)" class="btn-fleet-ghost flex-1 justify-center border-red-500/20 hover:bg-red-500/10 hover:text-red-400">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Refuser
+                  </button>
+                </div>
+              }
+              @if (trip.status === 'ONGOING') {
+                <div class="flex items-center gap-3 pt-4" style="border-top: 1px solid #1e2025;">
+                  <button (click)="completeTrip(trip)" class="btn-fleet flex-1"
+                    style="background: linear-gradient(135deg, #10b981, #059669); border: none;">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Terminer la Mission
+                  </button>
+                </div>
+              }
             </div>
           </div>
-        </div>
+        }
       </div>
-
+    
       <!-- Empty State -->
-      <div *ngIf="trips.length === 0 && !isLoading" class="py-20 text-center fleet-card bg-transparent border-dashed">
-        <div class="h-16 w-16 mx-auto rounded-full flex items-center justify-center mb-4" style="background: #141518; border: 1px solid #2a2d35;">
+      @if (trips.length === 0 && !isLoading) {
+        <div class="py-20 text-center fleet-card bg-transparent border-dashed">
+          <div class="h-16 w-16 mx-auto rounded-full flex items-center justify-center mb-4" style="background: #141518; border: 1px solid #2a2d35;">
             <svg class="h-8 w-8" style="color: #4b5563;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
             </svg>
+          </div>
+          <h3 class="text-base font-bold text-white mb-1">Aucun trajet assigné</h3>
+          <p class="text-sm" style="color: #4b5563;">Les nouvelles missions apparaîtront ici dès leur allocation.</p>
         </div>
-        <h3 class="text-base font-bold text-white mb-1">Aucun trajet assigné</h3>
-        <p class="text-sm" style="color: #4b5563;">Les nouvelles missions apparaîtront ici dès leur allocation.</p>
-      </div>
-
+      }
+    
       <!-- Pagination -->
-      <div *ngIf="!isLoading && totalElements > 0" class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 mt-4 border-t border-gray-800/50">
+      @if (!isLoading && totalElements > 0) {
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 mt-4 border-t border-gray-800/50">
           <div class="text-xs font-mono text-gray-500">
-              Affichage de <span class="text-gray-300">{{ currentPage * pageSize + 1 }}</span> à
-              <span class="text-gray-300">{{ (currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize }}</span> sur
-              <span class="text-gray-300">{{ totalElements }}</span> trajets
+            Affichage de <span class="text-gray-300">{{ currentPage * pageSize + 1 }}</span> à
+            <span class="text-gray-300">{{ (currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize }}</span> sur
+            <span class="text-gray-300">{{ totalElements }}</span> trajets
           </div>
-
           <div class="flex items-center gap-2">
-              <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0"
-                  class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                  </svg>
-              </button>
-              <span class="text-xs font-mono px-3 py-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-300">
-                  Page {{ currentPage + 1 }} / {{ totalPages }}
-              </span>
-              <button (click)="onPageChange(currentPage + 1)" [disabled]="isLastPage"
-                  class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                  </svg>
-              </button>
+            <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0"
+              class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <span class="text-xs font-mono px-3 py-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-300">
+              Page {{ currentPage + 1 }} / {{ totalPages }}
+            </span>
+            <button (click)="onPageChange(currentPage + 1)" [disabled]="isLastPage"
+              class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
-      </div>
+        </div>
+      }
     </div>
-  `
+    `
 })
 export class DriverTripsListComponent implements OnInit {
   private driverService = inject(DriverService);

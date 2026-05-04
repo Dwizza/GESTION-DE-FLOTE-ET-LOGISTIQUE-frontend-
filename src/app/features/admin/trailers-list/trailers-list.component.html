@@ -1,271 +1,278 @@
 <!-- ─── Trailers List ─────────────────────────── -->
 <div class="space-y-6">
 
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-            <div class="flex items-center gap-2 mb-1">
-                <svg class="h-4 w-4" style="color: #f59e0b;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
-                <span class="text-xs font-mono uppercase tracking-widest" style="color: #6b7280;">Équipements
-                    Flotte</span>
-            </div>
-            <h1 class="section-title">Remorques</h1>
-            <p class="section-subtitle">Gérez le matériel attelé, la capacité et la disponibilité</p>
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2 mb-1">
+        <svg class="h-4 w-4" style="color: #f59e0b;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+          <span class="text-xs font-mono uppercase tracking-widest" style="color: #6b7280;">Équipements
+          Flotte</span>
         </div>
-        <button (click)="openModal()" class="btn-fleet flex-shrink-0">
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Ajouter Remorque
+        <h1 class="section-title">Remorques</h1>
+        <p class="section-subtitle">Gérez le matériel attelé, la capacité et la disponibilité</p>
+      </div>
+      <button (click)="openModal()" class="btn-fleet flex-shrink-0">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+            d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          Ajouter Remorque
         </button>
-    </div>
+      </div>
 
-    <!-- Loading -->
-    <div *ngIf="isLoading" class="animate-pulse space-y-2">
-        <div class="h-10 rounded-lg" style="background: #1e2025;"></div>
-        <div *ngFor="let x of [1,2,3,4]" class="h-14 rounded-lg" style="background: #1e2025;"></div>
-    </div>
+      <!-- Loading -->
+      @if (isLoading) {
+        <div class="animate-pulse space-y-2">
+          <div class="h-10 rounded-lg" style="background: #1e2025;"></div>
+          @for (x of [1,2,3,4]; track x) {
+            <div class="h-14 rounded-lg" style="background: #1e2025;"></div>
+          }
+        </div>
+      }
 
-    <!-- Grid -->
-    <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        <div *ngFor="let t of trailers; let i = index" class="fleet-card group animate-fade-in relative overflow-hidden"
-            [style.animationDelay]="(i * 0.05) + 's'">
-            
-            <!-- Type Accent -->
-            <div class="absolute top-0 left-0 w-1 h-full"
-                [style.background]="t.status === 'AVAILABLE' ? '#10b981' : t.status === 'IN_USE' ? '#60a5fa' : t.status === 'IN_MAINTENANCE' ? '#f59e0b' : '#ef4444'"></div>
-
-            <!-- Card Header -->
-            <div class="px-5 py-4 ml-1 flex items-start justify-between" style="border-bottom: 1px solid #2a2d35;">
+      <!-- Grid -->
+      @if (!isLoading) {
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          @for (t of trailers; track t; let i = $index) {
+            <div class="fleet-card group animate-fade-in relative overflow-hidden"
+              [style.animationDelay]="(i * 0.05) + 's'">
+              <!-- Type Accent -->
+              <div class="absolute top-0 left-0 w-1 h-full"
+              [style.background]="t.status === 'AVAILABLE' ? '#10b981' : t.status === 'IN_USE' ? '#60a5fa' : t.status === 'IN_MAINTENANCE' ? '#f59e0b' : '#ef4444'"></div>
+              <!-- Card Header -->
+              <div class="px-5 py-4 ml-1 flex items-start justify-between" style="border-bottom: 1px solid #2a2d35;">
                 <div class="flex items-center gap-3">
-                    <div class="h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0"
-                        style="background: #252830; border: 1px solid #2a2d35;">
-                        <svg class="h-5 w-5" style="color: #6b7280;" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                        </svg>
+                  <div class="h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style="background: #252830; border: 1px solid #2a2d35;">
+                    <svg class="h-5 w-5" style="color: #6b7280;" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                      </svg>
                     </div>
                     <div>
-                        <h3 class="font-display font-bold text-sm" style="color: #f4f5f7;">{{ t.type | titlecase }}</h3>
-                        <p class="text-xs font-mono" style="color: #9ca3af;">ID: {{ t.id | slice:0:8 }}...</p>
+                      <h3 class="font-display font-bold text-sm" style="color: #f4f5f7;">{{ t.type | titlecase }}</h3>
+                      <p class="text-xs font-mono" style="color: #9ca3af;">ID: {{ t.id | slice:0:8 }}...</p>
                     </div>
-                </div>
-                <span [ngClass]="getStatusColor(t.status)" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest min-w-max"
-                     [style.color]="t.status === 'AVAILABLE' ? '#10b981' : t.status === 'IN_USE' ? '#60a5fa' : t.status === 'IN_MAINTENANCE' ? '#f59e0b' : '#ef4444'"
-                     [style.background]="t.status === 'AVAILABLE' ? 'rgba(16, 185, 129, 0.1)' : t.status === 'IN_USE' ? 'rgba(96, 165, 250, 0.1)' : t.status === 'IN_MAINTENANCE' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(239, 68, 68, 0.1)'"
-                     [style.border]="t.status === 'AVAILABLE' ? '1px solid rgba(16, 185, 129, 0.2)' : t.status === 'IN_USE' ? '1px solid rgba(96, 165, 250, 0.2)' : t.status === 'IN_MAINTENANCE' ? '1px solid rgba(245, 158, 11, 0.2)' : '1px solid rgba(239, 68, 68, 0.2)'">
+                  </div>
+                  <span [ngClass]="getStatusColor(t.status)" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest min-w-max"
+                    [style.color]="t.status === 'AVAILABLE' ? '#10b981' : t.status === 'IN_USE' ? '#60a5fa' : t.status === 'IN_MAINTENANCE' ? '#f59e0b' : '#ef4444'"
+                    [style.background]="t.status === 'AVAILABLE' ? 'rgba(16, 185, 129, 0.1)' : t.status === 'IN_USE' ? 'rgba(96, 165, 250, 0.1)' : t.status === 'IN_MAINTENANCE' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(239, 68, 68, 0.1)'"
+                    [style.border]="t.status === 'AVAILABLE' ? '1px solid rgba(16, 185, 129, 0.2)' : t.status === 'IN_USE' ? '1px solid rgba(96, 165, 250, 0.2)' : t.status === 'IN_MAINTENANCE' ? '1px solid rgba(245, 158, 11, 0.2)' : '1px solid rgba(239, 68, 68, 0.2)'">
                     {{ t.status }}
-                </span>
-            </div>
-
-            <!-- Card Body -->
-            <div class="px-5 py-4 ml-1 grid grid-cols-2 gap-4">
-                <div>
+                  </span>
+                </div>
+                <!-- Card Body -->
+                <div class="px-5 py-4 ml-1 grid grid-cols-2 gap-4">
+                  <div>
                     <p class="text-[10px] uppercase tracking-widest font-semibold mb-1" style="color: #6b7280;">Poids Max</p>
                     <p class="text-sm font-mono font-bold" style="color: #f4f5f7;">{{ t.maxWeight }} <span class="text-xs text-gray-500 font-sans">T</span></p>
-                </div>
-                <div>
+                  </div>
+                  <div>
                     <p class="text-[10px] uppercase tracking-widest font-semibold mb-1" style="color: #6b7280;">Volume Max</p>
                     <p class="text-sm font-mono font-bold" style="color: #f4f5f7;">{{ t.maxVolume }} <span class="text-xs text-gray-500 font-sans">m³</span></p>
+                  </div>
                 </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="px-5 py-3 ml-1 flex justify-end gap-2"
-                style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
-                <button (click)="openDetailModal(t)"
+                <!-- Footer -->
+                <div class="px-5 py-3 ml-1 flex justify-end gap-2"
+                  style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
+                  <button (click)="openDetailModal(t)"
                     class="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
                     title="Détails">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
-                </button>
-                <button (click)="openEditModal(t)"
+                  </button>
+                  <button (click)="openEditModal(t)"
                     class="p-1.5 rounded-md text-blue-400 hover:text-white hover:bg-blue-500/10 transition-colors"
                     title="Modifier">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
-                </button>
-                <button (click)="deleteTrailer(t.id)"
+                  </button>
+                  <button (click)="deleteTrailer(t.id)"
                     class="p-1.5 rounded-md text-rose-500 hover:bg-rose-500/10 transition-colors"
                     title="Retirer">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
-                </button>
-            </div>
-        </div>
-
-        <!-- Empty State -->
-        <div *ngIf="trailers.length === 0" class="col-span-full py-20 text-center fleet-card">
-            <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4"
-                style="background: #252830; border: 1px solid #2a2d35;">
-                <svg class="h-8 w-8" style="color: #4b5563;" fill="none" viewBox="0 0 24 24"
+                  </button>
+                </div>
+              </div>
+            }
+            <!-- Empty State -->
+            @if (trailers.length === 0) {
+              <div class="col-span-full py-20 text-center fleet-card">
+                <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4"
+                  style="background: #252830; border: 1px solid #2a2d35;">
+                  <svg class="h-8 w-8" style="color: #4b5563;" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
+                      d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                  </div>
+                  <p class="font-display font-semibold" style="color: #9ca3af;">Aucune remorque</p>
+                  <p class="text-sm mt-1" style="color: #4b5563;">Ajoutez votre première remorque</p>
+                </div>
+              }
             </div>
-            <p class="font-display font-semibold" style="color: #9ca3af;">Aucune remorque</p>
-            <p class="text-sm mt-1" style="color: #4b5563;">Ajoutez votre première remorque</p>
-        </div>
-    </div>
+          }
 
-    <!-- Pagination -->
-    <div *ngIf="!isLoading && totalElements > 0" class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-800/50">
-        <div class="text-xs font-mono text-gray-500">
-            Affichage de <span class="text-gray-300">{{ currentPage * pageSize + 1 }}</span> à
-            <span class="text-gray-300">{{ (currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize }}</span> sur
-            <span class="text-gray-300">{{ totalElements }}</span> remorques
-        </div>
-
-        <div class="flex items-center gap-2">
-            <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0"
-                class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <!-- Pagination -->
+          @if (!isLoading && totalElements > 0) {
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-800/50">
+              <div class="text-xs font-mono text-gray-500">
+                Affichage de <span class="text-gray-300">{{ currentPage * pageSize + 1 }}</span> à
+                <span class="text-gray-300">{{ (currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize }}</span> sur
+                <span class="text-gray-300">{{ totalElements }}</span> remorques
+              </div>
+              <div class="flex items-center gap-2">
+                <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0"
+                  class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-            </button>
-            <span class="text-xs font-mono px-3 py-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-300">
-                Page {{ currentPage + 1 }} / {{ totalPages }}
-            </span>
-            <button (click)="onPageChange(currentPage + 1)" [disabled]="isLastPage"
-                class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  </svg>
+                </button>
+                <span class="text-xs font-mono px-3 py-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-300">
+                  Page {{ currentPage + 1 }} / {{ totalPages }}
+                </span>
+                <button (click)="onPageChange(currentPage + 1)" [disabled]="isLastPage"
+                  class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- ─── Modal Créer ──────────────────────── -->
-<div *ngIf="isModalOpen" class="fixed z-50 inset-0 flex items-center justify-center p-4" role="dialog"
-    aria-modal="true">
-    <div class="fixed inset-0 modal-backdrop" (click)="closeModal()"></div>
-    <div class="modal-panel relative w-full max-w-md animate-slide-in-up">
-        <div class="flex items-center justify-between px-6 py-5" style="border-bottom: 1px solid #2a2d35;">
-            <div>
-                <h3 class="font-display font-bold text-lg" style="color: #f4f5f7;">{{ editingId ? 'Modifier la Remorque' : 'Ajouter une Remorque' }}</h3>
-                <p class="text-xs mt-0.5" style="color: #6b7280;">Renseignez les capacités du matériel</p>
+                  </svg>
+                </button>
+              </div>
             </div>
-            <button (click)="closeModal()" class="p-2 rounded-lg" style="color: #6b7280; background: #252830;">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
+          }
         </div>
-        <form [formGroup]="trailerForm" class="px-6 py-5 space-y-4">
-            <div class="grid grid-cols-2 gap-4">
+
+        <!-- ─── Modal Créer ──────────────────────── -->
+        @if (isModalOpen) {
+          <div class="fixed z-50 inset-0 flex items-center justify-center p-4" role="dialog"
+            aria-modal="true">
+            <div class="fixed inset-0 modal-backdrop" (click)="closeModal()"></div>
+            <div class="modal-panel relative w-full max-w-md animate-slide-in-up">
+              <div class="flex items-center justify-between px-6 py-5" style="border-bottom: 1px solid #2a2d35;">
                 <div>
+                  <h3 class="font-display font-bold text-lg" style="color: #f4f5f7;">{{ editingId ? 'Modifier la Remorque' : 'Ajouter une Remorque' }}</h3>
+                  <p class="text-xs mt-0.5" style="color: #6b7280;">Renseignez les capacités du matériel</p>
+                </div>
+                <button (click)="closeModal()" class="p-2 rounded-lg" style="color: #6b7280; background: #252830;">
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <form [formGroup]="trailerForm" class="px-6 py-5 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
                     <label class="fleet-label">Type</label>
                     <select formControlName="type" class="fleet-select">
-                        <option value="" disabled>Sélectionnez...</option>
-                        <option value="STANDARD">Standard</option>
-                        <option value="FRIGO">Frigorifique</option>
-                        <option value="TANKER">Citerne</option>
-                        <option value="FLATBED">Plateau</option>
+                      <option value="" disabled>Sélectionnez...</option>
+                      <option value="STANDARD">Standard</option>
+                      <option value="FRIGO">Frigorifique</option>
+                      <option value="TANKER">Citerne</option>
+                      <option value="FLATBED">Plateau</option>
                     </select>
-                </div>
-                <div>
+                  </div>
+                  <div>
                     <label class="fleet-label">Statut</label>
                     <select formControlName="status" class="fleet-select">
-                        <option value="AVAILABLE">Disponible</option>
-                        <option value="IN_USE">En service</option>
-                        <option value="IN_MAINTENANCE">En maintenance</option>
-                        <option value="BROKEN">En panne</option>
+                      <option value="AVAILABLE">Disponible</option>
+                      <option value="IN_USE">En service</option>
+                      <option value="IN_MAINTENANCE">En maintenance</option>
+                      <option value="BROKEN">En panne</option>
                     </select>
+                  </div>
                 </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
                     <label class="fleet-label">Poids Max (T)</label>
                     <input type="number" formControlName="maxWeight" class="fleet-input" placeholder="0">
-                </div>
-                <div>
+                  </div>
+                  <div>
                     <label class="fleet-label">Volume Max (m³)</label>
                     <input type="number" formControlName="maxVolume" class="fleet-input" placeholder="0">
+                  </div>
                 </div>
+              </form>
+              <div class="flex justify-end gap-3 px-6 py-4" style="border-top: 1px solid #2a2d35;">
+                <button (click)="closeModal()" class="btn-fleet-ghost">Annuler</button>
+                <button (click)="onSubmit()" [disabled]="isSubmitting" class="btn-fleet">
+                  {{ isSubmitting ? 'Opération en cours...' : (editingId ? 'Modifier' : 'Ajouter') }}
+                </button>
+              </div>
             </div>
-        </form>
-        <div class="flex justify-end gap-3 px-6 py-4" style="border-top: 1px solid #2a2d35;">
-            <button (click)="closeModal()" class="btn-fleet-ghost">Annuler</button>
-            <button (click)="onSubmit()" [disabled]="isSubmitting" class="btn-fleet">
-                {{ isSubmitting ? 'Opération en cours...' : (editingId ? 'Modifier' : 'Ajouter') }}
-            </button>
-        </div>
-    </div>
-</div>
+          </div>
+        }
 
-<!-- ─── Modal Détails ────────────────────── -->
-<div *ngIf="isDetailModalOpen && selectedTrailer" class="fixed z-50 inset-0 flex items-center justify-center p-4"
-    role="dialog" aria-modal="true">
-    <div class="fixed inset-0 modal-backdrop" (click)="closeDetailModal()"></div>
-    <div class="modal-panel relative w-full max-w-xl animate-slide-in-up overflow-hidden">
-        <div class="absolute top-0 left-0 right-0 h-0.5"
-            style="background: linear-gradient(90deg, #f59e0b, rgba(245,158,11,0.2), transparent);"></div>
-
-        <div class="flex items-start justify-between px-6 pt-6 pb-5" style="border-bottom: 1px solid #2a2d35;">
-            <div class="flex items-center gap-4">
-                <div class="h-14 w-14 rounded-xl flex items-center justify-center"
+        <!-- ─── Modal Détails ────────────────────── -->
+        @if (isDetailModalOpen && selectedTrailer) {
+          <div class="fixed z-50 inset-0 flex items-center justify-center p-4"
+            role="dialog" aria-modal="true">
+            <div class="fixed inset-0 modal-backdrop" (click)="closeDetailModal()"></div>
+            <div class="modal-panel relative w-full max-w-xl animate-slide-in-up overflow-hidden">
+              <div class="absolute top-0 left-0 right-0 h-0.5"
+              style="background: linear-gradient(90deg, #f59e0b, rgba(245,158,11,0.2), transparent);"></div>
+              <div class="flex items-start justify-between px-6 pt-6 pb-5" style="border-bottom: 1px solid #2a2d35;">
+                <div class="flex items-center gap-4">
+                  <div class="h-14 w-14 rounded-xl flex items-center justify-center"
                     style="background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25);">
                     <svg class="h-7 w-7" style="color: #f59e0b;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
-                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="font-display font-bold text-xl" style="color: #f4f5f7;">{{ selectedTrailer.type |
-                        titlecase }}</h3>
-                    <p class="text-sm font-mono" style="color: #6b7280;">ID: {{ selectedTrailer.id | slice:0:12 }}...
-                    </p>
-                </div>
-            </div>
-            <button (click)="closeDetailModal()" class="p-2 rounded-lg" style="color: #6b7280; background: #252830;">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-        </div>
-
-        <div class="p-6 grid grid-cols-2 gap-4">
-            <div class="p-4 rounded-xl" style="background: #141518; border: 1px solid #2a2d35;">
-                <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="color: #4b5563;">Capacités</p>
-                <div class="space-y-3">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                      </svg>
+                    </div>
                     <div>
+                      <h3 class="font-display font-bold text-xl" style="color: #f4f5f7;">{{ selectedTrailer.type |
+                      titlecase }}</h3>
+                      <p class="text-sm font-mono" style="color: #6b7280;">ID: {{ selectedTrailer.id | slice:0:12 }}...
+                      </p>
+                    </div>
+                  </div>
+                  <button (click)="closeDetailModal()" class="p-2 rounded-lg" style="color: #6b7280; background: #252830;">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="p-6 grid grid-cols-2 gap-4">
+                  <div class="p-4 rounded-xl" style="background: #141518; border: 1px solid #2a2d35;">
+                    <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="color: #4b5563;">Capacités</p>
+                    <div class="space-y-3">
+                      <div>
                         <p class="text-xs" style="color: #6b7280;">Poids Maximum</p>
                         <p class="text-xl font-display font-bold mt-1" style="color: #f4f5f7;">{{
-                            selectedTrailer.maxWeight | number }} <span class="text-sm"
-                                style="color: #6b7280;">Tonnes</span></p>
-                    </div>
-                    <div>
+                          selectedTrailer.maxWeight | number }} <span class="text-sm"
+                        style="color: #6b7280;">Tonnes</span></p>
+                      </div>
+                      <div>
                         <p class="text-xs" style="color: #6b7280;">Volume Maximum</p>
                         <p class="text-xl font-display font-bold mt-1" style="color: #f4f5f7;">{{
-                            selectedTrailer.maxVolume | number }} <span class="text-sm"
-                                style="color: #6b7280;">m³</span></p>
+                          selectedTrailer.maxVolume | number }} <span class="text-sm"
+                        style="color: #6b7280;">m³</span></p>
+                      </div>
                     </div>
+                  </div>
+                  <div class="p-4 rounded-xl" style="background: #141518; border: 1px solid #2a2d35;">
+                    <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="color: #4b5563;">État</p>
+                    <div>
+                      <p class="text-xs mb-2" style="color: #6b7280;">Statut Actuel</p>
+                      <span [ngClass]="getStatusColor(selectedTrailer.status)" class="text-sm">{{ selectedTrailer.status |
+                      titlecase }}</span>
+                    </div>
+                  </div>
                 </div>
-            </div>
-            <div class="p-4 rounded-xl" style="background: #141518; border: 1px solid #2a2d35;">
-                <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="color: #4b5563;">État</p>
-                <div>
-                    <p class="text-xs mb-2" style="color: #6b7280;">Statut Actuel</p>
-                    <span [ngClass]="getStatusColor(selectedTrailer.status)" class="text-sm">{{ selectedTrailer.status |
-                        titlecase }}</span>
+                <div class="flex justify-end gap-3 px-6 py-4"
+                  style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
+                  <button (click)="closeDetailModal()" class="btn-fleet-ghost">Fermer</button>
                 </div>
+              </div>
             </div>
-        </div>
-
-        <div class="flex justify-end gap-3 px-6 py-4"
-            style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
-            <button (click)="closeDetailModal()" class="btn-fleet-ghost">Fermer</button>
-        </div>
-    </div>
-</div>
+          }

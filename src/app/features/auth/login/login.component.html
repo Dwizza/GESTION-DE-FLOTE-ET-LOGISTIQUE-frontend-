@@ -28,7 +28,7 @@
         </div>
         <!-- Ping animation around icon -->
         <div class="absolute inset-0 rounded-2xl animate-ping"
-          style="background: rgba(245,158,11,0.15); animation-duration: 3s;"></div>
+        style="background: rgba(245,158,11,0.15); animation-duration: 3s;"></div>
       </div>
 
       <h1 class="text-5xl font-display font-bold mb-3"
@@ -87,72 +87,82 @@
     </div>
 
     <!-- Error Alert -->
-    <div *ngIf="errorMessage$ | async as error" class="mb-6 flex items-start gap-3 p-4 rounded-xl animate-fade-in"
-      style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);">
-      <svg class="h-5 w-5 flex-shrink-0 mt-0.5" style="color: #ef4444;" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-      <p class="text-sm" style="color: #fca5a5;">{{ error }}</p>
-    </div>
+    @if (errorMessage$ | async; as error) {
+      <div class="mb-6 flex items-start gap-3 p-4 rounded-xl animate-fade-in"
+        style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);">
+        <svg class="h-5 w-5 flex-shrink-0 mt-0.5" style="color: #ef4444;" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p class="text-sm" style="color: #fca5a5;">{{ error }}</p>
+        </div>
+      }
 
-    <!-- Form -->
-    <form class="space-y-5" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <!-- Email -->
-      <div>
-        <label for="email" class="fleet-label">Adresse e-mail</label>
-        <input id="email" formControlName="email" type="email" autocomplete="email" class="fleet-input h-11"
-          [style.borderColor]="email?.invalid && email?.touched ? 'rgba(239,68,68,0.5)' : ''"
-          placeholder="operateur@fleet.com">
-        <p *ngIf="email?.invalid && email?.touched" class="mt-1.5 text-xs" style="color: #f87171;">
-          Adresse email invalide.
-        </p>
+      <!-- Form -->
+      <form class="space-y-5" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Email -->
+        <div>
+          <label for="email" class="fleet-label">Adresse e-mail</label>
+          <input id="email" formControlName="email" type="email" autocomplete="email" class="fleet-input h-11"
+            [style.borderColor]="email?.invalid && email?.touched ? 'rgba(239,68,68,0.5)' : ''"
+            placeholder="operateur@fleet.com">
+            @if (email?.invalid && email?.touched) {
+              <p class="mt-1.5 text-xs" style="color: #f87171;">
+                Adresse email invalide.
+              </p>
+            }
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label for="password" class="fleet-label">Mot de passe</label>
+            <input id="password" formControlName="password" type="password" autocomplete="current-password"
+              class="fleet-input h-11"
+              [style.borderColor]="password?.invalid && password?.touched ? 'rgba(239,68,68,0.5)' : ''"
+              placeholder="••••••••">
+              @if (password?.invalid && password?.touched) {
+                <p class="mt-1.5 text-xs" style="color: #f87171;">
+                  Le mot de passe est requis.
+                </p>
+              }
+            </div>
+
+            <!-- Options Row -->
+            <div class="flex items-center justify-between">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" class="w-4 h-4 rounded" style="accent-color: #f59e0b;">
+                <span class="text-sm" style="color: #9ca3af;">Se souvenir</span>
+              </label>
+              <a href="#" class="text-sm font-medium transition-colors" style="color: #f59e0b;">Mot de passe oublié?</a>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" [disabled]="isLoading$ | async" class="btn-fleet w-full h-11 justify-center mt-2">
+              @if (isLoading$ | async) {
+                <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                  </path>
+                </svg>
+              }
+              <span>{{ (isLoading$ | async) ? 'Connexion...' : 'Accéder au système' }}</span>
+              @if (!(isLoading$ | async)) {
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              }
+            </button>
+          </form>
+
+          <!-- Register (Disabled per requirements)
+          <p class="mt-6 text-center text-sm" style="color: #6b7280;">
+            Pas encore de compte?
+            <a routerLink="/register" class="ml-1 font-semibold transition-colors" style="color: #f59e0b;">Créer un accès</a>
+          </p> -->
+
+          <!-- Version stamp -->
+          <p class="mt-8 text-center text-xs font-mono" style="color: #374151;">FleetOps Control Center — 2026</p>
+        </div>
       </div>
-
-      <!-- Password -->
-      <div>
-        <label for="password" class="fleet-label">Mot de passe</label>
-        <input id="password" formControlName="password" type="password" autocomplete="current-password"
-          class="fleet-input h-11"
-          [style.borderColor]="password?.invalid && password?.touched ? 'rgba(239,68,68,0.5)' : ''"
-          placeholder="••••••••">
-        <p *ngIf="password?.invalid && password?.touched" class="mt-1.5 text-xs" style="color: #f87171;">
-          Le mot de passe est requis.
-        </p>
-      </div>
-
-      <!-- Options Row -->
-      <div class="flex items-center justify-between">
-        <label class="flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" class="w-4 h-4 rounded" style="accent-color: #f59e0b;">
-          <span class="text-sm" style="color: #9ca3af;">Se souvenir</span>
-        </label>
-        <a href="#" class="text-sm font-medium transition-colors" style="color: #f59e0b;">Mot de passe oublié?</a>
-      </div>
-
-      <!-- Submit -->
-      <button type="submit" [disabled]="isLoading$ | async" class="btn-fleet w-full h-11 justify-center mt-2">
-        <svg *ngIf="isLoading$ | async" class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-          </path>
-        </svg>
-        <span>{{ (isLoading$ | async) ? 'Connexion...' : 'Accéder au système' }}</span>
-        <svg *ngIf="!(isLoading$ | async)" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-        </svg>
-      </button>
-    </form>
-
-    <!-- Register (Disabled per requirements)
-    <p class="mt-6 text-center text-sm" style="color: #6b7280;">
-      Pas encore de compte?
-      <a routerLink="/register" class="ml-1 font-semibold transition-colors" style="color: #f59e0b;">Créer un accès</a>
-    </p> -->
-
-    <!-- Version stamp -->
-    <p class="mt-8 text-center text-xs font-mono" style="color: #374151;">FleetOps Control Center — 2026</p>
-  </div>
-</div>

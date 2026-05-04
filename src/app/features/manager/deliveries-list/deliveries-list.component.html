@@ -1,355 +1,383 @@
 <!-- ─── Manager Deliveries List ─────────────────────────── -->
 <div class="space-y-6">
 
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-            <div class="flex items-center gap-2 mb-1">
-                <svg class="h-4 w-4" style="color: #10b981;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                </svg>
-                <span class="text-xs font-mono uppercase tracking-widest" style="color: #6b7280;">Logistique</span>
-            </div>
-            <h1 class="section-title">Suivi des Livraisons</h1>
-            <p class="section-subtitle">Gérez les expéditions et le fret client</p>
-        </div>
-        <button (click)="openModal()" class="btn-fleet flex-shrink-0"
-            style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);">
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Nouvelle Livraison
-        </button>
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2 mb-1">
+        <svg class="h-4 w-4" style="color: #10b981;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+        </svg>
+        <span class="text-xs font-mono uppercase tracking-widest" style="color: #6b7280;">Logistique</span>
+      </div>
+      <h1 class="section-title">Suivi des Livraisons</h1>
+      <p class="section-subtitle">Gérez les expéditions et le fret client</p>
+    </div>
+    <button (click)="openModal()" class="btn-fleet flex-shrink-0"
+      style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);">
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+          d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+        Nouvelle Livraison
+      </button>
     </div>
 
     <!-- Loading Skeleton -->
-    <div *ngIf="isLoading" class="animate-pulse space-y-2">
+    @if (isLoading) {
+      <div class="animate-pulse space-y-2">
         <div class="h-10 rounded-lg surface-card"></div>
-        <div *ngFor="let x of [1,2,3,4]" class="h-14 rounded-lg surface-card"></div>
-    </div>
+        @for (x of [1,2,3,4]; track x) {
+          <div class="h-14 rounded-lg surface-card"></div>
+        }
+      </div>
+    }
 
     <!-- Grid -->
-    <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        <div *ngFor="let d of deliveries; let i = index" class="fleet-card group animate-fade-in flex flex-col"
+    @if (!isLoading) {
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        @for (d of deliveries; track d; let i = $index) {
+          <div class="fleet-card group animate-fade-in flex flex-col"
             [style.animationDelay]="(i * 0.05) + 's'">
             <!-- Card Header -->
             <div class="px-5 py-4 flex items-start justify-between" style="border-bottom: 1px solid #2a2d35;">
-                <div class="flex items-start gap-3">
-                    <div class="h-10 w-10 mt-1 rounded-lg flex items-center justify-center flex-shrink-0"
-                        style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
-                        <svg class="h-5 w-5" style="color: #10b981;" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="font-display font-bold text-sm text-gray-100 font-mono">{{ d.reference }}</h3>
-                        <p class="text-xs mt-0.5 text-gray-400">Client: <span class="font-semibold text-gray-300">{{
-                                d.client ? d.client.companyName : 'N/A' }}</span></p>
-                    </div>
+              <div class="flex items-start gap-3">
+                <div class="h-10 w-10 mt-1 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
+                  <svg class="h-5 w-5" style="color: #10b981;" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                  </svg>
                 </div>
-                <div class="flex flex-col items-end shrink-0 ml-2">
-                    <span *ngIf="d.status === 'CREATED'"
-                        class="inline-flex items-center px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest"
-                        style="background: rgba(167, 139, 250, 0.1); color: #a78bfa; border: 1px solid rgba(167, 139, 250, 0.2)">Créée</span>
-                    <span *ngIf="d.status === 'IN_PROGRESS'"
-                        class="inline-flex items-center px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest"
-                        style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2)">En
-                        Cours</span>
-                    <span *ngIf="d.status === 'DELIVERED'"
-                        class="inline-flex items-center px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest"
-                        style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2)">Livrée</span>
-                    <p class="font-mono font-bold text-emerald-400 mt-2">{{ d.prix | currency:'MAD':'symbol':'1.0-0' }}
-                    </p>
+                <div>
+                  <h3 class="font-display font-bold text-sm text-gray-100 font-mono">{{ d.reference }}</h3>
+                  <p class="text-xs mt-0.5 text-gray-400">Client: <span class="font-semibold text-gray-300">{{
+                  d.client ? d.client.companyName : 'N/A' }}</span></p>
                 </div>
+              </div>
+              <div class="flex flex-col items-end shrink-0 ml-2">
+                @if (d.status === 'CREATED') {
+                  <span
+                    class="inline-flex items-center px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest"
+                  style="background: rgba(167, 139, 250, 0.1); color: #a78bfa; border: 1px solid rgba(167, 139, 250, 0.2)">Créée</span>
+                }
+                @if (d.status === 'IN_PROGRESS') {
+                  <span
+                    class="inline-flex items-center px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest"
+                    style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2)">En
+                  Cours</span>
+                }
+                @if (d.status === 'DELIVERED') {
+                  <span
+                    class="inline-flex items-center px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest"
+                  style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2)">Livrée</span>
+                }
+                <p class="font-mono font-bold text-emerald-400 mt-2">{{ d.prix | currency:'MAD':'symbol':'1.0-0' }}
+                </p>
+              </div>
             </div>
-
             <!-- Card Body - Timeline -->
             <div class="px-5 py-4 flex-1">
-                <div
-                    class="relative pl-4 space-y-4 before:absolute before:inset-y-2 before:left-[7px] before:w-0.5 before:bg-gray-800">
-                    <div class="relative">
-                        <div
-                            class="absolute -left-[23px] top-1 h-3 w-3 rounded-full border-2 border-[#141518] bg-gray-600">
-                        </div>
-                        <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-0.5">Origine</p>
-                        <p class="text-sm font-medium text-gray-300 leading-snug">{{ d.pickupAddress }}</p>
-                    </div>
-                    <div class="relative">
-                        <div
-                            class="absolute -left-[23px] top-1 h-3 w-3 rounded-full border-2 border-[#141518] bg-emerald-500">
-                        </div>
-                        <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-0.5">Destination
-                        </p>
-                        <p class="text-sm font-medium text-gray-300 leading-snug">{{ d.deliveryAddress }}</p>
-                    </div>
+              <div
+                class="relative pl-4 space-y-4 before:absolute before:inset-y-2 before:left-[7px] before:w-0.5 before:bg-gray-800">
+                <div class="relative">
+                  <div
+                    class="absolute -left-[23px] top-1 h-3 w-3 rounded-full border-2 border-[#141518] bg-gray-600">
+                  </div>
+                  <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-0.5">Origine</p>
+                  <p class="text-sm font-medium text-gray-300 leading-snug">{{ d.pickupAddress }}</p>
                 </div>
-
-                <div class="grid grid-cols-2 gap-4 mt-5 pt-4 border-t border-gray-800/50">
-                    <div>
-                        <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-1">Poids</p>
-                        <p class="text-sm font-mono font-bold text-gray-200">{{ d.weight }} <span
-                                class="text-xs text-gray-500 font-sans font-normal">t</span></p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-1">Trajet Assigné
-                        </p>
-                        <span *ngIf="d.trip"
-                            class="inline-flex text-[10px] font-mono font-bold text-blue-400 bg-blue-400/10 px-1.5 py-0.5 rounded border border-blue-400/20">
-                            {{ d.trip.reference }}
-                        </span>
-                        <span *ngIf="!d.trip" class="text-xs text-gray-600 italic">Non assigné</span>
-                    </div>
+                <div class="relative">
+                  <div
+                    class="absolute -left-[23px] top-1 h-3 w-3 rounded-full border-2 border-[#141518] bg-emerald-500">
+                  </div>
+                  <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-0.5">Destination
+                  </p>
+                  <p class="text-sm font-medium text-gray-300 leading-snug">{{ d.deliveryAddress }}</p>
                 </div>
+              </div>
+              <div class="grid grid-cols-2 gap-4 mt-5 pt-4 border-t border-gray-800/50">
+                <div>
+                  <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-1">Poids</p>
+                  <p class="text-sm font-mono font-bold text-gray-200">{{ d.weight }} <span
+                  class="text-xs text-gray-500 font-sans font-normal">t</span></p>
+                </div>
+                <div>
+                  <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-1">Trajet Assigné
+                  </p>
+                  @if (d.trip) {
+                    <span
+                      class="inline-flex text-[10px] font-mono font-bold text-blue-400 bg-blue-400/10 px-1.5 py-0.5 rounded border border-blue-400/20">
+                      {{ d.trip.reference }}
+                    </span>
+                  }
+                  @if (!d.trip) {
+                    <span class="text-xs text-gray-600 italic">Non assigné</span>
+                  }
+                </div>
+              </div>
             </div>
-
             <!-- Footer -->
             <div class="px-5 py-3 flex justify-end gap-2 mt-auto"
-                style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
-                <button (click)="openDetailsModal(d)"
-                    class="p-1.5 rounded-md text-emerald-400 hover:bg-emerald-400/10 transition-colors" title="Détails">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
+              <button (click)="openDetailsModal(d)"
+                class="p-1.5 rounded-md text-emerald-400 hover:bg-emerald-400/10 transition-colors" title="Détails">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
-                </button>
-                <button (click)="openUpdateModal(d)"
+                  </button>
+                  <button (click)="openUpdateModal(d)"
                     class="p-1.5 rounded-md text-gray-400 hover:text-white transition-colors" title="Modifier">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              }
+              <!-- Empty State -->
+              @if (deliveries.length === 0) {
+                <div class="col-span-full py-20 text-center fleet-card">
+                  <div
+                    class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4 border border-gray-800 bg-gray-900">
+                    <svg class="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                     </svg>
-                </button>
+                  </div>
+                  <p class="font-display font-semibold text-gray-400">Aucune livraison trouvée</p>
+                </div>
+              }
             </div>
-        </div>
+          }
 
-        <!-- Empty State -->
-        <div *ngIf="deliveries.length === 0" class="col-span-full py-20 text-center fleet-card">
-            <div
-                class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4 border border-gray-800 bg-gray-900">
-                <svg class="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                </svg>
-            </div>
-            <p class="font-display font-semibold text-gray-400">Aucune livraison trouvée</p>
-        </div>
-    </div>
-
-    <!-- Pagination -->
-    <div *ngIf="!isLoading && totalElements > 0" class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-800/50">
-        <div class="text-xs font-mono text-gray-500">
-            Affichage de <span class="text-gray-300">{{ currentPage * pageSize + 1 }}</span> à
-            <span class="text-gray-300">{{ (currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize }}</span> sur
-            <span class="text-gray-300">{{ totalElements }}</span> livraisons
-        </div>
-
-        <div class="flex items-center gap-2">
-            <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0"
-                class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <!-- Pagination -->
+          @if (!isLoading && totalElements > 0) {
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-800/50">
+              <div class="text-xs font-mono text-gray-500">
+                Affichage de <span class="text-gray-300">{{ currentPage * pageSize + 1 }}</span> à
+                <span class="text-gray-300">{{ (currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize }}</span> sur
+                <span class="text-gray-300">{{ totalElements }}</span> livraisons
+              </div>
+              <div class="flex items-center gap-2">
+                <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0"
+                  class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-            </button>
-            <span class="text-xs font-mono px-3 py-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-300">
-                Page {{ currentPage + 1 }} / {{ totalPages }}
-            </span>
-            <button (click)="onPageChange(currentPage + 1)" [disabled]="isLastPage"
-                class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  </svg>
+                </button>
+                <span class="text-xs font-mono px-3 py-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-300">
+                  Page {{ currentPage + 1 }} / {{ totalPages }}
+                </span>
+                <button (click)="onPageChange(currentPage + 1)" [disabled]="isLastPage"
+                  class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-            </button>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          }
         </div>
-    </div>
-</div>
 
-<!-- Modal Détails -->
-<div *ngIf="isDetailsModalOpen && selectedDeliveryDetails"
-    class="fixed z-50 inset-0 flex items-center justify-center p-4">
-    <div class="fixed inset-0 modal-backdrop" (click)="closeModal()"></div>
-    <div class="modal-panel relative w-full max-w-lg animate-slide-in-up">
-        <div class="p-6 space-y-4">
-            <h3 class="text-xl font-bold font-display text-gray-100">{{ selectedDeliveryDetails.reference }}</h3>
-            <div class="grid grid-cols-2 gap-4 text-sm">
-                <div>
+        <!-- Modal Détails -->
+        @if (isDetailsModalOpen && selectedDeliveryDetails) {
+          <div
+            class="fixed z-50 inset-0 flex items-center justify-center p-4">
+            <div class="fixed inset-0 modal-backdrop" (click)="closeModal()"></div>
+            <div class="modal-panel relative w-full max-w-lg animate-slide-in-up">
+              <div class="p-6 space-y-4">
+                <h3 class="text-xl font-bold font-display text-gray-100">{{ selectedDeliveryDetails.reference }}</h3>
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                  <div>
                     <span class="text-gray-500 block text-xs font-mono uppercase tracking-tight">Client</span>
                     <span class="text-gray-200 font-semibold">{{ selectedDeliveryDetails.client?.companyName || 'N/A'
-                        }}</span>
-                </div>
-                <div>
+                    }}</span>
+                  </div>
+                  <div>
                     <span class="text-gray-500 block text-xs font-mono uppercase tracking-tight">Trajet Associé</span>
                     <span class="text-blue-400 font-bold font-mono">{{ selectedDeliveryDetails.trip?.reference ||
-                        'Aucun'
-                        }}</span>
+                      'Aucun'
+                    }}</span>
+                  </div>
                 </div>
-            </div>
-
-            <div class="pt-4 border-t border-gray-800">
-                <div class="flex items-center justify-between mb-2">
+                <div class="pt-4 border-t border-gray-800">
+                  <div class="flex items-center justify-between mb-2">
                     <span class="text-gray-500 block text-xs font-mono uppercase tracking-tight">Itinéraire
-                        théorique</span>
-                </div>
-                <div class="space-y-2">
+                    théorique</span>
+                  </div>
+                  <div class="space-y-2">
                     <div class="flex items-center gap-3">
-                        <div class="w-2 h-2 rounded-full bg-gray-600"></div>
-                        <span class="text-xs text-gray-300">{{ selectedDeliveryDetails.pickupAddress }}</span>
+                      <div class="w-2 h-2 rounded-full bg-gray-600"></div>
+                      <span class="text-xs text-gray-300">{{ selectedDeliveryDetails.pickupAddress }}</span>
                     </div>
                     <div class="w-px h-3 bg-gray-800 ml-1"></div>
                     <div class="flex items-center gap-3">
-                        <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
-                        <span class="text-xs text-gray-300">{{ selectedDeliveryDetails.deliveryAddress }}</span>
+                      <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                      <span class="text-xs text-gray-300">{{ selectedDeliveryDetails.deliveryAddress }}</span>
                     </div>
+                  </div>
                 </div>
-            </div>
-
-            <!-- Path Map -->
-            <div class="pt-4 border-t border-gray-800">
-                <div class="flex items-center justify-between mb-2">
+                <!-- Path Map -->
+                <div class="pt-4 border-t border-gray-800">
+                  <div class="flex items-center justify-between mb-2">
                     <span class="text-gray-500 block text-xs font-mono uppercase tracking-tight italic">
-                        Visualisation de l'itinéraire
-                        <span *ngIf="deliveryPath.length > 0" class="text-emerald-500 ml-2">(+ Tracé réel: {{
-                            deliveryPath.length }} pts)</span>
+                      Visualisation de l'itinéraire
+                      @if (deliveryPath.length > 0) {
+                        <span class="text-emerald-500 ml-2">(+ Tracé réel: {{
+                        deliveryPath.length }} pts)</span>
+                      }
                     </span>
-                </div>
-                <div class="h-48 w-full rounded-lg overflow-hidden border border-gray-800 bg-[#141518]">
+                  </div>
+                  <div class="h-48 w-full rounded-lg overflow-hidden border border-gray-800 bg-[#141518]">
                     <app-map [center]="mapCenter" [polylines]="deliveryPath" [markers]="tempMarkers"
-                        [zoom]="10"></app-map>
+                    [zoom]="10"></app-map>
+                  </div>
                 </div>
+              </div>
+              <div class="p-4 border-t border-gray-800 flex justify-end">
+                <button (click)="closeModal()" class="btn-fleet-ghost">Fermer</button>
+              </div>
             </div>
-        </div>
-        <div class="p-4 border-t border-gray-800 flex justify-end">
-            <button (click)="closeModal()" class="btn-fleet-ghost">Fermer</button>
-        </div>
-    </div>
-</div>
-<div *ngIf="isModalOpen" class="fixed z-50 inset-0 flex items-center justify-center p-4">
-    <div class="fixed inset-0 modal-backdrop" (click)="closeModal()"></div>
-    <div class="modal-panel relative w-full max-w-xl animate-slide-in-up flex flex-col max-h-[90vh]">
-        <div class="absolute top-0 left-0 right-0 h-1" style="background: linear-gradient(90deg, #10b981, #059669);">
-        </div>
-
-        <div class="px-6 py-5 border-b border-gray-800">
-            <h3 class="font-display font-bold text-lg text-gray-100">{{ isUpdateMode ? 'Modifier Livraison' : 'Nouvelle
+          </div>
+        }
+        @if (isModalOpen) {
+          <div class="fixed z-50 inset-0 flex items-center justify-center p-4">
+            <div class="fixed inset-0 modal-backdrop" (click)="closeModal()"></div>
+            <div class="modal-panel relative w-full max-w-xl animate-slide-in-up flex flex-col max-h-[90vh]">
+              <div class="absolute top-0 left-0 right-0 h-1" style="background: linear-gradient(90deg, #10b981, #059669);">
+              </div>
+              <div class="px-6 py-5 border-b border-gray-800">
+                <h3 class="font-display font-bold text-lg text-gray-100">{{ isUpdateMode ? 'Modifier Livraison' : 'Nouvelle
                 Expédition' }}</h3>
-        </div>
-
-        <div class="p-6 overflow-y-auto space-y-4">
-            <form [formGroup]="deliveryForm" class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
+              </div>
+              <div class="p-6 overflow-y-auto space-y-4">
+                <form [formGroup]="deliveryForm" class="space-y-4">
+                  <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="fleet-label">Libellé / Description</label>
-                        <input type="text" formControlName="description" class="fleet-input"
-                            placeholder="Contenu du fret">
+                      <label class="fleet-label">Libellé / Description</label>
+                      <input type="text" formControlName="description" class="fleet-input"
+                        placeholder="Contenu du fret">
+                      </div>
                     </div>
-                </div>
-
-                <div class="grid grid-cols-3 gap-4">
-                    <div>
+                    <div class="grid grid-cols-3 gap-4">
+                      <div>
                         <label class="fleet-label">Poids (T)</label>
                         <input type="number" formControlName="weight" class="fleet-input"
-                            [class.border-red-500]="deliveryForm.get('weight')?.invalid && deliveryForm.get('weight')?.touched">
-                        <p class="text-[10px] text-red-500 mt-1"
-                            *ngIf="deliveryForm.get('weight')?.invalid && deliveryForm.get('weight')?.touched">
-                            Min 0.1
-                        </p>
-                    </div>
-                    <div>
-                        <label class="fleet-label">Volume (m³)</label>
-                        <input type="number" formControlName="volume" class="fleet-input"
-                            [class.border-red-500]="deliveryForm.get('volume')?.invalid && deliveryForm.get('volume')?.touched">
-                        <p class="text-[10px] text-red-500 mt-1"
-                            *ngIf="deliveryForm.get('volume')?.invalid && deliveryForm.get('volume')?.touched">
-                            Min 0.1
-                        </p>
-                    </div>
-                    <div>
-                        <label class="fleet-label">Prix (MAD)</label>
-                        <input type="number" formControlName="prix" class="fleet-input text-emerald-400 font-bold"
-                            [class.border-red-500]="deliveryForm.get('prix')?.invalid && deliveryForm.get('prix')?.touched">
-                        <p class="text-[10px] text-red-500 mt-1"
-                            *ngIf="deliveryForm.get('prix')?.invalid && deliveryForm.get('prix')?.touched">
-                            Requis
-                        </p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="space-y-3">
+                          [class.border-red-500]="deliveryForm.get('weight')?.invalid && deliveryForm.get('weight')?.touched">
+                          @if (deliveryForm.get('weight')?.invalid && deliveryForm.get('weight')?.touched) {
+                            <p class="text-[10px] text-red-500 mt-1"
+                              >
+                              Min 0.1
+                            </p>
+                          }
+                        </div>
                         <div>
-                            <label class="fleet-label flex items-center justify-between">
-                                Adresse de Départ
-                                <button type="button" (click)="setSelectionMode('pickup')"
+                          <label class="fleet-label">Volume (m³)</label>
+                          <input type="number" formControlName="volume" class="fleet-input"
+                            [class.border-red-500]="deliveryForm.get('volume')?.invalid && deliveryForm.get('volume')?.touched">
+                            @if (deliveryForm.get('volume')?.invalid && deliveryForm.get('volume')?.touched) {
+                              <p class="text-[10px] text-red-500 mt-1"
+                                >
+                                Min 0.1
+                              </p>
+                            }
+                          </div>
+                          <div>
+                            <label class="fleet-label">Prix (MAD)</label>
+                            <input type="number" formControlName="prix" class="fleet-input text-emerald-400 font-bold"
+                              [class.border-red-500]="deliveryForm.get('prix')?.invalid && deliveryForm.get('prix')?.touched">
+                              @if (deliveryForm.get('prix')?.invalid && deliveryForm.get('prix')?.touched) {
+                                <p class="text-[10px] text-red-500 mt-1"
+                                  >
+                                  Requis
+                                </p>
+                              }
+                            </div>
+                          </div>
+                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-3">
+                              <div>
+                                <label class="fleet-label flex items-center justify-between">
+                                  Adresse de Départ
+                                  <button type="button" (click)="setSelectionMode('pickup')"
                                     class="text-[10px] text-emerald-400 hover:text-emerald-300 uppercase font-mono">
                                     {{ selectionType === 'pickup' ? 'Sél. sur carte...' : 'Pointer sur carte' }}
-                                </button>
-                            </label>
-                            <input type="text" formControlName="pickupAddress" class="fleet-input"
-                                placeholder="Origine">
-                            <div class="text-[10px] text-gray-500 font-mono mt-1"
-                                *ngIf="deliveryForm.get('pickupLatitude')?.value">
-                                Coordonnées: {{ deliveryForm.get('pickupLatitude')?.value | number:'1.4-4' }}, {{
-                                deliveryForm.get('pickupLongitude')?.value | number:'1.4-4' }}
-                            </div>
+                                  </button>
+                                </label>
+                                <input type="text" formControlName="pickupAddress" class="fleet-input"
+                                  placeholder="Origine">
+                                  @if (deliveryForm.get('pickupLatitude')?.value) {
+                                    <div class="text-[10px] text-gray-500 font-mono mt-1"
+                                      >
+                                      Coordonnées: {{ deliveryForm.get('pickupLatitude')?.value | number:'1.4-4' }}, {{
+                                      deliveryForm.get('pickupLongitude')?.value | number:'1.4-4' }}
+                                    </div>
+                                  }
+                                </div>
+                                <div>
+                                  <label class="fleet-label flex items-center justify-between">
+                                    Adresse d'Arrivée
+                                    <button type="button" (click)="setSelectionMode('delivery')"
+                                      class="text-[10px] text-red-400 hover:text-red-300 uppercase font-mono">
+                                      {{ selectionType === 'delivery' ? 'Sél. sur carte...' : 'Pointer sur carte' }}
+                                    </button>
+                                  </label>
+                                  <input type="text" formControlName="deliveryAddress" class="fleet-input"
+                                    placeholder="Destination">
+                                    @if (deliveryForm.get('deliveryLatitude')?.value) {
+                                      <div class="text-[10px] text-gray-500 font-mono mt-1"
+                                        >
+                                        Coordonnées: {{ deliveryForm.get('deliveryLatitude')?.value | number:'1.4-4' }}, {{
+                                        deliveryForm.get('deliveryLongitude')?.value | number:'1.4-4' }}
+                                      </div>
+                                    }
+                                  </div>
+                                </div>
+                                <div class="h-full min-h-[200px] rounded-lg overflow-hidden border border-gray-800 bg-[#141518]">
+                                  <app-map [center]="mapCenter" [markers]="tempMarkers" [selectionMode]="!!selectionType"
+                                  (mapClick)="onMapClick($event)" [zoom]="selectionType ? 10 : 6"></app-map>
+                                </div>
+                              </div>
+                              <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-800">
+                                <div>
+                                  <label class="fleet-label">Affecter au Trajet <span class="text-red-500">*</span></label>
+                                  <select formControlName="tripId" class="fleet-select"
+                                    [class.border-red-500]="deliveryForm.get('tripId')?.invalid && deliveryForm.get('tripId')?.touched">
+                                    <option value="">Sélectionner un trajet...</option>
+                                    @for (t of trips; track t) {
+                                      <option [value]="t.id">{{ t.reference }} ({{ t.status }})</option>
+                                    }
+                                  </select>
+                                  @if (deliveryForm.get('tripId')?.invalid && deliveryForm.get('tripId')?.touched) {
+                                    <p class="text-[10px] text-red-500 mt-1"
+                                      >
+                                      Trajet requis
+                                    </p>
+                                  }
+                                </div>
+                                <div>
+                                  <label class="fleet-label">État de livraison</label>
+                                  <select formControlName="status" class="fleet-select">
+                                    <option value="CREATED">Créée</option>
+                                    <option value="IN_PROGRESS">En Cours</option>
+                                    <option value="DELIVERED">Livrée</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                          <div class="p-4 border-t border-gray-800 flex justify-end gap-3 bg-gray-900/40">
+                            <button (click)="closeModal()" class="btn-fleet-ghost">Annuler</button>
+                            <button (click)="onSubmit()" [disabled]="isSubmitting" class="btn-fleet"
+                            style="background: linear-gradient(135deg, #10b981, #059669);">Enregistrer</button>
+                          </div>
                         </div>
-                        <div>
-                            <label class="fleet-label flex items-center justify-between">
-                                Adresse d'Arrivée
-                                <button type="button" (click)="setSelectionMode('delivery')"
-                                    class="text-[10px] text-red-400 hover:text-red-300 uppercase font-mono">
-                                    {{ selectionType === 'delivery' ? 'Sél. sur carte...' : 'Pointer sur carte' }}
-                                </button>
-                            </label>
-                            <input type="text" formControlName="deliveryAddress" class="fleet-input"
-                                placeholder="Destination">
-                            <div class="text-[10px] text-gray-500 font-mono mt-1"
-                                *ngIf="deliveryForm.get('deliveryLatitude')?.value">
-                                Coordonnées: {{ deliveryForm.get('deliveryLatitude')?.value | number:'1.4-4' }}, {{
-                                deliveryForm.get('deliveryLongitude')?.value | number:'1.4-4' }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="h-full min-h-[200px] rounded-lg overflow-hidden border border-gray-800 bg-[#141518]">
-                        <app-map [center]="mapCenter" [markers]="tempMarkers" [selectionMode]="!!selectionType"
-                            (mapClick)="onMapClick($event)" [zoom]="selectionType ? 10 : 6"></app-map>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-800">
-                    <div>
-                        <label class="fleet-label">Affecter au Trajet <span class="text-red-500">*</span></label>
-                        <select formControlName="tripId" class="fleet-select"
-                            [class.border-red-500]="deliveryForm.get('tripId')?.invalid && deliveryForm.get('tripId')?.touched">
-                            <option value="">Sélectionner un trajet...</option>
-                            <option *ngFor="let t of trips" [value]="t.id">{{ t.reference }} ({{ t.status }})</option>
-                        </select>
-                        <p class="text-[10px] text-red-500 mt-1"
-                            *ngIf="deliveryForm.get('tripId')?.invalid && deliveryForm.get('tripId')?.touched">
-                            Trajet requis
-                        </p>
-                    </div>
-                    <div>
-                        <label class="fleet-label">État de livraison</label>
-                        <select formControlName="status" class="fleet-select">
-                            <option value="CREATED">Créée</option>
-                            <option value="IN_PROGRESS">En Cours</option>
-                            <option value="DELIVERED">Livrée</option>
-                        </select>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <div class="p-4 border-t border-gray-800 flex justify-end gap-3 bg-gray-900/40">
-            <button (click)="closeModal()" class="btn-fleet-ghost">Annuler</button>
-            <button (click)="onSubmit()" [disabled]="isSubmitting" class="btn-fleet"
-                style="background: linear-gradient(135deg, #10b981, #059669);">Enregistrer</button>
-        </div>
-    </div>
-</div>
+                      </div>
+                    }

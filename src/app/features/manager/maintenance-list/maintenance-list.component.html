@@ -1,234 +1,249 @@
 <!-- ─── Manager Maintenance List ─────────────────────────── -->
 <div class="space-y-6">
 
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-            <div class="flex items-center gap-2 mb-1">
-                <svg class="h-4 w-4" style="color: #10b981;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
-                    </path>
-                </svg>
-                <span class="text-xs font-mono uppercase tracking-widest" style="color: #6b7280;">Parc Technique</span>
-            </div>
-            <h1 class="section-title">Gestion de Maintenance</h1>
-            <p class="section-subtitle">Suivi des interventions techniques et entretiens</p>
-        </div>
-        <button (click)="openModal()" class="btn-fleet flex-shrink-0"
-            style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);">
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Nouvelle Intervention
-        </button>
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2 mb-1">
+        <svg class="h-4 w-4" style="color: #10b981;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+          </path>
+        </svg>
+        <span class="text-xs font-mono uppercase tracking-widest" style="color: #6b7280;">Parc Technique</span>
+      </div>
+      <h1 class="section-title">Gestion de Maintenance</h1>
+      <p class="section-subtitle">Suivi des interventions techniques et entretiens</p>
+    </div>
+    <button (click)="openModal()" class="btn-fleet flex-shrink-0"
+      style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);">
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+          d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+        Nouvelle Intervention
+      </button>
     </div>
 
     <!-- Grid -->
-    <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-        <div *ngFor="let m of maintenances; let i = index" class="fleet-card group animate-fade-in flex flex-col"
+    @if (!isLoading) {
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        @for (m of maintenances; track m; let i = $index) {
+          <div class="fleet-card group animate-fade-in flex flex-col"
             [style.animationDelay]="(i * 0.05) + 's'">
             <!-- Header -->
             <div class="px-5 py-4 flex items-start justify-between" style="border-bottom: 1px solid #2a2d35;">
-                <div class="flex items-center gap-3">
-                    <div *ngIf="m.truck"
-                        class="h-10 w-10 mt-1 rounded-lg flex items-center justify-center flex-shrink-0"
-                        style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
-                        <svg class="h-5 w-5" style="color: #10b981;" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                        </svg>
+              <div class="flex items-center gap-3">
+                @if (m.truck) {
+                  <div
+                    class="h-10 w-10 mt-1 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
+                    <svg class="h-5 w-5" style="color: #10b981;" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                      </svg>
                     </div>
-                    <div *ngIf="m.trailer"
-                        class="h-10 w-10 mt-1 rounded-lg flex items-center justify-center flex-shrink-0"
-                        style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);">
-                        <svg class="h-5 w-5" style="color: #60a5fa;" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  }
+                  @if (m.trailer) {
+                    <div
+                      class="h-10 w-10 mt-1 rounded-lg flex items-center justify-center flex-shrink-0"
+                      style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);">
+                      <svg class="h-5 w-5" style="color: #60a5fa;" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
-                    </div>
+                      </div>
+                    }
                     <div>
-                        <p class="text-[10px] uppercase font-bold tracking-widest"
-                            [ngStyle]="{'color': m.truck ? '#10b981' : '#60a5fa'}">
-                            {{ m.truck ? 'Camion' : 'Remorque' }}
-                        </p>
-                        <p class="text-sm font-bold text-gray-100 font-mono mt-0.5">
-                            {{ m.truck ? m.truck.registrationNumber : m.trailer?.type }}
-                        </p>
+                      <p class="text-[10px] uppercase font-bold tracking-widest"
+                        [ngStyle]="{'color': m.truck ? '#10b981' : '#60a5fa'}">
+                        {{ m.truck ? 'Camion' : 'Remorque' }}
+                      </p>
+                      <p class="text-sm font-bold text-gray-100 font-mono mt-0.5">
+                        {{ m.truck ? m.truck.registrationNumber : m.trailer?.type }}
+                      </p>
                     </div>
-                </div>
-                <div class="flex flex-col items-end">
+                  </div>
+                  <div class="flex flex-col items-end">
                     <span [ngClass]="{
                             'text-amber-500 bg-amber-500/10 border-amber-500/20': m.status === 'IN_PROGRESS',
                             'text-emerald-500 bg-emerald-500/10 border-emerald-500/20': m.status === 'COMPLETED',
                             'text-gray-400 bg-gray-500/10 border-gray-500/20': m.status === 'PLANNED'
                         }"
-                        class="inline-flex px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest border">
-                        {{ m.status }}
+                      class="inline-flex px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest border">
+                      {{ m.status }}
                     </span>
                     <span class="text-[10px] text-gray-400 font-mono mt-2">{{ m.dateMaintenance | date:'dd/MM/yy'
-                        }}</span>
+                    }}</span>
+                  </div>
                 </div>
-            </div>
-
-            <!-- Body -->
-            <div class="px-5 py-5 space-y-4 flex-1">
-                <div>
+                <!-- Body -->
+                <div class="px-5 py-5 space-y-4 flex-1">
+                  <div>
                     <p class="text-sm font-semibold text-gray-100 leading-snug">{{ m.description }}</p>
                     <p class="text-[10px] uppercase tracking-widest text-gray-500 mt-1 font-mono">
-                        {{ m.reference }} <span class="mx-1">•</span> <span class="text-gray-400">{{ m.type }}</span>
+                      {{ m.reference }} <span class="mx-1">•</span> <span class="text-gray-400">{{ m.type }}</span>
                     </p>
-                </div>
-
-                <div class="pt-4 border-t border-gray-800/50 flex items-center justify-between">
+                  </div>
+                  <div class="pt-4 border-t border-gray-800/50 flex items-center justify-between">
                     <div>
-                        <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-0.5">Coût</p>
-                        <p class="text-sm font-mono font-bold text-emerald-400">{{ m.cout | currency:'MAD':'':'1.0-0' }}
-                            <span class="text-[10px] font-sans font-normal text-gray-400">MAD</span></p>
+                      <p class="text-[10px] uppercase tracking-widest font-semibold text-gray-500 mb-0.5">Coût</p>
+                      <p class="text-sm font-mono font-bold text-emerald-400">{{ m.cout | currency:'MAD':'':'1.0-0' }}
+                        <span class="text-[10px] font-sans font-normal text-gray-400">MAD</span></p>
+                      </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Actions Footer -->
-            <div class="px-5 py-3 flex justify-end gap-2 mt-auto"
-                style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
-                <button (click)="openDetailsModal(m)"
-                    class="p-1.5 rounded-md text-emerald-400 hover:bg-emerald-400/10 transition-colors" title="Détails">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  </div>
+                  <!-- Actions Footer -->
+                  <div class="px-5 py-3 flex justify-end gap-2 mt-auto"
+                    style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
+                    <button (click)="openDetailsModal(m)"
+                      class="p-1.5 rounded-md text-emerald-400 hover:bg-emerald-400/10 transition-colors" title="Détails">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                </button>
-                <button (click)="openEditModal(m)"
-                    class="p-1.5 rounded-md text-amber-500 hover:bg-amber-500/10 transition-colors" title="Modifier">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                    </svg>
-                </button>
-            </div>
-        </div>
+                          </svg>
+                        </button>
+                        <button (click)="openEditModal(m)"
+                          class="p-1.5 rounded-md text-amber-500 hover:bg-amber-500/10 transition-colors" title="Modifier">
+                          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    }
+                    <!-- Empty State -->
+                    @if (maintenances.length === 0) {
+                      <div class="col-span-full py-20 text-center fleet-card">
+                        <div
+                          class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4 border border-gray-800 bg-gray-900">
+                          <svg class="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                            </path>
+                          </svg>
+                        </div>
+                        <p class="font-display font-semibold text-gray-400">Aucune intervention</p>
+                      </div>
+                    }
+                  </div>
+                }
 
-        <!-- Empty State -->
-        <div *ngIf="maintenances.length === 0" class="col-span-full py-20 text-center fleet-card">
-            <div
-                class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4 border border-gray-800 bg-gray-900">
-                <svg class="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
-                    </path>
-                </svg>
-            </div>
-            <p class="font-display font-semibold text-gray-400">Aucune intervention</p>
-        </div>
-    </div>
+                <!-- Pagination -->
+                @if (!isLoading && totalElements > 0) {
+                  <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-800/50">
+                    <div class="text-xs font-mono text-gray-500">
+                      Affichage de <span class="text-gray-300">{{ currentPage * pageSize + 1 }}</span> à
+                      <span class="text-gray-300">{{ (currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize }}</span> sur
+                      <span class="text-gray-300">{{ totalElements }}</span> interventions
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0"
+                        class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </button>
+                      <span class="text-xs font-mono px-3 py-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-300">
+                        Page {{ currentPage + 1 }} / {{ totalPages }}
+                      </span>
+                      <button (click)="onPageChange(currentPage + 1)" [disabled]="isLastPage"
+                        class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                }
+              </div>
 
-    <!-- Pagination -->
-    <div *ngIf="!isLoading && totalElements > 0" class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-800/50">
-        <div class="text-xs font-mono text-gray-500">
-            Affichage de <span class="text-gray-300">{{ currentPage * pageSize + 1 }}</span> à
-            <span class="text-gray-300">{{ (currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize }}</span> sur
-            <span class="text-gray-300">{{ totalElements }}</span> interventions
-        </div>
-
-        <div class="flex items-center gap-2">
-            <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0"
-                class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-            </button>
-            <span class="text-xs font-mono px-3 py-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-300">
-                Page {{ currentPage + 1 }} / {{ totalPages }}
-            </span>
-            <button (click)="onPageChange(currentPage + 1)" [disabled]="isLastPage"
-                class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- Modal -->
-<div *ngIf="isModalOpen" class="fixed z-50 inset-0 flex items-center justify-center p-4">
-    <div class="fixed inset-0 modal-backdrop" (click)="closeModal()"></div>
-    <div class="modal-panel relative w-full max-w-xl animate-slide-in-up">
-        <div class="absolute top-0 left-0 right-0 h-1" style="background: linear-gradient(90deg, #10b981, #059669);">
-        </div>
-        <div class="px-6 py-5 border-b border-gray-800">
-            <h3 class="font-bold text-lg text-gray-100">{{ editingId ? 'Modifier Intervention' : 'Nouvelle Intervention'
-                }}</h3>
-        </div>
-        <form [formGroup]="maintenanceForm" class="p-6 space-y-4">
-            <div class="flex gap-4 mb-4">
-                <button type="button" (click)="setServiceType('TRUCK')" [class.bg-[#10b981]]="serviceType === 'TRUCK'"
-                    class="flex-1 py-2 rounded border border-gray-700 text-xs font-bold uppercase">Camion</button>
-                <button type="button" (click)="setServiceType('TRAILER')"
-                    [class.bg-[#10b981]]="serviceType === 'TRAILER'"
-                    class="flex-1 py-2 rounded border border-gray-700 text-xs font-bold uppercase">Remorque</button>
-            </div>
-
-            <div *ngIf="serviceType === 'TRUCK'">
-                <label class="fleet-label">Camion concerné</label>
-                <select formControlName="truckId" class="fleet-select">
-                    <option value="">Sélectionner...</option>
-                    <option *ngFor="let t of trucks" [value]="t.id">{{ t.registrationNumber }}</option>
-                </select>
-            </div>
-            <div *ngIf="serviceType === 'TRAILER'">
-                <label class="fleet-label">Remorque concernée</label>
-                <select formControlName="trailerId" class="fleet-select">
-                    <option value="">Sélectionner...</option>
-                    <option *ngFor="let t of trailers" [value]="t.id">{{ t.type }}</option>
-                </select>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div class="col-span-2">
-                    <label class="fleet-label">Description des travaux</label>
-                    <input type="text" formControlName="description" class="fleet-input">
+              <!-- Modal -->
+              @if (isModalOpen) {
+                <div class="fixed z-50 inset-0 flex items-center justify-center p-4">
+                  <div class="fixed inset-0 modal-backdrop" (click)="closeModal()"></div>
+                  <div class="modal-panel relative w-full max-w-xl animate-slide-in-up">
+                    <div class="absolute top-0 left-0 right-0 h-1" style="background: linear-gradient(90deg, #10b981, #059669);">
+                    </div>
+                    <div class="px-6 py-5 border-b border-gray-800">
+                      <h3 class="font-bold text-lg text-gray-100">{{ editingId ? 'Modifier Intervention' : 'Nouvelle Intervention'
+                      }}</h3>
+                    </div>
+                    <form [formGroup]="maintenanceForm" class="p-6 space-y-4">
+                      <div class="flex gap-4 mb-4">
+                        <button type="button" (click)="setServiceType('TRUCK')" [class.bg-[#10b981]]="serviceType === 'TRUCK'"
+                        class="flex-1 py-2 rounded border border-gray-700 text-xs font-bold uppercase">Camion</button>
+                        <button type="button" (click)="setServiceType('TRAILER')"
+                          [class.bg-[#10b981]]="serviceType === 'TRAILER'"
+                        class="flex-1 py-2 rounded border border-gray-700 text-xs font-bold uppercase">Remorque</button>
+                      </div>
+                      @if (serviceType === 'TRUCK') {
+                        <div>
+                          <label class="fleet-label">Camion concerné</label>
+                          <select formControlName="truckId" class="fleet-select">
+                            <option value="">Sélectionner...</option>
+                            @for (t of trucks; track t) {
+                              <option [value]="t.id">{{ t.registrationNumber }}</option>
+                            }
+                          </select>
+                        </div>
+                      }
+                      @if (serviceType === 'TRAILER') {
+                        <div>
+                          <label class="fleet-label">Remorque concernée</label>
+                          <select formControlName="trailerId" class="fleet-select">
+                            <option value="">Sélectionner...</option>
+                            @for (t of trailers; track t) {
+                              <option [value]="t.id">{{ t.type }}</option>
+                            }
+                          </select>
+                        </div>
+                      }
+                      <div class="grid grid-cols-2 gap-4">
+                        <div class="col-span-2">
+                          <label class="fleet-label">Description des travaux</label>
+                          <input type="text" formControlName="description" class="fleet-input">
+                        </div>
+                        <div>
+                          <label class="fleet-label">Intervenant</label>
+                          <input type="text" formControlName="performedBy" class="fleet-input">
+                        </div>
+                        <div>
+                          <label class="fleet-label">Type</label>
+                          <select formControlName="type" class="fleet-select">
+                            <option value="PREVENTIVE">Préventive</option>
+                            <option value="CORRECTIVE">Corrective</option>
+                            <option value="INSPECTION">Inspection</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label class="fleet-label">Status</label>
+                          <select formControlName="status" class="fleet-select">
+                            <option value="PLANNED">Planifiée</option>
+                            <option value="IN_PROGRESS">En Cours</option>
+                            <option value="COMPLETED">Terminée</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label class="fleet-label">Date</label>
+                          <input type="date" formControlName="dateMaintenance" class="fleet-input">
+                        </div>
+                        <div>
+                          <label class="fleet-label">Coût (MAD)</label>
+                          <input type="number" formControlName="cout" class="fleet-input text-emerald-400 font-bold">
+                        </div>
+                      </div>
+                    </form>
+                    <div class="p-4 border-t border-gray-800 flex justify-end gap-3 lg:bg-gray-900/40">
+                      <button (click)="closeModal()" class="btn-fleet-ghost">Annuler</button>
+                      <button (click)="onSubmit()" [disabled]="isSubmitting" class="btn-fleet"
+                      style="background: #10b981;">Enregistrer</button>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                    <label class="fleet-label">Intervenant</label>
-                    <input type="text" formControlName="performedBy" class="fleet-input">
-                </div>
-                <div>
-                    <label class="fleet-label">Type</label>
-                    <select formControlName="type" class="fleet-select">
-                        <option value="PREVENTIVE">Préventive</option>
-                        <option value="CORRECTIVE">Corrective</option>
-                        <option value="INSPECTION">Inspection</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="fleet-label">Status</label>
-                    <select formControlName="status" class="fleet-select">
-                        <option value="PLANNED">Planifiée</option>
-                        <option value="IN_PROGRESS">En Cours</option>
-                        <option value="COMPLETED">Terminée</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="fleet-label">Date</label>
-                    <input type="date" formControlName="dateMaintenance" class="fleet-input">
-                </div>
-                <div>
-                    <label class="fleet-label">Coût (MAD)</label>
-                    <input type="number" formControlName="cout" class="fleet-input text-emerald-400 font-bold">
-                </div>
-            </div>
-        </form>
-        <div class="p-4 border-t border-gray-800 flex justify-end gap-3 lg:bg-gray-900/40">
-            <button (click)="closeModal()" class="btn-fleet-ghost">Annuler</button>
-            <button (click)="onSubmit()" [disabled]="isSubmitting" class="btn-fleet"
-                style="background: #10b981;">Enregistrer</button>
-        </div>
-    </div>
-</div>
+              }

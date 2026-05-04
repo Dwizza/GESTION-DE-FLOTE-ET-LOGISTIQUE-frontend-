@@ -1,308 +1,310 @@
 <!-- ─── Clients List Dashboard ─────────────────────────── -->
 <div class="space-y-6">
 
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-            <div class="flex items-center gap-2 mb-1">
-                <svg class="h-4 w-4" style="color: #f59e0b;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
-                <span class="text-xs font-mono uppercase tracking-widest" style="color: #6b7280;">Partenaires &
-                    Clients</span>
-            </div>
-            <h1 class="section-title">Gestion des Clients</h1>
-            <p class="section-subtitle">Gérez la liste de vos clients, leurs adresses et contacts</p>
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2 mb-1">
+        <svg class="h-4 w-4" style="color: #f59e0b;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+          <span class="text-xs font-mono uppercase tracking-widest" style="color: #6b7280;">Partenaires &
+          Clients</span>
         </div>
-        <button (click)="openModal()" class="btn-fleet flex-shrink-0"
-            style="background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);">
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Ajouter un Client
+        <h1 class="section-title">Gestion des Clients</h1>
+        <p class="section-subtitle">Gérez la liste de vos clients, leurs adresses et contacts</p>
+      </div>
+      <button (click)="openModal()" class="btn-fleet flex-shrink-0"
+        style="background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+            d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          Ajouter un Client
         </button>
-    </div>
+      </div>
 
-    <!-- Loading Skeleton -->
-    <div *ngIf="isLoading" class="animate-pulse space-y-2">
-        <div class="h-10 rounded-lg" style="background: #1e2025;"></div>
-        <div *ngFor="let x of [1,2,3,4]" class="h-14 rounded-lg" style="background: #1e2025;"></div>
-    </div>
+      <!-- Loading Skeleton -->
+      @if (isLoading) {
+        <div class="animate-pulse space-y-2">
+          <div class="h-10 rounded-lg" style="background: #1e2025;"></div>
+          @for (x of [1,2,3,4]; track x) {
+            <div class="h-14 rounded-lg" style="background: #1e2025;"></div>
+          }
+        </div>
+      }
 
-    <!-- Grid -->
-    <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        <div *ngFor="let c of clients; let i = index" class="fleet-card group animate-fade-in transition-colors hover:border-[#f59e0b]/30"
-            [style.animationDelay]="(i * 0.05) + 's'">
-            <!-- Card Header -->
-            <div class="px-5 py-4 flex items-center gap-4" style="border-bottom: 1px solid #2a2d35;">
+      <!-- Grid -->
+      @if (!isLoading) {
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          @for (c of clients; track c; let i = $index) {
+            <div class="fleet-card group animate-fade-in transition-colors hover:border-[#f59e0b]/30"
+              [style.animationDelay]="(i * 0.05) + 's'">
+              <!-- Card Header -->
+              <div class="px-5 py-4 flex items-center gap-4" style="border-bottom: 1px solid #2a2d35;">
                 <div class="h-12 w-12 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg"
-                    style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2);">
-                    <span class="font-bold text-lg" style="color: #f59e0b;">{{ c.companyName.charAt(0) | uppercase}}</span>
+                  style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2);">
+                  <span class="font-bold text-lg" style="color: #f59e0b;">{{ c.companyName.charAt(0) | uppercase}}</span>
                 </div>
                 <div>
-                    <h3 class="font-display font-bold text-sm" style="color: #f4f5f7;">{{ c.companyName }}</h3>
-                    <p class="text-[10px] font-mono mt-0.5" style="color: #6b7280;">ID: {{ c.id.split('-')[0] }}</p>
+                  <h3 class="font-display font-bold text-sm" style="color: #f4f5f7;">{{ c.companyName }}</h3>
+                  <p class="text-[10px] font-mono mt-0.5" style="color: #6b7280;">ID: {{ c.id.split('-')[0] }}</p>
                 </div>
-            </div>
-
-            <!-- Card Body -->
-            <div class="px-5 py-4 space-y-4">
+              </div>
+              <!-- Card Body -->
+              <div class="px-5 py-4 space-y-4">
                 <div>
-                    <p class="text-[10px] uppercase tracking-widest font-semibold mb-1" style="color: #4b5563;">Contact</p>
-                    <p class="text-sm font-semibold" style="color: #f4f5f7;">{{ c.phone }}</p>
-                    <p class="text-xs text-gray-400 font-mono mt-0.5">{{ c.email }}</p>
+                  <p class="text-[10px] uppercase tracking-widest font-semibold mb-1" style="color: #4b5563;">Contact</p>
+                  <p class="text-sm font-semibold" style="color: #f4f5f7;">{{ c.phone }}</p>
+                  <p class="text-xs text-gray-400 font-mono mt-0.5">{{ c.email }}</p>
                 </div>
                 <div>
-                    <p class="text-[10px] uppercase tracking-widest font-semibold mb-1" style="color: #4b5563;">Adresse</p>
-                    <p class="text-sm text-gray-300 line-clamp-2" [title]="c.address">{{ c.address }}</p>
+                  <p class="text-[10px] uppercase tracking-widest font-semibold mb-1" style="color: #4b5563;">Adresse</p>
+                  <p class="text-sm text-gray-300 line-clamp-2" [title]="c.address">{{ c.address }}</p>
                 </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="px-5 py-3 flex justify-end gap-2"
+              </div>
+              <!-- Footer -->
+              <div class="px-5 py-3 flex justify-end gap-2"
                 style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
                 <button (click)="openDetailsModal(c)"
-                    class="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
-                    title="Détails">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
+                  class="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+                  title="Détails">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
                 </button>
                 <button (click)="openModal(c)"
-                    class="p-1.5 rounded-md text-blue-400 hover:text-white hover:bg-blue-500/10 transition-colors"
-                    title="Modifier">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                    </svg>
+                  class="p-1.5 rounded-md text-blue-400 hover:text-white hover:bg-blue-500/10 transition-colors"
+                  title="Modifier">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
                 </button>
                 <button (click)="deleteClient(c.id)"
-                    class="p-1.5 rounded-md text-rose-500 hover:bg-rose-500/10 transition-colors"
-                    title="Supprimer">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
+                  class="p-1.5 rounded-md text-rose-500 hover:bg-rose-500/10 transition-colors"
+                  title="Supprimer">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
                 </button>
+              </div>
             </div>
-        </div>
-
-        <!-- Empty State -->
-        <div *ngIf="clients.length === 0" class="col-span-full py-20 text-center fleet-card">
-            <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4"
+          }
+          <!-- Empty State -->
+          @if (clients.length === 0) {
+            <div class="col-span-full py-20 text-center fleet-card">
+              <div class="h-16 w-16 rounded-xl flex items-center justify-center mx-auto mb-4"
                 style="background: #252830; border: 1px solid #2a2d35;">
                 <svg class="h-8 w-8" style="color: #4b5563;" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <p class="font-display font-semibold" style="color: #9ca3af;">Aucun client trouvé</p>
+                <p class="text-sm mt-1" style="color: #4b5563;">Commencez par ajouter votre premier client.</p>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Pagination -->
+        @if (!isLoading && totalElements > 0) {
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-800/50">
+            <div class="text-xs font-mono text-gray-500">
+              Affichage de <span class="text-gray-300">{{ currentPage * pageSize + 1 }}</span> à
+              <span class="text-gray-300">{{ (currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize }}</span> sur
+              <span class="text-gray-300">{{ totalElements }}</span> clients
             </div>
-            <p class="font-display font-semibold" style="color: #9ca3af;">Aucun client trouvé</p>
-            <p class="text-sm mt-1" style="color: #4b5563;">Commencez par ajouter votre premier client.</p>
-        </div>
-    </div>
-
-    <!-- Pagination -->
-    <div *ngIf="!isLoading && totalElements > 0" class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-800/50">
-        <div class="text-xs font-mono text-gray-500">
-            Affichage de <span class="text-gray-300">{{ currentPage * pageSize + 1 }}</span> à
-            <span class="text-gray-300">{{ (currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize }}</span> sur
-            <span class="text-gray-300">{{ totalElements }}</span> clients
-        </div>
-
-        <div class="flex items-center gap-2">
-            <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0"
+            <div class="flex items-center gap-2">
+              <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0"
                 class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
-            </button>
-            <span class="text-xs font-mono px-3 py-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-300">
+              </button>
+              <span class="text-xs font-mono px-3 py-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-300">
                 Page {{ currentPage + 1 }} / {{ totalPages }}
-            </span>
-            <button (click)="onPageChange(currentPage + 1)" [disabled]="isLastPage"
+              </span>
+              <button (click)="onPageChange(currentPage + 1)" [disabled]="isLastPage"
                 class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
-            </button>
-        </div>
-    </div>
-</div>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
 
-<!-- ─── Modal: Détails du Client ────────────────────── -->
-<div *ngIf="isDetailsModalOpen && selectedClientDetails" 
-     class="fixed z-50 inset-0 flex items-center justify-center p-4">
-    <div class="fixed inset-0 modal-backdrop" (click)="closeDetailsModal()"></div>
-    <div class="modal-panel relative w-full max-w-2xl animate-slide-in-up overflow-hidden">
-        
-        <!-- Header Gradient Line -->
-        <div class="absolute top-0 left-0 right-0 h-1.5" style="background: linear-gradient(90deg, #f59e0b, #d97706);"></div>
-
-        <!-- Header -->
-        <div class="flex items-center justify-between px-8 py-6 border-b border-[#2a2d35] bg-[#1a1c23]">
-            <div class="flex items-center gap-4">
+      <!-- ─── Modal: Détails du Client ────────────────────── -->
+      @if (isDetailsModalOpen && selectedClientDetails) {
+        <div
+          class="fixed z-50 inset-0 flex items-center justify-center p-4">
+          <div class="fixed inset-0 modal-backdrop" (click)="closeDetailsModal()"></div>
+          <div class="modal-panel relative w-full max-w-2xl animate-slide-in-up overflow-hidden">
+            <!-- Header Gradient Line -->
+            <div class="absolute top-0 left-0 right-0 h-1.5" style="background: linear-gradient(90deg, #f59e0b, #d97706);"></div>
+            <!-- Header -->
+            <div class="flex items-center justify-between px-8 py-6 border-b border-[#2a2d35] bg-[#1a1c23]">
+              <div class="flex items-center gap-4">
                 <div class="h-12 w-12 rounded-xl flex items-center justify-center shadow-lg"
-                    style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2);">
-                    <span class="text-xl font-bold" style="color: #f59e0b;">{{ selectedClientDetails.companyName.charAt(0) | uppercase }}</span>
+                  style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2);">
+                  <span class="text-xl font-bold" style="color: #f59e0b;">{{ selectedClientDetails.companyName.charAt(0) | uppercase }}</span>
                 </div>
                 <div>
-                    <h2 class="text-xl font-bold text-gray-100">{{ selectedClientDetails.companyName }}</h2>
-                    <p class="text-xs font-mono text-gray-500 tracking-wider mt-0.5">ID: {{ selectedClientDetails.id.split('-')[0] }}</p>
+                  <h2 class="text-xl font-bold text-gray-100">{{ selectedClientDetails.companyName }}</h2>
+                  <p class="text-xs font-mono text-gray-500 tracking-wider mt-0.5">ID: {{ selectedClientDetails.id.split('-')[0] }}</p>
                 </div>
-            </div>
-            <button (click)="closeDetailsModal()" class="p-2 rounded-lg hover:bg-[#252830] transition-colors text-gray-400 hover:text-gray-100">
+              </div>
+              <button (click)="closeDetailsModal()" class="p-2 rounded-lg hover:bg-[#252830] transition-colors text-gray-400 hover:text-gray-100">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
-            </button>
-        </div>
-
-        <!-- Content Body -->
-        <div class="px-8 py-8 space-y-8 bg-[#181a20]">
-            
-            <!-- Cards Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              </button>
+            </div>
+            <!-- Content Body -->
+            <div class="px-8 py-8 space-y-8 bg-[#181a20]">
+              <!-- Cards Grid -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Contact Info -->
                 <div class="p-5 rounded-2xl bg-[#0e1015] border border-[#2a2d35] relative group transition-all hover:border-[#f59e0b]/30">
-                    <div class="absolute top-4 right-4 text-[#f59e0b]/20 group-hover:text-[#f59e0b]/40 transition-colors">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
+                  <div class="absolute top-4 right-4 text-[#f59e0b]/20 group-hover:text-[#f59e0b]/40 transition-colors">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                  </div>
+                  <p class="text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-2">Coordonnées</p>
+                  <div class="space-y-3">
+                    <div>
+                      <p class="text-xs text-gray-400">Téléphone</p>
+                      <p class="text-sm font-semibold text-gray-100">{{ selectedClientDetails.phone }}</p>
                     </div>
-                    <p class="text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-2">Coordonnées</p>
-                    <div class="space-y-3">
-                        <div>
-                            <p class="text-xs text-gray-400">Téléphone</p>
-                            <p class="text-sm font-semibold text-gray-100">{{ selectedClientDetails.phone }}</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-400">Email</p>
-                            <p class="text-sm font-semibold text-gray-100">{{ selectedClientDetails.email }}</p>
-                        </div>
+                    <div>
+                      <p class="text-xs text-gray-400">Email</p>
+                      <p class="text-sm font-semibold text-gray-100">{{ selectedClientDetails.email }}</p>
                     </div>
+                  </div>
                 </div>
-
                 <!-- Location Info -->
                 <div class="p-5 rounded-2xl bg-[#0e1015] border border-[#2a2d35] relative group transition-all hover:border-[#f59e0b]/30">
-                    <div class="absolute top-4 right-4 text-[#f59e0b]/20 group-hover:text-[#f59e0b]/40 transition-colors">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                    </div>
-                    <p class="text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-2">Localisation</p>
-                    <div>
-                        <p class="text-xs text-gray-400">Adresse de Siège</p>
-                        <p class="text-sm font-semibold text-gray-100 leading-relaxed">{{ selectedClientDetails.address }}</p>
-                    </div>
+                  <div class="absolute top-4 right-4 text-[#f59e0b]/20 group-hover:text-[#f59e0b]/40 transition-colors">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <p class="text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-2">Localisation</p>
+                  <div>
+                    <p class="text-xs text-gray-400">Adresse de Siège</p>
+                    <p class="text-sm font-semibold text-gray-100 leading-relaxed">{{ selectedClientDetails.address }}</p>
+                  </div>
                 </div>
-            </div>
-
-            <!-- Account Summary Row -->
-            <div class="p-6 rounded-2xl bg-[#0e1015] border border-[#2a2d35]">
+              </div>
+              <!-- Account Summary Row -->
+              <div class="p-6 rounded-2xl bg-[#0e1015] border border-[#2a2d35]">
                 <div class="flex items-center justify-between mb-4">
-                    <h4 class="text-sm font-display font-bold text-gray-200">Résumé du Compte</h4>
-                    <span class="badge-available">Compte Actif</span>
+                  <h4 class="text-sm font-display font-bold text-gray-200">Résumé du Compte</h4>
+                  <span class="badge-available">Compte Actif</span>
                 </div>
                 <div class="grid grid-cols-3 gap-4">
-                    <div class="text-center p-3 rounded-xl bg-[#181a20] border border-[#2a2d35]/30">
-                        <p class="text-xs text-gray-500 mb-1">Rôle</p>
-                        <p class="text-xs font-bold text-[#f59e0b]">{{ selectedClientDetails.role }}</p>
-                    </div>
-                    <div class="text-center p-3 rounded-xl bg-[#181a20] border border-[#2a2d35]/30">
-                        <p class="text-xs text-gray-500 mb-1">Trajets</p>
-                        <p class="text-xs font-bold text-gray-200">0</p>
-                    </div>
-                    <div class="text-center p-3 rounded-xl bg-[#181a20] border border-[#2a2d35]/30">
-                        <p class="text-xs text-gray-500 mb-1">Lieux</p>
-                        <p class="text-xs font-bold text-gray-200">0</p>
-                    </div>
+                  <div class="text-center p-3 rounded-xl bg-[#181a20] border border-[#2a2d35]/30">
+                    <p class="text-xs text-gray-500 mb-1">Rôle</p>
+                    <p class="text-xs font-bold text-[#f59e0b]">{{ selectedClientDetails.role }}</p>
+                  </div>
+                  <div class="text-center p-3 rounded-xl bg-[#181a20] border border-[#2a2d35]/30">
+                    <p class="text-xs text-gray-500 mb-1">Trajets</p>
+                    <p class="text-xs font-bold text-gray-200">0</p>
+                  </div>
+                  <div class="text-center p-3 rounded-xl bg-[#181a20] border border-[#2a2d35]/30">
+                    <p class="text-xs text-gray-500 mb-1">Lieux</p>
+                    <p class="text-xs font-bold text-gray-200">0</p>
+                  </div>
                 </div>
+              </div>
             </div>
+            <!-- Footer -->
+            <div class="px-8 py-5 border-t border-[#2a2d35] bg-[#1a1c23] flex justify-end">
+              <button (click)="closeDetailsModal()" class="btn-fleet-ghost px-8">Fermer</button>
+            </div>
+          </div>
         </div>
+      }
 
-        <!-- Footer -->
-        <div class="px-8 py-5 border-t border-[#2a2d35] bg-[#1a1c23] flex justify-end">
-            <button (click)="closeDetailsModal()" class="btn-fleet-ghost px-8">Fermer</button>
-        </div>
-    </div>
-</div>
-
-<!-- ─── Modal: Créer / Modifier Client ────────────────── -->
-<div *ngIf="isModalOpen" class="fixed z-50 inset-0 flex items-center justify-center p-4" role="dialog"
-    aria-modal="true">
-    <div class="fixed inset-0 modal-backdrop" (click)="closeModal()"></div>
-    <div class="modal-panel relative w-full max-w-xl animate-slide-in-up">
-
-        <!-- Modal Indication Line -->
-        <div class="absolute top-0 left-0 right-0 h-1" style="background: linear-gradient(90deg, #f59e0b, #d97706);">
-        </div>
-
-        <!-- Header -->
-        <div class="flex items-center justify-between px-6 py-5" style="border-bottom: 1px solid #2a2d35;">
-            <div>
+      <!-- ─── Modal: Créer / Modifier Client ────────────────── -->
+      @if (isModalOpen) {
+        <div class="fixed z-50 inset-0 flex items-center justify-center p-4" role="dialog"
+          aria-modal="true">
+          <div class="fixed inset-0 modal-backdrop" (click)="closeModal()"></div>
+          <div class="modal-panel relative w-full max-w-xl animate-slide-in-up">
+            <!-- Modal Indication Line -->
+            <div class="absolute top-0 left-0 right-0 h-1" style="background: linear-gradient(90deg, #f59e0b, #d97706);">
+            </div>
+            <!-- Header -->
+            <div class="flex items-center justify-between px-6 py-5" style="border-bottom: 1px solid #2a2d35;">
+              <div>
                 <h3 class="font-display font-bold text-lg" style="color: #f4f5f7;">
-                    {{ editMode ? 'Modifier le client' : 'Nouveau client' }}
+                  {{ editMode ? 'Modifier le client' : 'Nouveau client' }}
                 </h3>
                 <p class="text-xs mt-0.5" style="color: #6b7280;">Gérez les informations de l'entreprise</p>
-            </div>
-            <button (click)="closeModal()" class="p-2 rounded-lg transition-colors"
+              </div>
+              <button (click)="closeModal()" class="p-2 rounded-lg transition-colors"
                 style="color: #6b7280; background: #252830;" onmouseover="this.style.color='#f4f5f7'"
                 onmouseout="this.style.color='#6b7280'">
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
-            </button>
-        </div>
-
-        <!-- Form Body -->
-        <form [formGroup]="clientForm" class="px-6 py-5 space-y-4">
-
-            <div class="grid grid-cols-1 gap-4">
-                <div>
-                    <label class="fleet-label">Nom de l'entreprise <span style="color: #ef4444;">*</span></label>
-                    <input type="text" formControlName="companyName" class="fleet-input"
-                        placeholder="Ex: Transport Atlas SA">
-                </div>
+              </button>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div *ngIf="!editMode">
-                    <label class="fleet-label">Email de connexion <span style="color: #ef4444;">*</span></label>
-                    <input type="email" formControlName="email" class="fleet-input"
+            <!-- Form Body -->
+            <form [formGroup]="clientForm" class="px-6 py-5 space-y-4">
+              <div class="grid grid-cols-1 gap-4">
+                <div>
+                  <label class="fleet-label">Nom de l'entreprise <span style="color: #ef4444;">*</span></label>
+                  <input type="text" formControlName="companyName" class="fleet-input"
+                    placeholder="Ex: Transport Atlas SA">
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  @if (!editMode) {
+                    <div>
+                      <label class="fleet-label">Email de connexion <span style="color: #ef4444;">*</span></label>
+                      <input type="email" formControlName="email" class="fleet-input"
                         placeholder="contact@entreprise.com">
-                </div>
-                <div *ngIf="!editMode">
-                    <label class="fleet-label">Mot de passe provisoire <span style="color: #ef4444;">*</span></label>
-                    <input type="password" formControlName="password" class="fleet-input"
-                        placeholder="Min. 8 caractères">
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 gap-4">
-                <div>
-                    <label class="fleet-label">Numéro de téléphone <span style="color: #ef4444;">*</span></label>
-                    <input type="text" formControlName="phone" class="fleet-input text-gray-300 font-mono"
-                        placeholder="Ex: 06 12 34 56 78">
-                </div>
-                <div>
-                    <label class="fleet-label">Adresse physique <span style="color: #ef4444;">*</span></label>
-                    <input type="text" formControlName="address" class="fleet-input"
-                        placeholder="Saisissez l'adresse complète...">
-                </div>
-            </div>
-        </form>
-
-        <!-- Footer -->
-        <div class="flex justify-end gap-3 px-6 py-4"
-            style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
-            <button (click)="closeModal()" class="btn-fleet-ghost">Annuler</button>
-            <button (click)="onSubmit()" [disabled]="isSubmitting" class="btn-fleet shadow-lg"
-                style="background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);">
-                {{ isSubmitting ? 'Enregistrement...' : (editMode ? 'Mettre à jour' : 'Ajouter le client') }}
-            </button>
-        </div>
-    </div>
-</div>
+                      </div>
+                    }
+                    @if (!editMode) {
+                      <div>
+                        <label class="fleet-label">Mot de passe provisoire <span style="color: #ef4444;">*</span></label>
+                        <input type="password" formControlName="password" class="fleet-input"
+                          placeholder="Min. 8 caractères">
+                        </div>
+                      }
+                    </div>
+                    <div class="grid grid-cols-1 gap-4">
+                      <div>
+                        <label class="fleet-label">Numéro de téléphone <span style="color: #ef4444;">*</span></label>
+                        <input type="text" formControlName="phone" class="fleet-input text-gray-300 font-mono"
+                          placeholder="Ex: 06 12 34 56 78">
+                        </div>
+                        <div>
+                          <label class="fleet-label">Adresse physique <span style="color: #ef4444;">*</span></label>
+                          <input type="text" formControlName="address" class="fleet-input"
+                            placeholder="Saisissez l'adresse complète...">
+                          </div>
+                        </div>
+                      </form>
+                      <!-- Footer -->
+                      <div class="flex justify-end gap-3 px-6 py-4"
+                        style="border-top: 1px solid #2a2d35; background: rgba(0,0,0,0.2);">
+                        <button (click)="closeModal()" class="btn-fleet-ghost">Annuler</button>
+                        <button (click)="onSubmit()" [disabled]="isSubmitting" class="btn-fleet shadow-lg"
+                          style="background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);">
+                          {{ isSubmitting ? 'Enregistrement...' : (editMode ? 'Mettre à jour' : 'Ajouter le client') }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                }
